@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         fragmentTransaction.hide(mFragment[mIndex]);
         //如果未添加到事务中
         if (!mFragment[index].isAdded()) {
-            fragmentTransaction.add(R.id.confirm, mFragment[index]);
+            fragmentTransaction.add(R.id.content_layout, mFragment[index]);
         } else {//已经添加到事务中直接显示
             fragmentTransaction.show(mFragment[index]);
         }
