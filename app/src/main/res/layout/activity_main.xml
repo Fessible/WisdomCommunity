@@ -1,18 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.com.wisdomcommunity.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="4dp">
 
-</android.support.constraint.ConstraintLayout>
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/rb_home"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/icon_home_selector"
+            android:gravity="center"
+            android:text="主页"
+            android:textColor="@color/text_main_selector"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/rb_shop"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/icon_shop_selector"
+            android:gravity="center"
+            android:text="店铺"
+            android:textColor="@color/text_main_selector"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/rb_order"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/icon_order_selector"
+            android:gravity="center"
+            android:text="订单"
+            android:textColor="@color/text_main_selector"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/rb_person"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/icon_person_selector"
+            android:gravity="center"
+            android:text="我的"
+            android:textColor="@color/text_main_selector"
+            android:textSize="14sp" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/radioGroup" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@id/radioGroup"
+        android:background="@color/text_normal" />
+</RelativeLayout>

@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">WisdomCommunity</string>
+    <string name="app_name">智慧社区直销平台</string>
+    <string name="login_forget_pass">忘记密码</string>
+    <string name="hint_input_phone">请输入手机号</string>
+    <string name="hint_input_password">请输入密码</string>
+    <string name="count_down_timer_reset_code_format">%1$d 秒</string>
+    <string name="login">登录</string>
+
+    <string name="reset_password">重置密码</string>
+    <string name="hint_input_code">请输入手机验证码</string>
+    <string name="reset_code">发送验证码</string>
+    <string name="hint_input_new_password">请输入新密码</string>
+    <string name="hint_input_confirm_new_password">请再次输入新密码</string>
+    <string name="opt_confirm">确定</string>
+    <string name="text_network_error">网络链接错误</string>
+    <string name="text_server_error">服务器返回数据错误</string>
+
+    <string name="home_title">智慧社区</string>
 </resources>

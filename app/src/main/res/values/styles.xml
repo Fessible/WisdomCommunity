@@ -1,11 +1,57 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="Widget.Design.Admin.AppBarLayout" parent="Widget.Design.AppBarLayout">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/palette_primary_text_color</item>
+        <item name="android:textColorHint">@color/palette_quaternary_text_color</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/bg_text_box_selector</item>
+        <item name="android:paddingLeft">18dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ResetPassword.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@null</item>
+        <item name="android:minHeight">58dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/palette_primary_text_color</item>
+        <item name="android:textColorHint">@color/palette_quaternary_text_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.Design.Admin.Login.Confirm.TextView" parent="@android:style/Widget.TextView">
+        <item name="android:background">@drawable/btn_login_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Support.Platform.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Design.Admin.Toolbar.Title" parent="TextAppearance.Widget.Support.Platform.Toolbar.Title">
+        <item name="android:maxWidth">180dp</item>
+        <item name="android:textColor">@color/palette_white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
 </resources>
