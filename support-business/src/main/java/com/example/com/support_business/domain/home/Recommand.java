@@ -22,4 +22,9 @@ public class Recommand implements Serializable {
      * 商品价格
      */
     public String price;
+
+    /**
+     * 商品ID
+     */
+    public String goodsId;
 }

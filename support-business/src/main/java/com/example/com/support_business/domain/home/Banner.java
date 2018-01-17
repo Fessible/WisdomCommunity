@@ -12,4 +12,15 @@ public class Banner implements Serializable {
      * 图片地址
      */
     public String bannerUrl;
+
+    /**
+     * 描述
+     */
+    public String description;
+
+    /**
+     * 店铺ID
+     */
+    public String goodsId;
+
 }

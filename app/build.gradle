@@ -38,5 +38,6 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
-
+    //circularImage
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

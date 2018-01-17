@@ -1,6 +1,8 @@
 package com.example.com.wisdomcommunity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,9 +10,11 @@ import android.widget.RadioGroup;
 
 import com.example.com.wisdomcommunity.base.BaseActivity;
 import com.example.com.wisdomcommunity.ui.home.HomeFragment;
+import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.order.OrderFragment;
 import com.example.com.wisdomcommunity.ui.person.PersonFragment;
 import com.example.com.wisdomcommunity.ui.shop.ShopFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 
 import butterknife.BindView;
 
@@ -25,6 +29,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private Fragment[] mFragment;
     private int mIndex;
+    //test
+    public int author = 0;
+    public final static int REQUEST_CODE = 1;
 
     @Override
     public int getResLayout() {
@@ -33,8 +40,25 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void onViewCreated(Bundle savedInstanceState) {
+        if (author == 0) {
+            IntentUtil.startTemplateActivityForResult(MainActivity.this, LoginFragment.class, null, LoginFragment.TAG_Login_FRAGMENT, REQUEST_CODE);
+
+        }
         radioGroup.setOnCheckedChangeListener(this);
         initFragment();
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE:
+            }
+
+        }
     }
 
     private void initFragment() {
