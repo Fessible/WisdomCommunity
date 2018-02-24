@@ -1,6 +1,7 @@
 package com.example.com.support_business;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -9,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class SeverHelper {
+
     private String baseUrl = "http://rapapi.org/mockjs/30782/community/";
 
     private SeverHelper() {
@@ -35,6 +37,7 @@ public class SeverHelper {
                 .Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit;

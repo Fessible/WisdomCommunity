@@ -51,5 +51,9 @@ public interface BasicContract {
             context = null;
             view = null;
         }
+
+        protected boolean isActivityLife() {
+            return view != null;
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.com.support_business.api;
 
 import com.example.com.support_business.domain.home.Banner;
-import com.example.com.support_business.domain.home.Recommand;
+import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.login.Register;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
@@ -11,11 +11,11 @@ import com.example.com.support_business.domain.personal.Version;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.support_business.domain.shop.ShopList;
-import com.example.com.support_business.params.LoginParams;
-import com.example.com.support_business.params.PersonParams;
 import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
 import com.example.com.support_business.module.ResultEntity;
+import com.example.com.support_business.params.LoginParams;
+import com.example.com.support_business.params.PersonParams;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -62,8 +62,10 @@ interface CommunityApi {
      * 主页
      *************/
     //商品推荐
-    @GET("home/recommand")
-    public Observable<Response<ListEntity<Recommand>>> recommand();
+    @GET("home/recommend")
+    public Observable<Response<ListEntity<Recommend>>> recommend();
+//    public rx.Observable<Response<ListEntity<Recommend>>> recommend();
+
 
     //标题栏
     @GET("home/banner")

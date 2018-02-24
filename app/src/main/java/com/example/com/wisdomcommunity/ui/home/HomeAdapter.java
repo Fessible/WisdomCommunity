@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.com.support_business.domain.home.Recommand;
+import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseHolder;
 
@@ -24,13 +24,13 @@ import butterknife.BindView;
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
 
     private Context mContext;
-    private List<Recommand> recommendList = new ArrayList<>();
+    private List<Recommend> recommendList = new ArrayList<>();
 
     public HomeAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void setData(List<Recommand> recommendList) {
+    public void setData(List<Recommend> recommendList) {
         this.recommendList = recommendList;
     }
 
@@ -64,11 +64,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
             super(context, parent, R.layout.adapter_home_item);
         }
 
-        void bindHolder(Context context, Recommand recommand) {
-            name.setText(recommand.name);
-            price.setText(recommand.price);
+        void bindHolder(Context context, Recommend recommend) {
+            name.setText(recommend.name);
+            price.setText(recommend.price);
             Glide.with(context)
-                    .load(recommand.goodsUrl)
+                    .load(recommend.goodsUrl)
                     .into(imge);
         }
     }

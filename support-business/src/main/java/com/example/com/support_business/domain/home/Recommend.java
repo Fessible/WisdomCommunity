@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Created by rhm on 2018/1/16.
  */
 
-public class Recommand implements Serializable {
+public class Recommend implements Serializable {
     /**
      * 商品图片
      */

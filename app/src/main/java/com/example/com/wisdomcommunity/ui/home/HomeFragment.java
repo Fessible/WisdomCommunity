@@ -9,9 +9,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.com.support_business.domain.home.Recommand;
+import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.mvp.HomeContract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,17 +26,20 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  * Created by rhm on 2018/1/16.
  */
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements HomeContract.View {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     @BindView(R.id.banner)
     BGABanner banner;
 
+    private HomePresenter presenter;
+
     //test
     private List<String> imgUrlList = new ArrayList<>();
     private List<String> imgTipList = new ArrayList<>();
-    private List<Recommand> recommandList = new ArrayList<>();
+    private List<Recommend> recommendList = new ArrayList<>();
+    private HomeAdapter adapter;
 
     @Override
     public int getResLayout() {
@@ -45,9 +49,11 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
 
-        initData();
-        HomeAdapter adapter = new HomeAdapter(getContext());
-        adapter.setData(recommandList);
+        presenter = new HomePresenter(getContext(), HomeFragment.this);
+        presenter.loadRecomends(false);
+//        initData();
+        adapter = new HomeAdapter(getContext());
+//        adapter.setData(recommendList);
         recyclerView.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -62,12 +68,12 @@ public class HomeFragment extends BaseFragment {
     private void initData() {
         imgTipList = Arrays.asList("", "", "");
         imgUrlList = Arrays.asList("http://ww1.sinaimg.cn/large/83029c1egy1fni7wwcrrdj20go0ciq4x.jpg", "http://ww1.sinaimg.cn/large/83029c1egy1fni7wwoow5j20dw099jsf.jpg", "http://ww1.sinaimg.cn/large/83029c1egy1fni7fmpvx9j20dw09raam.jpg");
-        Recommand recommand = new Recommand();
-        recommand.goodsUrl = "http://ww1.sinaimg.cn/large/83029c1egy1fni7wwcrrdj20go0ciq4x.jpg";
-        recommand.price = "￥24.88";
-        recommand.name = "大金桔店";
+        Recommend recommend = new Recommend();
+        recommend.goodsUrl = "http://ww1.sinaimg.cn/large/83029c1egy1fni7wwcrrdj20go0ciq4x.jpg";
+        recommend.price = "￥24.88";
+        recommend.name = "大金桔店";
         for (int i = 0; i < 6; i++) {
-            recommandList.add(recommand);
+            recommendList.add(recommend);
         }
     }
 
@@ -87,4 +93,35 @@ public class HomeFragment extends BaseFragment {
 
         }
     };
+
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void onUnauthorized() {
+
+    }
+
+    @Override
+    public void onLoadRecommendSuccess(List<Recommend> recommendList) {
+        if (recommendList != null) {
+            adapter.setData(recommendList);
+            adapter.notifyDataSetChanged();
+        }
+
+
+    }
+
+    @Override
+    public void onLoadRecommendFailure(String msg) {
+        showShortToast(msg);
+    }
 }
