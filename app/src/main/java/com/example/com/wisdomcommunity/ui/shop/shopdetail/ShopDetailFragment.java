@@ -47,4 +47,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     protected void initView(View view, Bundle savedInstanceState) {
 
     }
+
+    @Override
+    protected void destroyView() {
+
+    }
 }

@@ -73,6 +73,11 @@ public class LoginFragment extends BaseFragment {
 //        setImmersiveStatusBar(true, Color.WHITE);
     }
 
+    @Override
+    protected void destroyView() {
+
+    }
+
     @OnClick(R.id.text_clear)
     public void onClear() {
         if (editPhone != null) {

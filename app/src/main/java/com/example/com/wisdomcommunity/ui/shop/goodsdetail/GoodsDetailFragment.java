@@ -26,6 +26,11 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
     }
 
     @Override
+    protected void destroyView() {
+
+    }
+
+    @Override
     public void showProgress() {
 
     }

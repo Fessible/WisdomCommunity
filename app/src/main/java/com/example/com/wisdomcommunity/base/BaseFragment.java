@@ -44,12 +44,15 @@ public abstract class BaseFragment extends Fragment {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    protected abstract void destroyView();
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (unbinder != null) {
             unbinder.unbind();
         }
+        destroyView();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

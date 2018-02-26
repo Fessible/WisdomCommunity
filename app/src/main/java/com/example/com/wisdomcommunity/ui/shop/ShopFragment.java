@@ -59,6 +59,11 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
     }
 
     @Override
+    protected void destroyView() {
+
+    }
+
+    @Override
     public void showProgress() {
 
     }

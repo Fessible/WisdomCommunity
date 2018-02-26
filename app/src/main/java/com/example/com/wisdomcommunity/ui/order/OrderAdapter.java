@@ -4,17 +4,24 @@ import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.wisdomcommunity.R;
+import com.example.com.wisdomcommunity.base.BaseAdapter;
 import com.example.com.wisdomcommunity.base.BaseHolder;
+import com.example.com.wisdomcommunity.util.DateUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
+import static com.example.com.support_business.Constants.STATUS_FINISHED;
+import static com.example.com.support_business.Constants.STATUS_SENDING;
+import static com.example.com.support_business.Constants.STATUS_WAIT_PAY;
 import static com.example.com.wisdomcommunity.ui.order.OrderAdapter.Item.VIEW_EMPTY;
 import static com.example.com.wisdomcommunity.ui.order.OrderAdapter.Item.VIEW_STANDARD;
 
@@ -22,7 +29,7 @@ import static com.example.com.wisdomcommunity.ui.order.OrderAdapter.Item.VIEW_ST
  * Created by rhm on 2018/2/26.
  */
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder> {
+public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
 
     private final List<Item> itemList = new ArrayList<>();
     private Context mContext;
@@ -43,8 +50,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
             super.onChanged();
             if (orderRecordList != null) {
                 if (!orderRecordList.isEmpty()) {
-                    for (int i=0;i<orderRecordList.size();i++) {
-                        itemList.add(new StandardItem());
+                    for (int i = 0; i < orderRecordList.size(); i++) {
+                        itemList.add(new StandardItem(orderRecordList.get(i)));
                     }
                 } else {
                     itemList.add(new EmptyItem());
@@ -82,31 +89,81 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
         return itemList.size();
     }
 
-    class StandardHolder extends OrderHolder<StandardItem> {
+    @Override
+    protected void destroy() {
+        itemList.clear();
+    }
+
+    static class StandardHolder extends OrderHolder<StandardItem> {
         public StandardHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.adapter_order_item);
         }
 
+        @BindView(R.id.order_id)
+        TextView orderId;
+
+        @BindView(R.id.status)
+        TextView status;
+
+        @BindView(R.id.total_price)
+        TextView totalPrice;
+
+        @BindView(R.id.order_time)
+        TextView time;
+
         @Override
         public void bindHolder(Context context, StandardItem item) {
-
+            OrderRecord orderRecord = item.getOrderRecord();
+            orderId.setText(orderRecord.orderId);
+            totalPrice.setText(orderRecord.total);
+            status.setText(item.getStatus(context));
+            time.setText(item.getTime());
         }
     }
 
-    class EmptyHolder extends OrderHolder<EmptyItem> {
+    static class EmptyHolder extends OrderHolder<EmptyItem> {
         public EmptyHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.item_order_empty);
         }
 
         @Override
         public void bindHolder(Context context, EmptyItem item) {
-
         }
 
     }
 
 
     static class StandardItem implements Item {
+        private OrderRecord orderRecord;
+
+        StandardItem(OrderRecord record) {
+            this.orderRecord = record;
+        }
+
+        public OrderRecord getOrderRecord() {
+            return orderRecord;
+        }
+
+        public String getTime() {
+            return DateUtils.formatYMDHMS(orderRecord.orderTime);
+        }
+
+        public String getStatus(Context context) {
+            String status = null;
+            switch (orderRecord.orderStatus) {
+                case STATUS_FINISHED:
+                    status = context.getString(R.string.status_finished);
+                    break;
+                case STATUS_SENDING:
+                    status = context.getString(R.string.status_sending);
+                    break;
+                case STATUS_WAIT_PAY:
+                    status = context.getString(R.string.status_wait_pay);
+                    break;
+            }
+            return status;
+        }
+
         @Override
         public int getViewType() {
             return VIEW_STANDARD;
@@ -135,7 +192,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
         int getViewType();
     }
 
-    abstract class OrderHolder<II extends Item> extends BaseHolder {
+    static abstract class OrderHolder<II extends Item> extends BaseHolder {
         public OrderHolder(Context context, ViewGroup parent, int adapterLayoutResId) {
             super(context, parent, adapterLayoutResId);
         }

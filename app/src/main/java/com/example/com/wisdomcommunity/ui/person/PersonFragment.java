@@ -39,4 +39,9 @@ public class PersonFragment extends BaseFragment {
                         .divider(getResources().getDrawable(R.drawable.img_line_n))
                         .build()).build());
     }
+
+    @Override
+    protected void destroyView() {
+
+    }
 }

@@ -59,6 +59,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     }
 
+    @Override
+    protected void destroyView() {
+
+    }
+
     private BGABanner.Adapter bannerAdapter = new BGABanner.Adapter() {
         @Override
         public void fillBannerItem(BGABanner banner, View itemView, @Nullable Object model, int position) {
