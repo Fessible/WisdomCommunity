@@ -23,4 +23,14 @@ public class ShopDetail implements Serializable {
      * 店铺图片
      */
     public String shopUrl;
+
+    /**
+     * 营业时间
+     */
+    public String workTime;
+
+    /**
+     * 联系电话
+     */
+    public String shopPhone;
 }

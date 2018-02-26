@@ -4,8 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.com.support_business.SeverHelper;
+import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Recommend;
+import com.example.com.support_business.domain.order.OrderRecord;
+import com.example.com.support_business.domain.shop.GoodsDetail;
+import com.example.com.support_business.domain.shop.ShopDetail;
+import com.example.com.support_business.domain.shop.ShopList;
+import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
+import com.example.com.support_business.module.ResultEntity;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -55,6 +62,9 @@ public class CommunityServer extends RestyServer {
         communityApi = SeverHelper.with().newRetrofit().create(CommunityApi.class);
     }
 
+    /**
+     * 主页
+     */
     //商品推荐
     public void recommend(String compositeTag, boolean refresh, final SSOCallback<ListEntity<Recommend>> callback) {
         Disposable disposable = communityApi.recommend()
@@ -85,4 +95,152 @@ public class CommunityServer extends RestyServer {
     }
 
     //标题栏
+    public void banner(String composite, boolean refresh, final SSOCallback<ListEntity<Banner>> callback) {
+        Disposable disposable = communityApi.banner()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ListEntity<Banner>>>() {
+                    @Override
+                    public void accept(Response<ListEntity<Banner>> listEntityResponse) throws Exception {
+                        if (listEntityResponse != null) {
+                            if (listEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, listEntityResponse);
+                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
+    /**
+     * 店铺
+     */
+    //店铺列表
+    public void shopList(String composite, boolean refresh, final SSOCallback<ListEntity<ShopList>> callback) {
+        Disposable disposable = communityApi.shopList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ListEntity<ShopList>>>() {
+                    @Override
+                    public void accept(Response<ListEntity<ShopList>> listEntityResponse) throws Exception {
+                        if (listEntityResponse != null) {
+                            if (listEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, listEntityResponse);
+                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
+    //商品详情
+    public void goodsDetail(String composite, String goodsId, final boolean refresh, final SSOCallback<ResultEntity<GoodsDetail>> callback) {
+        Disposable disposable = communityApi.goodsDetail(goodsId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResultEntity<GoodsDetail>>>() {
+                    @Override
+                    public void accept(Response<ResultEntity<GoodsDetail>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite,disposable);
+    }
+
+    //店铺详情
+    public void shopDetail(String composite, boolean refesh, String shopId, final SSOCallback<ResultEntity<ShopDetail>> callback) {
+        Disposable disposable = communityApi.shopDetail(shopId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResultEntity<ShopDetail>>>() {
+                    @Override
+                    public void accept(Response<ResultEntity<ShopDetail>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite,disposable);
+    }
+
+    //订单
+    public void record(String composite, boolean refresh, final SSOCallback<ListEntity<OrderRecord>> callback) {
+        Disposable disposable= communityApi.record()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ListEntity<OrderRecord>>>() {
+                    @Override
+                    public void accept(Response<ListEntity<OrderRecord>> listEntityResponse) throws Exception {
+                        if (listEntityResponse != null) {
+                            if (listEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, listEntityResponse);
+                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback,throwable);
+
+                    }
+                });
+        add(composite,disposable);
+    }
+
 }

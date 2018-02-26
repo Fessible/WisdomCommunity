@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
+import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
 import butterknife.BindView;
 
@@ -32,5 +34,9 @@ public class PersonFragment extends BaseFragment {
         PersonAdapter adapter = new PersonAdapter(getContext());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
+                .defaultDecor(new DividerDecor.Builder(getContext())
+                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .build()).build());
     }
 }

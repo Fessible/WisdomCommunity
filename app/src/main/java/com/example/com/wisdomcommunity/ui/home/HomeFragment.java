@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
@@ -35,10 +36,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private HomePresenter presenter;
 
-    //test
     private List<String> imgUrlList = new ArrayList<>();
     private List<String> imgTipList = new ArrayList<>();
-    private List<Recommend> recommendList = new ArrayList<>();
     private HomeAdapter adapter;
 
     @Override
@@ -51,30 +50,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
         presenter = new HomePresenter(getContext(), HomeFragment.this);
         presenter.loadRecomends(false);
-//        initData();
+        presenter.loadBanners(false);
         adapter = new HomeAdapter(getContext());
-//        adapter.setData(recommendList);
         recyclerView.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        banner.setData(imgUrlList, imgTipList);
-        banner.setAdapter(bannerAdapter);
 
-        //点击事件
-        banner.setDelegate(delegate);
-    }
-
-    private void initData() {
-        imgTipList = Arrays.asList("", "", "");
-        imgUrlList = Arrays.asList("http://ww1.sinaimg.cn/large/83029c1egy1fni7wwcrrdj20go0ciq4x.jpg", "http://ww1.sinaimg.cn/large/83029c1egy1fni7wwoow5j20dw099jsf.jpg", "http://ww1.sinaimg.cn/large/83029c1egy1fni7fmpvx9j20dw09raam.jpg");
-        Recommend recommend = new Recommend();
-        recommend.goodsUrl = "http://ww1.sinaimg.cn/large/83029c1egy1fni7wwcrrdj20go0ciq4x.jpg";
-        recommend.price = "￥24.88";
-        recommend.name = "大金桔店";
-        for (int i = 0; i < 6; i++) {
-            recommendList.add(recommend);
-        }
     }
 
     private BGABanner.Adapter bannerAdapter = new BGABanner.Adapter() {
@@ -123,5 +105,24 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onLoadRecommendFailure(String msg) {
         showShortToast(msg);
+    }
+
+    @Override
+    public void onLoadBannerSuccess(List<Banner> bannerList) {
+        if (bannerList != null) {
+            for (int i = 0; i < bannerList.size(); i++) {
+                imgUrlList.add(bannerList.get(i).bannerUrl);
+                imgTipList.add("");
+            }
+            banner.setData(imgUrlList, imgTipList);
+            banner.setAdapter(bannerAdapter);
+            //点击事件
+            banner.setDelegate(delegate);
+        }
+    }
+
+    @Override
+    public void onLoadBannerFailure(String msg) {
+
     }
 }

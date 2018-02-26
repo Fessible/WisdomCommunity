@@ -3,6 +3,7 @@
     android:id="@+id/person_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -30,22 +31,43 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/nick_name"
+            android:background="@drawable/icon_fab_pen" />
+
+
         <TextView
             android:id="@+id/signature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="35dp"
             android:layout_marginTop="50dp"
             android:layout_toRightOf="@id/head_image"
-            android:text="人生若只如初见"
+            android:maxLength="50"
+            android:text="人生若只如初见顶"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ic_arrow" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:background="@color/white"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
 
 
 </LinearLayout>

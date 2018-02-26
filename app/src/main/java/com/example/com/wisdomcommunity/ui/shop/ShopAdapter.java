@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_EMPTY;
 import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_HEADER;
 import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_STANDARD;
 
@@ -46,8 +47,11 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder> {
                     itemList.add(new HeaderItem());
                     List<Goods> goodsList = shopList.goodsList;
                     if (goodsList != null && !goodsList.isEmpty()) {
-                        itemList.add(new StandardItem());
+                        for (int i = 0; i < goodsList.size(); i++) {
+                            itemList.add(new StandardItem());
+                        }
                     }
+                    itemList.add(new EmptyItem());
                 }
             }
         }
@@ -72,13 +76,16 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder> {
             case VIEW_STANDARD:
                 holder = new StandardHolder(mContext, parent);
                 break;
+            case VIEW_EMPTY:
+                holder = new EmptyHolder(mContext, parent);
+                break;
         }
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ShopHolder holder, int position) {
-        holder.bindHolder(mContext,itemList.get(position));
+        holder.bindHolder(mContext, itemList.get(position));
     }
 
     @Override
@@ -126,6 +133,17 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder> {
         }
     }
 
+    public class EmptyHolder extends ShopHolder<EmptyItem> {
+
+        public EmptyHolder(Context context, ViewGroup parent) {
+            super(context, parent, R.layout.adapter_empty);
+        }
+
+        @Override
+        void bindHolder(Context context, EmptyItem item) {
+
+        }
+    }
 
     public class StandardItem implements Item {
 
@@ -142,13 +160,22 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder> {
         }
     }
 
+    public class EmptyItem implements Item {
+        @Override
+        public int getViewType() {
+            return VIEW_EMPTY;
+        }
+    }
+
+
     public interface Item {
 
         int VIEW_HEADER = 0;
         int VIEW_STANDARD = 1;
+        int VIEW_EMPTY = 3;
 
         @IntDef({
-                VIEW_HEADER, VIEW_STANDARD
+                VIEW_HEADER, VIEW_STANDARD, VIEW_EMPTY
         })
         @interface ViewType {
         }

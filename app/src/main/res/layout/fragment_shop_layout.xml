@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:id="@+id/shop_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.design.widget.AppBarLayout
         style="@style/Widget.Design.Admin.AppBarLayout"
         android:layout_width="match_parent"
@@ -18,25 +19,27 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
-            <TextView
+            <EditText
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/bg_home_edittext"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
                 android:padding="6dp"
-                android:text="请输入要寻找的内容"
+                android:text="@string/edit_hint"
                 android:textColor="@color/color_cdcdcd"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

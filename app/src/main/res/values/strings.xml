@@ -20,4 +20,11 @@
     <string name="nav_shop">店铺</string>
     <string name="nav_order">订单</string>
     <string name="nav_person">我的</string>
+    <string name="work_time">营业时间：%s</string>
+    <string name="shipment">运费: %s</string>
+    <string name="recommend">商品推荐</string>
+    <string name="sign">￥</string>
+    <string name="edit_hint">请输入要寻找的内容</string>
+    <string name="order_id">订单号：</string>
+    <string name="no_order_record">暂时没有订单</string>
 </resources>

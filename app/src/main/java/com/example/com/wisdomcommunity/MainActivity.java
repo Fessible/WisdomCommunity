@@ -40,10 +40,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void onViewCreated(Bundle savedInstanceState) {
-        if (author == 0) {
-            IntentUtil.startTemplateActivityForResult(MainActivity.this, LoginFragment.class, null, LoginFragment.TAG_Login_FRAGMENT, REQUEST_CODE);
-
-        }
+//        if (author == 0) {
+//            IntentUtil.startTemplateActivityForResult(MainActivity.this, LoginFragment.class, null, LoginFragment.TAG_Login_FRAGMENT, REQUEST_CODE);
+//
+//        }
         radioGroup.setOnCheckedChangeListener(this);
         initFragment();
 

@@ -2,6 +2,7 @@ package com.example.com.wisdomcommunity.mvp;
 
 import android.content.Context;
 
+import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.wisdomcommunity.mvp.base.BasicContract;
 
@@ -20,6 +21,10 @@ public interface HomeContract {
         void onLoadRecommendSuccess(List<Recommend> recommendList);
 
         void onLoadRecommendFailure(String msg);
+
+        void onLoadBannerSuccess(List<Banner> bannerList);
+
+        void onLoadBannerFailure(String msg);
     }
 
     abstract class Presenter extends BasicContract.Presenter<View> {
@@ -28,6 +33,8 @@ public interface HomeContract {
         }
 
         public abstract void loadRecomends(boolean refresh);
+
+        public abstract void loadBanners(boolean refresh);
     }
 
 }

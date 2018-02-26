@@ -76,7 +76,7 @@ interface CommunityApi {
      ************/
     //商品详情
     @GET("shop/goods/{goodsId}")
-    public Observable<Response<ResultEntity<GoodsDetail>>> goods(@Path("goodsId") String goodsId);
+    public Observable<Response<ResultEntity<GoodsDetail>>> goodsDetail(@Path("goodsId") String goodsId);
 
     //店铺列表
     @GET("shop/list")

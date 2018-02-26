@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="20dp"
-    android:layout_height="100dp">
+    android:layout_height="wrap_content"
+    android:background="@color/palette_white"
+    android:orientation="vertical"
+    android:padding="20dp">
+
     <TextView
-        android:text="高原苹果"
         android:id="@+id/goods_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="高原苹果"
+        android:textColor="@color/color_333333" />
+
     <TextView
         android:id="@+id/standard"
-        android:layout_marginTop="20dp"
-        android:text="规格"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/price"
-        android:layout_alignParentBottom="true"
-        android:text="￥24.d"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_alignParentRight="true"
-        android:text="已售"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="规格: 话梅味的瓜子"
+        android:textSize="12sp" />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign"
+            android:textColor="@color/color_ffff4444" />
+
+        <TextView
+            android:layout_toRightOf="@id/sign"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12.77"
+            android:textColor="@color/color_ffff4444" />
+
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已售:12"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+</LinearLayout>

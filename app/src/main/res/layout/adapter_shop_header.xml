@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="10dp"
+    android:background="@color/palette_white"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/shop_icon"
@@ -11,19 +12,23 @@
         android:src="@drawable/app_icon" />
 
     <TextView
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/shop_icon"
         android:id="@+id/shop_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
-        android:text="鲜果优选" />
+        android:layout_toRightOf="@id/shop_icon"
+        android:text="鲜果优选"
+        android:textColor="@color/color_333333" />
 
     <TextView
         android:id="@+id/enter"
-        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="进入店铺" />
+        android:layout_alignParentRight="true"
+        android:background="@drawable/enter_shop"
+        android:padding="5dp"
+        android:text="进入店铺"
+        android:textColor="@color/palette_primary_color" />
 
 </RelativeLayout>
