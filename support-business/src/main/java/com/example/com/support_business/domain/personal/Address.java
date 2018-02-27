@@ -7,11 +7,11 @@ import java.io.Serializable;
  * Created by rhm on 2018/1/16.
  */
 
-public class Adress implements Serializable {
+public class Address implements Serializable {
     /**
      * 地址
      */
-    public String adress;
+    public String address;
 
     /**
      * 姓名

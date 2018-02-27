@@ -5,7 +5,7 @@ import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.login.Register;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
-import com.example.com.support_business.domain.personal.Adress;
+import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.personal.HeadImage;
 import com.example.com.support_business.domain.personal.Version;
 import com.example.com.support_business.domain.shop.GoodsDetail;
@@ -39,7 +39,7 @@ interface CommunityApi {
      *****************/
     //地址管理
     @GET("personal/address/{userId}")
-    public Observable<Response<ListEntity<Adress>>> address(@Path("userId") String userId);
+    public Observable<Response<ListEntity<Address>>> address(@Path("userId") String userId);
 
     //头像编辑
     @Multipart

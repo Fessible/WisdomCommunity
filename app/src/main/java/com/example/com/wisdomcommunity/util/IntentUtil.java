@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.example.com.wisdomcommunity.SecondActivity;
 import com.example.com.wisdomcommunity.TemplateActivity;
 
 /**
@@ -41,11 +42,15 @@ public class IntentUtil {
 
 
     public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag) {
-        IntentUtil.startTemplateActivity(fragment, fragmentClazz, null, tag);
+        IntentUtil.startActivity(TemplateActivity.class, fragment, fragmentClazz, null, tag);
     }
 
-    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag) {
-        Intent intent = new Intent(fragment.getContext(), TemplateActivity.class);
+    public static void startSecondActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag) {
+        IntentUtil.startActivity(SecondActivity.class, fragment, fragmentClazz, null, tag);
+    }
+
+    public static void startActivity(Class clazz, Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag) {
+        Intent intent = new Intent(fragment.getContext(), clazz);
         intent.putExtra(TemplateActivity.KEY_FRAGMENT_CLAZZ, fragmentClazz.getName());
         if (args != null) {
             intent.putExtra(TemplateActivity.KEY_FRAGMENT_ARGS, args);
@@ -55,11 +60,18 @@ public class IntentUtil {
     }
 
     public static void startTemplateActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag, int requstCode) {
-        IntentUtil.startTemplateActivityForResult(fragment, fragmentClazz, null, tag, requstCode);
+        IntentUtil.startActivityForResult(TemplateActivity.class, fragment, fragmentClazz, null, tag, requstCode);
     }
 
-    public static void startTemplateActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag, int requstCode) {
-        Intent intent = new Intent(fragment.getContext(), TemplateActivity.class);
+    public static void startSecondActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag, int requstCode) {
+        IntentUtil.startActivityForResult(SecondActivity.class, fragment, fragmentClazz, null, tag, requstCode);
+    }
+    public static void startSecondActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz,Bundle args, String tag, int requstCode) {
+        IntentUtil.startActivityForResult(SecondActivity.class, fragment, fragmentClazz, args, tag, requstCode);
+    }
+
+    public static void startActivityForResult(Class clazz, Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag, int requstCode) {
+        Intent intent = new Intent(fragment.getContext(), clazz);
         intent.putExtra(TemplateActivity.KEY_FRAGMENT_CLAZZ, fragmentClazz.getName());
         if (args != null) {
             intent.putExtra(TemplateActivity.KEY_FRAGMENT_ARGS, args);
@@ -77,4 +89,6 @@ public class IntentUtil {
         intent.putExtra(TemplateActivity.KEY_FRAGMENT_TAG, tag);
         activity.startActivityForResult(intent, requstCode);
     }
+
+
 }

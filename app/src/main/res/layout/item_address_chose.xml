@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/white">
+
+    <RadioGroup
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_rb"
+            android:checked="true"
+            android:padding="10dp"
+            android:text="@string/text_men"
+            android:textColor="@color/text_normal" />
+
+        <RadioButton
+            android:layout_marginLeft="10dp"
+            android:button="@drawable/selector_rb"
+            android:padding="10dp"
+            android:textColor="@color/text_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_woman" />
+    </RadioGroup>
+
+</RelativeLayout>

@@ -53,4 +53,14 @@ public interface Constants {
     @Retention(RetentionPolicy.SOURCE)
     public @interface STATUS {
     }
+
+    //地址
+    public static final int TYPE_NAME = 0;
+    public static final int TYPE_PHONE = 1;
+    public static final int TYPE_OTHER = 2;
+
+    @IntDef({TYPE_NAME, TYPE_PHONE, TYPE_OTHER})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type {
+    }
 }

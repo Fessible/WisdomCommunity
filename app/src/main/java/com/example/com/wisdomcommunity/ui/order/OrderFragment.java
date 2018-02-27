@@ -69,10 +69,9 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
 
     @Override
     public void loadOrderRecordSuccess(List<OrderRecord> recordList) {
-        if (recordList != null) {
-            adapter.setData(recordList);
-            adapter.notifyDataSetChanged();
-        }
+        adapter.setData(recordList);
+        adapter.notifyDataSetChanged();
+
     }
 
     @Override

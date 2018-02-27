@@ -28,6 +28,8 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  */
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
+    public static final String TAG_HOME_FRAGMENT = "HOME_FRAGMENT";
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 

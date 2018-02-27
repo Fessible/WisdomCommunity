@@ -7,6 +7,7 @@ import com.example.com.support_business.SeverHelper;
 import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.order.OrderRecord;
+import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.support_business.domain.shop.ShopList;
@@ -181,7 +182,7 @@ public class CommunityServer extends RestyServer {
                         callOnFailureMethod(callback, throwable);
                     }
                 });
-        add(composite,disposable);
+        add(composite, disposable);
     }
 
     //店铺详情
@@ -210,12 +211,12 @@ public class CommunityServer extends RestyServer {
                         callOnFailureMethod(callback, throwable);
                     }
                 });
-        add(composite,disposable);
+        add(composite, disposable);
     }
 
     //订单
     public void record(String composite, boolean refresh, final SSOCallback<ListEntity<OrderRecord>> callback) {
-        Disposable disposable= communityApi.record()
+        Disposable disposable = communityApi.record()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ListEntity<OrderRecord>>>() {
@@ -236,11 +237,39 @@ public class CommunityServer extends RestyServer {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        callOnFailureMethod(callback,throwable);
+                        callOnFailureMethod(callback, throwable);
 
                     }
                 });
-        add(composite,disposable);
+        add(composite, disposable);
     }
 
+    //请求地址
+    public void address(String composite, boolean refesh, String userId, final SSOCallback<ListEntity<Address>> callback) {
+        Disposable disposable = communityApi.address(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ListEntity<Address>>>() {
+                    @Override
+                    public void accept(Response<ListEntity<Address>> listEntityResponse) throws Exception {
+                        if (listEntityResponse != null) {
+                            if (listEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, listEntityResponse);
+                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
 }
