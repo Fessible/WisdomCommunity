@@ -49,7 +49,15 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         recyclerView.setAdapter(addressAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         presenter = new AddressPresenter(getContext(), AddressFragment.this);
-        presenter.loadAddress("");
+        presenter.loadAddress("123");
+        addressAdapter.setOnItemClickListener(new AddressAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick() {
+                Bundle bundle = new Bundle();
+                bundle.putString(TITLE,getContext().getString(R.string.edit_address));
+                IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle,AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT,REQUEST_CODE);
+            }
+        });
     }
 
     @OnClick(R.id.back)

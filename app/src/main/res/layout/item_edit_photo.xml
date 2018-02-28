@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/header_bg"
+    android:paddingTop="10dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp">
+
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_back" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.Widget.Design.Admin.Toolbar.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:text="@string/title_edit" />
+
+    <RelativeLayout
+        android:id="@+id/head_image_layout"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/head_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/app_icon" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/take_photo" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

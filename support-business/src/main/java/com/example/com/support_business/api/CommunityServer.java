@@ -8,12 +8,14 @@ import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
+import com.example.com.support_business.domain.personal.Info;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
 import com.example.com.support_business.module.ResultEntity;
+import com.example.com.support_business.params.PersonParams;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -264,6 +266,40 @@ public class CommunityServer extends RestyServer {
                             throwNullOrFailureResponse();
                         }
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
+    /**
+     * 个人中心
+     */
+
+    //获取个人信息
+    public void info(String composite, boolean refresh, String userId, final SSOCallback<ResultEntity<Info>> callback) {
+        Disposable disposable = communityApi.info(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResultEntity<Info>>>() {
+                    @Override
+                    public void accept(Response<ResultEntity<Info>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {

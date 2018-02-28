@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/order_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/palette_background_color"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        style="@style/Widget.Design.Admin.AppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.example.com.wisdomcommunity.view.CompatStatusBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+            <TextView
+                android:id="@+id/back"
+                android:background="@drawable/icon_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextAppearance.Widget.Design.Admin.Toolbar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/setting" />
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+
+</LinearLayout>

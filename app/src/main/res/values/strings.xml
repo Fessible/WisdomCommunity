@@ -41,17 +41,33 @@
     <string name="save">保存</string>
     <string name="text_men">先生</string>
     <string name="text_woman">女士</string>
-    <string name="name" >姓名：</string>
+    <string name="name">姓名：</string>
     <string name="phone">手机：</string>
+    <string name="edit_address">修改地址</string>
     <string name="detail_address">详细地址：</string>
     <string name="address">收货地址：</string>
     <string name="hint_chose_area">请选择小区</string>
     <string name="address_manager">地址管理</string>
     <string name="feedback">意见反馈</string>
-    <string name="settiing">设置</string>
+    <string name="setting">设置</string>
     <string name="service">客服</string>
     <string name="name_hint">请输入姓名</string>
     <string name="phont_hint">配送人员联系您的手机号</string>
     <string name="address_hint">输入门牌号等详细地址</string>
+    <string name="submit">提交</string>
+    <string name="max_init">0/100</string>
+    <string name="feedback_hint">我们非常重视您给我们提出的宝贵建议，帮助我们不断完善产品，谢谢！</string>
+    <string name="set_share">分享给好友</string>
+    <string name="set_cache">清空缓存</string>
+    <string name="set_about">关于智慧社区</string>
+    <string name="set_update">版本更新</string>
+    <string name="set_exit">退出当前账号</string>
+    <string name="title_edit">修改个人资料</string>
+    <string name="user_name">用户名</string>
+    <string name="signature">个性签名</string>
+    <string name="district">小区</string>
+    <string name="sex">性别</string>
+    <string name="men">男</string>
+    <string name="woman">女</string>
 
 </resources>

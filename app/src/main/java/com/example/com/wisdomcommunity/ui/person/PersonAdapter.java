@@ -46,7 +46,7 @@ public class PersonAdapter extends BaseAdapter<PersonAdapter.PersonHolder> {
             super.onChanged();
             itemList.add(new Item(R.drawable.icon_location, mContext.getString(R.string.address_manager), TYPE_ADDRESS));
             itemList.add(new Item(R.drawable.ic_feedback, mContext.getString(R.string.feedback), TYPE_FEEDBACK));
-            itemList.add(new Item(R.drawable.ic_setting, mContext.getString(R.string.settiing), TYPE_SET));
+            itemList.add(new Item(R.drawable.ic_setting, mContext.getString(R.string.setting), TYPE_SET));
             itemList.add(new Item(R.drawable.btn_online_customer_service, mContext.getString(R.string.service), TYPE_SERVICE));
         }
     };

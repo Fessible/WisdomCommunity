@@ -7,6 +7,7 @@ import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.personal.HeadImage;
+import com.example.com.support_business.domain.personal.Info;
 import com.example.com.support_business.domain.personal.Version;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
@@ -56,7 +57,7 @@ interface CommunityApi {
 
     //获取个人信息
     @GET("personal/userInfo/{userId}")
-    public Observable<Response<PersonParams>> info(@Path("userId") String userId);
+    public Observable<Response<ResultEntity<Info>>> info(@Path("userId") String userId);
 
     /*************
      * 主页
