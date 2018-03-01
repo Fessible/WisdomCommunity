@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.personal.Info;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseAdapter;
@@ -120,6 +123,17 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
 
         @Override
         void bindHolder(Context context, HeadItem item, final OnItemClickListener clickListener) {
+            final int placeholderResId = R.drawable.icon_head_address;
+            //头像设置
+//            Glide.with(context)
+//                    .load(item.headUrl)
+//                    .placeholder(placeholderResId)
+//                    .fallback(placeholderResId)
+//                    .into(headImage);
+            Glide.with(context)
+                    .load(item.headUrl)
+                    .apply(new RequestOptions().placeholder(placeholderResId).centerCrop().fallback(placeholderResId))
+                    .into(headImage);
             headImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
