@@ -9,6 +9,8 @@ import com.example.com.support_business.domain.personal.Info;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.EditInfoContract;
+import com.example.com.wisdomcommunity.ui.person.info.username.UserNameFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -26,6 +28,9 @@ import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYP
 
 public class EditInfoFragment extends BaseFragment implements EditInfoContract.View {
     public static final String TAG_INFO_FRAGMENT = "INFO_FRAGMENT";
+    public static final int REQUEST_NAME = 0;
+    public static final String KEY_NAME = "user_name";
+
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -58,6 +63,9 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                     case TYPE_DISTRICT:
                         break;
                     case TYPE_NAME:
+                        Bundle bundle = new Bundle();
+                        bundle.putString(KEY_NAME, "张三");
+                        IntentUtil.startSecondActivityForResult(EditInfoFragment.this, UserNameFragment.class, bundle, UserNameFragment.TAG_USER_NAME_FRAGMENT, REQUEST_NAME);
                         break;
                     case TYPE_SEX:
                         break;

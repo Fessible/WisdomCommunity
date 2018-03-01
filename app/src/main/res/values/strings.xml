@@ -69,5 +69,7 @@
     <string name="sex">性别</string>
     <string name="men">男</string>
     <string name="woman">女</string>
-
+    <string name="edit_user_name">修改用户名</string>
+    <string name="edit_signature">修改个性签名</string>
+    <string name="sure">确定</string>
 </resources>
