@@ -40,6 +40,8 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
     public final static int TYPE_DISTRICT = 2;//小区名
     public final static int TYPE_SIGNATURE = 3;//个性签名
     public final static int TYPE_SEX = 4;//性别
+    public final static int TYPE_BACK = 5;//返回
+
 
 
     private final List<Item> itemList = new ArrayList<>();
@@ -60,6 +62,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
         @Override
         public void onChanged() {
             super.onChanged();
+            itemList.clear();
             itemList.add(new HeadItem(info != null ? info.headImage : null));
             itemList.add(new EmptyItem());
             itemList.add(new StandardItem(context.getString(R.string.user_name), info != null ? info.userName : "", TYPE_NAME));
@@ -117,19 +120,17 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
         @BindView(R.id.head_image)
         CircleImageView headImage;
 
+        @BindView(R.id.back)
+        TextView back;
+
         public HeaderHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.item_edit_photo);
         }
 
         @Override
-        void bindHolder(Context context, HeadItem item, final OnItemClickListener clickListener) {
+        void bindHolder(Context context, final HeadItem item, final OnItemClickListener clickListener) {
             final int placeholderResId = R.drawable.icon_head_address;
             //头像设置
-//            Glide.with(context)
-//                    .load(item.headUrl)
-//                    .placeholder(placeholderResId)
-//                    .fallback(placeholderResId)
-//                    .into(headImage);
             Glide.with(context)
                     .load(item.headUrl)
                     .apply(new RequestOptions().placeholder(placeholderResId).centerCrop().fallback(placeholderResId))
@@ -138,11 +139,21 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(TYPE_HEAD_IMAGE);
+                        clickListener.onItemClick(TYPE_HEAD_IMAGE, item.headUrl);
+                    }
+                }
+            });
+
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickListener != null) {
+                        clickListener.onItemClick(TYPE_BACK,null);
                     }
                 }
             });
         }
+
     }
 
     static class StandardHolder extends EditHolder<StandardItem> {
@@ -165,7 +176,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(item.type);
+                        clickListener.onItemClick(item.type, item.content);
                     }
                 }
             });
@@ -247,7 +258,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
     }
 
     interface OnItemClickListener {
-        void onItemClick(int type);
+        void onItemClick(int type, String content);
     }
 
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.com.support_business.domain.personal.Address;
@@ -30,6 +31,9 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     public static final String TITLE = "title";
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private AddressAdapter addressAdapter;
     private AddressPresenter presenter;
@@ -58,12 +62,15 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
                 IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle,AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT,REQUEST_CODE);
             }
         });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
 
-    @OnClick(R.id.back)
-    public void back() {
-        getActivity().finish();
-    }
 
     @OnClick(R.id.add_layout)
     public void add() {

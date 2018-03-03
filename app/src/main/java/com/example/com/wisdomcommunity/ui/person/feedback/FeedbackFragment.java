@@ -1,6 +1,7 @@
 package com.example.com.wisdomcommunity.ui.person.feedback;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -31,6 +32,9 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
     @BindView(R.id.submit)
     TextView submit;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private FeedBbackPresenter presenter;
     private String suggestion;
     private int length;
@@ -47,6 +51,12 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
         editFeedback.addTextChangedListener(textWatcher);
         editFeedback.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH)});
         presenter = new FeedBbackPresenter(getContext(), FeedbackFragment.this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -93,7 +103,9 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
 
     @Override
     public void submitSuccess(String msg) {
-        showShortToast(msg);
+        if (!TextUtils.isEmpty(msg)) {
+            showShortToast(msg);
+        }
         getActivity().finish();
     }
 

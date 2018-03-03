@@ -3,11 +3,11 @@ package com.example.com.wisdomcommunity.ui.person.service;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
-import com.example.com.wisdomcommunity.ui.person.set.SetAdapter;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -21,6 +21,9 @@ public class ServiceFragment extends BaseFragment {
     public static final String TAG_SERVICE_FRAGMENT = "SERVICE_FRAGMENT";
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private ServiceAdapter adapter;
 
@@ -43,6 +46,12 @@ public class ServiceFragment extends BaseFragment {
             @Override
             public void onItemClick() {
 
+            }
+        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
             }
         });
     }

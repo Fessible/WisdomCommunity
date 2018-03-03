@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.com.wisdomcommunity.R;
@@ -33,12 +34,15 @@ public class ServiceAdapter extends BaseAdapter<ServiceAdapter.ServiceHolder> {
         @Override
         public void onChanged() {
             super.onChanged();
-            serviceItemList.add(new ServiceItem("如何查看订单"));
-            serviceItemList.add(new ServiceItem("订单信息填写错误"));
-            serviceItemList.add(new ServiceItem("如何取消订单"));
-            serviceItemList.add(new ServiceItem("商品如何退换货"));
+            serviceItemList.add(new ServiceItem("如何查看订单", content[0]));
+            serviceItemList.add(new ServiceItem("订单信息填写错误", content[1]));
+            serviceItemList.add(new ServiceItem("如何取消订单", content[2]));
+            serviceItemList.add(new ServiceItem("商品如何退换货", content[3]));
         }
     };
+
+    //test data
+    private String[] content = {"在我的订单中可以查看购买的商品订单及物流状态", "您可以联系客服反馈您的情况，更正为正确的地址或电话信息", "如果您的订单未发货可以取消订单", "在该商品订单中选择售后服务，上传退换商品的图片及文字描述，提交成功后，客服为您受理退货"};
 
     @Override
     protected void destroy() {
@@ -68,8 +72,10 @@ public class ServiceAdapter extends BaseAdapter<ServiceAdapter.ServiceHolder> {
 
     static class ServiceItem {
         private String title;
+        private String content;
 
-        public ServiceItem(String title) {
+        public ServiceItem(String title, String content) {
+            this.content = content;
             this.title = title;
         }
 
@@ -79,12 +85,21 @@ public class ServiceAdapter extends BaseAdapter<ServiceAdapter.ServiceHolder> {
         @BindView(R.id.title)
         TextView title;
 
+        @BindView(R.id.content)
+        TextView content;
+
+        @BindView(R.id.arrow)
+        ImageView arrow;
+
         public ServiceHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.item_service);
         }
 
-        public void bindHolder(Context context, ServiceItem item, final OnItemClickListener clickListener) {
+        public void bindHolder(final Context context, final ServiceItem item, final OnItemClickListener clickListener) {
             title.setText(item.title);
+            content.setText(item.content);
+
+            content.setVisibility(View.GONE);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,6 +107,14 @@ public class ServiceAdapter extends BaseAdapter<ServiceAdapter.ServiceHolder> {
                     if (clickListener != null) {
                         clickListener.onItemClick();
                     }
+                    if (content.getVisibility() == View.VISIBLE) {
+                        content.setVisibility(View.GONE);
+                        arrow.setBackgroundResource(R.drawable.right_arrow);
+                    } else {
+                        content.setVisibility(View.VISIBLE);
+                        arrow.setBackgroundResource(R.drawable.arrow_down);
+                    }
+
                 }
             });
         }

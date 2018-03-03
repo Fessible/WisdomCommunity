@@ -18,7 +18,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/icon_head_address" />
 
         <TextView
             android:id="@+id/nick_name"
@@ -27,7 +27,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/head_image"
-            android:text="13359989890"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -49,7 +49,6 @@
             android:layout_marginTop="50dp"
             android:layout_toRightOf="@id/head_image"
             android:maxLength="50"
-            android:text="人生若只如初见顶"
             android:textColor="@color/white"
             android:textSize="14sp" />
 

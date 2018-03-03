@@ -19,6 +19,8 @@ import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoratio
 
 import butterknife.BindView;
 
+import static com.example.com.wisdomcommunity.ui.person.PersonFragment.KEY_INFO;
+import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_BACK;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_DISTRICT;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_HEAD_IMAGE;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_NAME;
@@ -29,7 +31,7 @@ import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYP
  * Created by rhm on 2018/2/28.
  */
 
-public class EditInfoFragment extends BaseFragment implements EditInfoContract.View {
+public class EditInfoFragment extends BaseFragment  {
     public static final String TAG_INFO_FRAGMENT = "INFO_FRAGMENT";
     public static final int REQUEST_NAME = 0;
     public static final int REQUEST_SIGNATURE = 1;
@@ -51,18 +53,23 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        presenter = new EditInfoPresenter(getContext(), EditInfoFragment.this);
+//        presenter = new EditInfoPresenter(getContext(), EditInfoFragment.this);
+//        //todo userId
+//        presenter.loadInfo("123");
+        Bundle bundle = getArguments();
+        Info info = (Info) bundle.getSerializable(KEY_INFO);
         adapter = new EditInfoAdapter(getContext());
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
                         .divider(getResources().getDrawable(R.drawable.img_line_n))
                         .build()).build());
         recyclerView.setAdapter(adapter);
+        adapter.setData(info);
         adapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.setClickListener(new EditInfoAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int type) {
+            public void onItemClick(int type, String content) {
                 switch (type) {
                     case TYPE_HEAD_IMAGE:
                         if (photoSheetDialog == null) {
@@ -79,7 +86,7 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                         break;
                     case TYPE_NAME:
                         Bundle bundle = new Bundle();
-                        bundle.putString(KEY_NAME, "张三");
+                        bundle.putString(KEY_NAME, content);
                         IntentUtil.startSecondActivityForResult(EditInfoFragment.this, UserNameFragment.class, bundle, UserNameFragment.TAG_USER_NAME_FRAGMENT, REQUEST_NAME);
                         break;
                     case TYPE_SEX:
@@ -114,8 +121,11 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                         break;
                     case TYPE_SIGNATURE:
                         Bundle signature = new Bundle();
-                        signature.putString(KEY_SIGNATURE, "张三");
+                        signature.putString(KEY_SIGNATURE, content);
                         IntentUtil.startSecondActivityForResult(EditInfoFragment.this, SignatureFragment.class, signature, SignatureFragment.TAG_SIGNATURE_FRAGMENT, REQUEST_SIGNATURE);
+                        break;
+                    case TYPE_BACK:
+                        getActivity().finish();
                         break;
                 }
             }
@@ -146,31 +156,17 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
 
     }
 
-    @Override
-    public void showProgress() {
 
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void onUnauthorized() {
-
-    }
-
-    @Override
-    public void loadInfoSuccess(Info info) {
-        if (info != null) {
-            adapter.setData(info);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void loadInfoFailure(String msg) {
-
-    }
+//    @Override
+//    public void loadInfoSuccess(Info info) {
+//        if (info != null) {
+//            adapter.setData(info);
+//            adapter.notifyDataSetChanged();
+//        }
+//    }
+//
+//    @Override
+//    public void loadInfoFailure(String msg) {
+//
+//    }
 }

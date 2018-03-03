@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/Widget.Design.Edu.ToolBar</item>
     </style>
 
     <style name="Widget.Design.Admin.AppBarLayout" parent="Widget.Design.AppBarLayout">
@@ -72,7 +73,7 @@
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="MyTextView" >
+    <style name="MyTextView">
         <item name="android:textColor">@color/palette_primary_color</item>
         <item name="android:textSize">16sp</item>
         <item name="android:minHeight">54dp</item>
@@ -91,5 +92,19 @@
 
     <style name="Widget.Design.Admin.BottomSheet.Modal" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@color/palette_transparent</item>
+    </style>
+
+    <style name="Widget.Design.Edu.ToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="navigationIcon">@drawable/selector_btn_back</item>
+        <item name="actionMenuTextColor">@color/palette_white</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Design.Edu.Toolbar.Title
+        </item>
+        <item name="buttonGravity">bottom</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Design.Edu.Toolbar.Title" parent="TextAppearance.Widget.Support.Platform.Toolbar.Title">
+        <item name="android:textColor">@color/palette_white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:maxWidth">120dp</item>
     </style>
 </resources>

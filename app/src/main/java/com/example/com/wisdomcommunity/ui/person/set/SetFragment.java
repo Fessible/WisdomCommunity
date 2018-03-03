@@ -70,8 +70,4 @@ public class SetFragment extends BaseFragment {
 
     }
 
-    @OnClick(R.id.back)
-    public void back() {
-
-    }
 }

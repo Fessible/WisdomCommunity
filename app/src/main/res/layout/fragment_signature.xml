@@ -21,12 +21,6 @@
             android:layout_height="?attr/actionBarSize">
 
             <TextView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_back" />
-
-            <TextView
                 android:id="@+id/title"
                 style="@style/TextAppearance.Widget.Design.Admin.Toolbar.Title"
                 android:layout_width="wrap_content"
@@ -48,6 +42,7 @@
         android:paddingTop="9dp">
 
         <EditText
+            android:maxLength="50"
             android:id="@+id/edit_signature"
             style="@style/Widget.Design.EditView"
             android:layout_width="match_parent"
@@ -55,11 +50,11 @@
             android:hint="@string/hint_signature" />
 
         <TextView
-            android:id="@+id/txt_sick_number"
+            android:id="@+id/txt_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/max_init"
+            android:text="@string/max_init_50"
             android:textColor="@color/color_bbb"
             android:textSize="12sp" />
     </LinearLayout>

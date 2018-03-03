@@ -1,9 +1,9 @@
 package com.example.com.wisdomcommunity.ui.person.address.add;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,9 +30,11 @@ public class AddAddressFragment extends BaseFragment {
     @BindView(R.id.title)
     TextView title;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private AddAddressAdapter addAddressAdapter;
     private String strTitle;
-
 
     @Override
     public int getResLayout() {
@@ -61,15 +63,16 @@ public class AddAddressFragment extends BaseFragment {
             }
         });
         addAddressAdapter.notifyDataSetChanged();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
 
     @OnClick(R.id.save)
     public void save() {
-    }
-
-    @OnClick(R.id.back)
-    public void back() {
-//        getActivity().finish();
     }
 
     @Override
