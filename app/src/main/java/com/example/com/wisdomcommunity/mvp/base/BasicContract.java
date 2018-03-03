@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.com.wisdomcommunity.R;
 
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Created by rhm on 2018/1/16.
  */
@@ -23,6 +26,8 @@ public interface BasicContract {
 
 
     abstract class Presenter<V extends View> implements MVPContract.Presenter {
+        protected final String compositeTag = UUID.randomUUID().toString();
+        protected final AtomicBoolean destroyFlag = new AtomicBoolean(false);
         protected Context context;
         protected V view;
         protected final String networkError;

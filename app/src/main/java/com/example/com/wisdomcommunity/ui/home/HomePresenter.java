@@ -19,8 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 public class HomePresenter extends HomeContract.Presenter {
-    private final String compositeTag = UUID.randomUUID().toString();
-    private final AtomicBoolean destroyFlag = new AtomicBoolean(false);
+
 
     public HomePresenter(Context context, HomeContract.View view) {
         super(context, view);
@@ -111,6 +110,5 @@ public class HomePresenter extends HomeContract.Presenter {
 
             }
         });
-
     }
 }

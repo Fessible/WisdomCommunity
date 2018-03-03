@@ -308,4 +308,36 @@ public class CommunityServer extends RestyServer {
                 });
         add(composite, disposable);
     }
+
+    //意见反馈
+    public void suggestion(String composite, String suggestion, final SSOCallback<Entity> callback) {
+        Disposable disposable = communityApi.suggestion(suggestion)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<Entity>>() {
+                    @Override
+                    public void accept(Response<Entity> entityResponse) throws Exception {
+                        if (entityResponse != null) {
+                            if (entityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, entityResponse);
+                            } else if (entityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+
+
+    }
 }

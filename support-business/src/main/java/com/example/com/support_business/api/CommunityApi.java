@@ -59,6 +59,10 @@ interface CommunityApi {
     @GET("personal/userInfo/{userId}")
     public Observable<Response<ResultEntity<Info>>> info(@Path("userId") String userId);
 
+    //意见反馈
+    @POST("personal/feedback")
+    public Observable<Response<Entity>> suggestion(@Body String suggestion);
+
     /*************
      * 主页
      *************/

@@ -76,4 +76,6 @@
     <string name="opt_take_photo">拍照</string>
     <string name="opt_select_from_album">从手机相册中选择</string>
     <string name="opt_cancel">取消</string>
+    <string name="edit_max">%1$d/%2$d</string>
+    <string name="please_edit_feedback">请填写反馈建议</string>
 </resources>
