@@ -3,6 +3,8 @@ package com.example.com.wisdomcommunity.ui.order;
 import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
+import android.telecom.Call;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -34,6 +36,7 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
     private final List<Item> itemList = new ArrayList<>();
     private Context mContext;
     private List<OrderRecord> orderRecordList = new ArrayList<>();
+    private Callback callback;
 
     public OrderAdapter(Context context) {
         this.mContext = context;
@@ -81,7 +84,7 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
 
     @Override
     public void onBindViewHolder(OrderHolder holder, int position) {
-        holder.bindHolder(mContext, itemList.get(position));
+        holder.bindHolder(mContext, itemList.get(position), callback);
     }
 
     @Override
@@ -112,12 +115,20 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
         TextView time;
 
         @Override
-        public void bindHolder(Context context, StandardItem item) {
-            OrderRecord orderRecord = item.getOrderRecord();
+        public void bindHolder(Context context, StandardItem item, final Callback callback) {
+            final OrderRecord orderRecord = item.getOrderRecord();
             orderId.setText(orderRecord.orderId);
             totalPrice.setText(orderRecord.total);
             status.setText(item.getStatus(context));
             time.setText(item.getTime());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (callback != null) {
+                        callback.onCallback(orderRecord.orderId);
+                    }
+                }
+            });
         }
     }
 
@@ -127,7 +138,7 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
         }
 
         @Override
-        public void bindHolder(Context context, EmptyItem item) {
+        public void bindHolder(Context context, EmptyItem item, Callback callback) {
         }
 
     }
@@ -197,8 +208,15 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
             super(context, parent, adapterLayoutResId);
         }
 
-        public abstract void bindHolder(Context context, II item);
+        public abstract void bindHolder(Context context, II item, Callback callback);
     }
 
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
+
+    interface Callback {
+        void onCallback(String value);
+    }
 
 }

@@ -9,6 +9,7 @@ import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.OrderContract;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -22,6 +23,9 @@ import butterknife.BindView;
  */
 
 public class OrderFragment extends BaseFragment implements OrderContract.View {
+    public static final String TAG_ORDER_FRAGMENT = "ORDER_FRAGMENT";
+    public static final String KEY_ORDER_ID = "order_id";
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -45,6 +49,14 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
                 .defaultDecor(new DividerDecor.Builder(getContext())
                         .divider(getResources().getDrawable(R.drawable.img_line_n))
                         .build()).build());
+        adapter.setCallback(new OrderAdapter.Callback() {
+            @Override
+            public void onCallback(String value) {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_ORDER_ID, value);
+                IntentUtil.startTemplateActivity(OrderFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT);
+            }
+        });
     }
 
     @Override

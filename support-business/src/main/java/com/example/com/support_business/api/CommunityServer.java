@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.com.support_business.SeverHelper;
 import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Recommend;
+import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.personal.Info;
@@ -246,6 +247,35 @@ public class CommunityServer extends RestyServer {
         add(composite, disposable);
     }
 
+    //订单详情
+    public void orderDetail(String composite, boolean refresh, String orderId, final SSOCallback<ResultEntity<OrderDetail>> callback) {
+        final Disposable disposable = communityApi.detail(orderId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResultEntity<OrderDetail>>>() {
+                    @Override
+                    public void accept(Response<ResultEntity<OrderDetail>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
     //请求地址
     public void address(String composite, boolean refesh, String userId, final SSOCallback<ListEntity<Address>> callback) {
         Disposable disposable = communityApi.address(userId)
@@ -337,7 +367,5 @@ public class CommunityServer extends RestyServer {
                     }
                 });
         add(composite, disposable);
-
-
     }
 }

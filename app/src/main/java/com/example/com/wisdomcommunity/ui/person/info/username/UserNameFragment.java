@@ -1,13 +1,18 @@
 package com.example.com.wisdomcommunity.ui.person.info.username;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KEY_NAME;
 
@@ -17,8 +22,14 @@ import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KE
 
 public class UserNameFragment extends BaseFragment {
     public static final String TAG_USER_NAME_FRAGMENT = "USER_NAME_FRAGMENT";
+    public static final String KEY_USER_NAME = "user_name";
     @BindView(R.id.user_name)
     EditText userName;
+
+    @BindView(R.id.sure)
+    TextView sure;
+
+    private String strUserName;
 
     @Override
     public int getResLayout() {
@@ -30,6 +41,37 @@ public class UserNameFragment extends BaseFragment {
         Bundle bundle = getArguments();
         String name = bundle.getString(KEY_NAME);
         userName.setText(name);
+        userName.setSelection(name != null ? name.length() : 0);
+        userName.addTextChangedListener(textWatcher);
+    }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            int length = s.length();
+            if (length >= 4) {
+                sure.setEnabled(true);
+            } else {
+                sure.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            strUserName = s.toString();
+        }
+    };
+
+    @OnClick(R.id.sure)
+    public void sure() {
+        Intent intent = new Intent();
+        intent.putExtra(KEY_USER_NAME, strUserName);
+        getActivity().finish();
     }
 
     @Override

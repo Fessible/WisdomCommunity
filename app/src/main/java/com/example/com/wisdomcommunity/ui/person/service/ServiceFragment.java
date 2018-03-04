@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
@@ -25,15 +26,19 @@ public class ServiceFragment extends BaseFragment {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.title)
+    TextView title;
+
     private ServiceAdapter adapter;
 
     @Override
     public int getResLayout() {
-        return R.layout.fragment_service_layout;
+        return R.layout.fragment_template_layout;
     }
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        title.setText(getContext().getString(R.string.service));
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
                         .divider(getResources().getDrawable(R.drawable.img_line_n))

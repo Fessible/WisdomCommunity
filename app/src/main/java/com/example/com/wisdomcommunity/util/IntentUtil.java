@@ -41,9 +41,14 @@ public class IntentUtil {
     }
 
 
-    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag) {
+    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz,String tag) {
         IntentUtil.startActivity(TemplateActivity.class, fragment, fragmentClazz, null, tag);
     }
+
+    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz,Bundle args,String tag) {
+        IntentUtil.startActivity(TemplateActivity.class, fragment, fragmentClazz, args, tag);
+    }
+
 
     public static void startSecondActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag) {
         IntentUtil.startActivity(SecondActivity.class, fragment, fragmentClazz, null, tag);

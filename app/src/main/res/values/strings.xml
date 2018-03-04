@@ -34,6 +34,7 @@
     <string name="status_sending">配送中</string>
     <string name="status_wait_pay">待付款</string>
     <string name="my_order">我的订单</string>
+    <string name="order_detail">订单详情</string>
     <!--个人中心-->
     <string name="title_address">收货地址</string>
     <string name="empty_address_hint">暂无收货地址，请点击添加按钮添加</string>
