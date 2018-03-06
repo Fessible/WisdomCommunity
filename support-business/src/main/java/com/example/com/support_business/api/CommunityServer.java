@@ -71,6 +71,22 @@ public class CommunityServer extends RestyServer {
      */
     //商品推荐
     public void recommend(String compositeTag, boolean refresh, final SSOCallback<ListEntity<Recommend>> callback) {
+//        OkHttpClient client = new OkHttpClient();
+//        Request request = new Request.Builder().url("http://39.108.158.246:8080/community/home/recommend").build();
+////        Request request = new Request.Builder().url("http://rapapi.org/mockjs/30782/community/home/recommend?").build();
+//        Call call = client.newCall(request);
+//        call.enqueue(new okhttp3.Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("http", "onFailure: "+call);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+//                Log.d("http", "onResponse: "+response.body().string());
+//            }
+//        });
+
         Disposable disposable = communityApi.recommend()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -9,6 +9,7 @@
         <item name="toolbarStyle">@style/Widget.Design.Edu.ToolBar</item>
     </style>
 
+
     <style name="Widget.Design.Admin.AppBarLayout" parent="Widget.Design.AppBarLayout">
         <item name="android:background">@color/colorPrimary</item>
         <item name="elevation">0dp</item>
@@ -81,11 +82,26 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
+    <!--自定义dialog背景全透明无边框theme -->
+    <style name="MyDialog" parent="android:style/Theme.Dialog">
+        <!--背景颜色及和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否去除边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 
-    <style name="Theme.Design.Admin.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
+    <style name="Theme.Design.Admin.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:backgroundDimEnabled">true</item>//背景变暗
         <item name="android:backgroundDimAmount">0.6</item>
-        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>//去除边框
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="bottomSheetStyle">@style/Widget.Design.Admin.BottomSheet.Modal</item>//对话框透明
         <item name="selectableItemBackground">@color/palette_transparent</item>
     </style>

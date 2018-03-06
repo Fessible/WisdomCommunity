@@ -15,7 +15,6 @@ public class SeverHelper {
 //    private String baseUrl = "http://39.108.158.246:8080/community/";
 
     private SeverHelper() {
-
     }
 
     private static volatile SeverHelper sInstance;

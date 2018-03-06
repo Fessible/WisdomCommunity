@@ -2,22 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/palette_white"
+    android:background="@drawable/selector_normal"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="18dp">
 
     <TextView
         android:id="@+id/goods_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="高原苹果"
         android:textColor="@color/color_333333" />
 
     <TextView
         android:id="@+id/standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="规格: 话梅味的瓜子"
         android:textSize="12sp" />
 
     <RelativeLayout
@@ -39,14 +37,13 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12.77"
             android:textColor="@color/color_ffff4444" />
 
         <TextView
+            android:id="@+id/sale"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已售:12"
             android:textSize="12sp" />
     </RelativeLayout>
 

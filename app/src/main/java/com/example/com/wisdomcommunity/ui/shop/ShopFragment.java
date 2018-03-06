@@ -56,11 +56,21 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
                         .divider(getResources().getDrawable(R.drawable.img_line_n))
                         .build())
                 .build());
+        shopAdapter.setCallback(callback);
     }
+
+    private ShopAdapter.Callback callback = new ShopAdapter.Callback() {
+        @Override
+        public void onCallback(String value, int type) {
+
+        }
+    };
 
     @Override
     protected void destroyView() {
-
+        if (shopAdapter != null) {
+            shopAdapter.destroy();
+        }
     }
 
     @Override

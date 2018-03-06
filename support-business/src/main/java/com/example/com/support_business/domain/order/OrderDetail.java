@@ -1,6 +1,8 @@
 package com.example.com.support_business.domain.order;
 
 
+import com.example.com.support_business.Constants;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public class OrderDetail implements Serializable {
     /**
      * 收货地址
      */
-    public String addrress;
+    public String address;
 
     /**
      * 商品清单
@@ -27,7 +29,8 @@ public class OrderDetail implements Serializable {
     /**
      * 订单状态
      */
-    public String orderStatus;
+    @Constants.STATUS
+    public int orderStatus;
 
     /**
      * 下单时间
@@ -37,7 +40,7 @@ public class OrderDetail implements Serializable {
     /**
      * 支付金额
      */
-    public String price;
+    public String pay;
 
     /**
      * 收货人
@@ -72,6 +75,11 @@ public class OrderDetail implements Serializable {
      * 商品总价
      */
     public String total;
+
+    /**
+     * 店铺ID
+     */
+    public String shopId;
 
 
     public static class Order {

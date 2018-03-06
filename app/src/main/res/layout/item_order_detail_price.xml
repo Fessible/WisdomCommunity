@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="18dp"
+    android:layout_marginRight="18dp"
+    android:background="@color/white"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/title_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="商品总价"
+        android:textColor="@color/text_normal" />
+
+    <TextView
+        android:id="@+id/total_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="1333"
+        android:textColor="@color/color_333333" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_price"
+        android:layout_marginTop="5dp"
+        android:text="@string/title_shipment"
+        android:textColor="@color/text_normal" />
+
+    <TextView
+        android:id="@+id/shipment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/title_price"
+        android:layout_marginTop="5dp"
+        android:text="0000"
+        android:textColor="@color/color_333333" />
+
+    <ImageView
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/shipment"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/img_line_n" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line"
+        android:layout_marginTop="10dp"
+        android:text="实际支付"
+        android:textColor="@color/color_333333"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/line"
+        android:layout_marginTop="10dp"
+        android:text="1111"
+        android:textColor="@color/color_ffff4444"
+        android:textSize="15sp"/>
+</RelativeLayout>

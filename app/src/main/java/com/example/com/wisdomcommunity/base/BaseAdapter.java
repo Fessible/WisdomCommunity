@@ -7,6 +7,5 @@ import android.support.v7.widget.RecyclerView;
  */
 
 public abstract class BaseAdapter<E extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<E> {
-
     protected abstract void destroy();
 }
