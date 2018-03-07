@@ -1,24 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_layout"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_goods_selector"
+    android:paddingBottom="10dp"
     android:paddingLeft="18dp"
     android:paddingRight="18dp"
-    android:layout_height="50dp">
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/icon_goods"
-        android:layout_centerVertical="true"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_centerVertical="true"
         android:background="@drawable/app_icon" />
+
     <TextView
-        android:maxLength="10"
+        android:id="@+id/goods_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/icon_goods"
-        android:id="@+id/goods_name"
-        android:text="橘子等对等顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
+        android:maxLength="10"
+        android:text="橘子等对等顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶" />
+
+    <TextView
+        android:id="@+id/price"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goods_name"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/icon_goods"
+        android:text="￥17.89"
+        android:textColor="@color/color_ffff4444" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/minus"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="55dp"
+            android:background="@drawable/icon_minus_un" />
+
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@id/minus"
+            android:text="0"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/add"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@id/number"
+            android:background="@drawable/icon_add_n" />
+    </RelativeLayout>
 
 </RelativeLayout>

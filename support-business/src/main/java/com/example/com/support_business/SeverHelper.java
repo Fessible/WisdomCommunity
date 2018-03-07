@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SeverHelper {
 
-    private String baseUrl = "http://rapapi.org/mockjs/30782/community/";
+    private String baseUrl = "http://rapapi.org/mockjsdata/30782/community/";
 //    private String baseUrl = "http://39.108.158.246:8080/community/";
 
     private SeverHelper() {

@@ -140,7 +140,7 @@ public class ShopAdapter extends BaseAdapter<ShopAdapter.ShopHolder> {
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onCallback(item.shopId, VIEW_HEADER);
+                        callback.onCallback(item.shopId, item.shopName, VIEW_HEADER);
                     }
                 }
             });
@@ -169,14 +169,14 @@ public class ShopAdapter extends BaseAdapter<ShopAdapter.ShopHolder> {
             final Goods goods = item.goods;
             goodsName.setText(goods.goodsName);
             price.setText(goods.price);
-            standard.setText(context.getString(R.string.standard,goods.standard));
-            sale.setText(context.getString(R.string.already_sale,goods.sale));
+            standard.setText(context.getString(R.string.standard, goods.standard));
+            sale.setText(context.getString(R.string.already_sale, goods.sale));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onCallback(goods.goodsId,VIEW_STANDARD);
+                        callback.onCallback(goods.goodsId, goods.goodsName, VIEW_STANDARD);
                     }
                 }
             });
@@ -259,7 +259,7 @@ public class ShopAdapter extends BaseAdapter<ShopAdapter.ShopHolder> {
     }
 
     interface Callback {
-        void onCallback(String value, int type);
+        void onCallback(String value, String name, int type);
     }
 
 }

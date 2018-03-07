@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_normal"
     android:orientation="vertical"
-    android:padding="18dp">
+    android:paddingBottom="5dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/goods_name"
@@ -19,10 +22,10 @@
         android:textSize="12sp" />
 
     <RelativeLayout
-        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/sign"
@@ -32,18 +35,18 @@
             android:textColor="@color/color_ffff4444" />
 
         <TextView
-            android:layout_toRightOf="@id/sign"
-            android:layout_marginLeft="5dp"
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/sign"
             android:textColor="@color/color_ffff4444" />
 
         <TextView
             android:id="@+id/sale"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:textSize="12sp" />
     </RelativeLayout>
 

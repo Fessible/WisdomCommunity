@@ -177,6 +177,7 @@ public class CommunityServer extends RestyServer {
 
     //商品详情
     public void goodsDetail(String composite, String goodsId, final boolean refresh, final SSOCallback<ResultEntity<GoodsDetail>> callback) {
+
         Disposable disposable = communityApi.goodsDetail(goodsId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -206,6 +207,21 @@ public class CommunityServer extends RestyServer {
 
     //店铺详情
     public void shopDetail(String composite, boolean refesh, String shopId, final SSOCallback<ResultEntity<ShopDetail>> callback) {
+//        OkHttpClient client = new OkHttpClient();
+//        Request request = new Request.Builder().url("http://39.108.158.246:8080/community/home/recommend").build();
+////        Request request = new Request.Builder().url("http://rapapi.org/mockjs/30782/community/home/recommend?").build();
+//        Call call = client.newCall(request);
+//        call.enqueue(new okhttp3.Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("http", "onFailure: " + call);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+//                Log.d("http", "onResponse: " + response.body().string());
+//            }
+//        });
         Disposable disposable = communityApi.shopDetail(shopId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

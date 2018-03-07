@@ -6,23 +6,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <android.support.design.widget.AppBarLayout
+        style="@style/Widget.Design.Admin.AppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.example.com.wisdomcommunity.view.CompatStatusBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextAppearance.Widget.Design.Admin.Toolbar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
     <ImageView
         android:id="@+id/img_goods"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <TextView
-        android:layout_marginLeft="48dp"
         android:id="@+id/goods_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="橘子" />
-    <TextView
         android:layout_marginLeft="48dp"
-        android:text="￥20.0"
+        android:text="橘子" />
+
+    <TextView
         android:id="@+id/price"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="48dp"
+        android:text="￥20.0" />
+
     <ImageView
         android:id="@+id/img_detail"
         android:layout_width="match_parent"

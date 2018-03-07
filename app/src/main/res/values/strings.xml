@@ -23,7 +23,7 @@
     <string name="nav_person">我的</string>
     <!--店铺-->
     <string name="work_time">营业时间：%s</string>
-    <string name="shipment">运费: %s</string>
+    <string name="shipment">运费: ￥%s</string>
     <string name="recommend">商品推荐</string>
     <string name="sign">￥</string>
     <string name="edit_hint">请输入要寻找的内容</string>
@@ -95,4 +95,7 @@
     <string name="already_sale">已售：%1$d</string>
     <string name="standard">规格: %1$s</string>
     <string name="all_goods">全部商品</string>
+    <string name="no_shipment">(不包含运费)</string>
+    <string name="make_sure">确认下单</string>
+    <string name="shop_info">店铺简介</string>
 </resources>

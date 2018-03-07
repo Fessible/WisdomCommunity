@@ -10,6 +10,9 @@ import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.ShopContract;
+import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
+import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.EmptyDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
@@ -27,6 +30,12 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_STAN
  */
 
 public class ShopFragment extends BaseFragment implements ShopContract.View {
+    public static final String TAG_SHOP_FRAGMENT = "SHOP_FRAGMENT";
+    public static final String KEY_SHOP_ID = "shop_id";
+    public static final String KEY_GOODS_ID = "goods_id";
+    public static final String KEY_SHOP_NAME = "shop_name";
+    public static final String KEY_GOODS_NAME = "goods_name";
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -61,8 +70,21 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
 
     private ShopAdapter.Callback callback = new ShopAdapter.Callback() {
         @Override
-        public void onCallback(String value, int type) {
-
+        public void onCallback(String value, String name, int type) {
+            switch (type) {
+                case VIEW_HEADER://店铺
+                    Bundle shopArgs = new Bundle();
+                    shopArgs.putString(KEY_SHOP_ID, value);
+                    shopArgs.putString(KEY_SHOP_NAME, name);
+                    IntentUtil.startTemplateActivity(ShopFragment.this, ShopDetailFragment.class, shopArgs, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
+                    break;
+                case VIEW_STANDARD://商品
+                    Bundle goodsArgs = new Bundle();
+                    goodsArgs.putString(KEY_SHOP_ID, value);
+                    goodsArgs.putString(KEY_SHOP_NAME, name);
+                    IntentUtil.startTemplateActivity(ShopFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
+                    break;
+            }
         }
     };
 

@@ -9,6 +9,11 @@ import java.util.List;
  */
 
 public class ShopDetail implements Serializable {
+
+    /**
+     * 配送费
+     */
+    public String shipment;
     /**
      * 商品列表
      */
