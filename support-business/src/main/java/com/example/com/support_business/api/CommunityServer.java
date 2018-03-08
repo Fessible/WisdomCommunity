@@ -10,6 +10,7 @@ import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.personal.Info;
+import com.example.com.support_business.domain.search.Search;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.support_business.domain.shop.ShopList;
@@ -391,6 +392,37 @@ public class CommunityServer extends RestyServer {
                             throwNullOrFailureResponse();
                         }
 
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
+    /**
+     * 搜索
+     */
+    public void search(String composite, String search, final SSOCallback<ListEntity<Search>> callback) {
+        Disposable disposable = communityApi.search(search)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ListEntity<Search>>>() {
+                    @Override
+                    public void accept(Response<ListEntity<Search>> listEntityResponse) throws Exception {
+                        if (listEntityResponse != null) {
+                            if (listEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, listEntityResponse);
+                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

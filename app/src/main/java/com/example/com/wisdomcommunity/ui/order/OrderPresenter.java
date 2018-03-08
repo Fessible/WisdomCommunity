@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 public class OrderPresenter extends OrderContract.Presenter {
-    private String compositeTag = UUID.randomUUID().toString();
-    private AtomicBoolean destroyFlag = new AtomicBoolean(false);
 
     public OrderPresenter(Context context, OrderContract.View view) {
         super(context, view);

@@ -10,6 +10,8 @@
     <color name="color_333333">#333333</color>
     <color name="color_cccccc">#cccccc</color>
     <color name="color_fed952">#fed952</color>
+    <color name="color_light_yellow">#ffff92</color>
+    <color name="color_error_yellow">#ea9518</color>
     <color name="color_666666">#666666</color>
     <color name="color_cdcdcd">#cdcdcd</color>
     <color name="color_efefef">#efefef</color>

@@ -21,6 +21,10 @@ public class Banner implements Serializable {
     /**
      * 店铺ID
      */
-    public String goodsId;
+    public String shopId;
+    /**
+     * 商店名称
+     */
+    public String shopName;
 
 }

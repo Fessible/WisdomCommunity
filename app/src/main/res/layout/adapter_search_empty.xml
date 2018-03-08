@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:padding="18dp"
+    android:background="@color/color_light_yellow">
+
+    <TextView
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:text="抱歉，暂时没有找到相关的信息"
+        android:textColor="@color/color_error_yellow"
+        android:drawablePadding="12dp"
+        android:drawableLeft="@drawable/icon_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         />
+
+</LinearLayout>

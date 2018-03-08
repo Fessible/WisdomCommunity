@@ -7,8 +7,8 @@
     android:paddingRight="18dp">
 
     <TextView
+        android:id="@+id/search_content"
         android:gravity="center_vertical"
-        android:text="你手动舒适的的"
         android:textColor="@color/color_333333"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

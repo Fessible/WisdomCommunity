@@ -2,6 +2,7 @@ package com.example.com.wisdomcommunity.ui.home;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
 
     private Context mContext;
     private List<Recommend> recommendList = new ArrayList<>();
+    private Callback callback;
 
     public HomeAdapter(Context context) {
         this.mContext = context;
@@ -32,6 +34,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
 
     public void setData(List<Recommend> recommendList) {
         this.recommendList = recommendList;
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
 
     @Override
@@ -42,7 +48,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
 
     @Override
     public void onBindViewHolder(Homeholder holder, int position) {
-        holder.bindHolder(mContext, recommendList.get(position));
+        holder.bindHolder(mContext, recommendList.get(position), callback);
     }
 
     @Override
@@ -64,13 +70,25 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
             super(context, parent, R.layout.adapter_home_item);
         }
 
-        void bindHolder(Context context, Recommend recommend) {
+        void bindHolder(Context context, final Recommend recommend, final Callback callback) {
             name.setText(recommend.name);
             price.setText(recommend.price);
             Glide.with(context)
                     .load(recommend.goodsUrl)
                     .into(imge);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (callback != null) {
+                        callback.onGoodsItem(recommend.goodsId, recommend.name);
+                    }
+                }
+            });
         }
+    }
+
+    interface Callback {
+        void onGoodsItem(String goodsID, String goodsName);
     }
 }
 

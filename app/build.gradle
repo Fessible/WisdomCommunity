@@ -43,4 +43,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     //circularImage
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.zaaach:citypicker:2.0.1'
 }

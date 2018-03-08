@@ -4,6 +4,7 @@
     android:id="@+id/shop_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_background_color"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -22,7 +23,6 @@
             app:navigationIcon="@null">
 
             <EditText
-                android:drawablePadding="15dp"
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -30,6 +30,7 @@
                 android:layout_marginRight="18dp"
                 android:background="@drawable/bg_home_edittext"
                 android:drawableLeft="@drawable/icon_search"
+                android:drawablePadding="15dp"
                 android:ellipsize="end"
                 android:hint="@string/edit_hint"
                 android:imeOptions="actionSearch"

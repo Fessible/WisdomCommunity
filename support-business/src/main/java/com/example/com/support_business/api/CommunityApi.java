@@ -9,6 +9,7 @@ import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.personal.HeadImage;
 import com.example.com.support_business.domain.personal.Info;
 import com.example.com.support_business.domain.personal.Version;
+import com.example.com.support_business.domain.search.Search;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.support_business.domain.shop.ShopList;
@@ -120,4 +121,7 @@ interface CommunityApi {
     //订单详情
     @GET("order/details/{orderId}")
     public Observable<Response<ResultEntity<OrderDetail>>> detail(@Path("orderId") String orderId);
+
+    @POST("search")
+    public Observable<Response<ListEntity<Search>>> search(@Body String search);
 }
