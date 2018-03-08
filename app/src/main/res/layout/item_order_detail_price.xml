@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/shipment"
         android:layout_marginTop="5dp"
-        android:background="@drawable/img_line_n" />
+        android:background="@drawable/icon_horizontal_line" />
 
     <TextView
         android:layout_width="wrap_content"

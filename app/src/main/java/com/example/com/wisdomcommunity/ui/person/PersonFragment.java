@@ -79,7 +79,7 @@ public class PersonFragment extends BaseFragment implements EditInfoContract.Vie
         adapter.notifyDataSetChanged();
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         adapter.setOnItemClickListener(new PersonAdapter.onItemClickListener() {
             @Override

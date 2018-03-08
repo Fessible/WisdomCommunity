@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.com.support_business.domain.shop.Goods;
 import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.ShopContract;
+import com.example.com.wisdomcommunity.ui.search.SearchFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_HEADER;
 import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_STANDARD;
@@ -39,6 +42,9 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.search_view)
+    EditText searchView;
+
     private ShopPresenter presenter;
     private ShopAdapter shopAdapter;
 
@@ -53,16 +59,18 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
 
         presenter = new ShopPresenter(getContext(), ShopFragment.this);
         presenter.loadShopList(false);
+
+        searchView.setFocusable(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         shopAdapter = new ShopAdapter(getContext());
         recyclerView.setAdapter(shopAdapter);
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .typeBetween(VIEW_HEADER, VIEW_STANDARD, new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build())
                 .typeBetween(VIEW_STANDARD, VIEW_STANDARD, new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build())
                 .build());
         shopAdapter.setCallback(callback);
@@ -80,8 +88,8 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
                     break;
                 case VIEW_STANDARD://商品
                     Bundle goodsArgs = new Bundle();
-                    goodsArgs.putString(KEY_SHOP_ID, value);
-                    goodsArgs.putString(KEY_SHOP_NAME, name);
+                    goodsArgs.putString(KEY_GOODS_ID, value);
+                    goodsArgs.putString(KEY_GOODS_NAME, name);
                     IntentUtil.startTemplateActivity(ShopFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
                     break;
             }
@@ -117,6 +125,11 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
             shopAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    @OnClick(R.id.search_view)
+    public void search(){
+        IntentUtil.startTemplateActivity(ShopFragment.this, SearchFragment.class, SearchFragment.TAG_SEARCH_FRAGMENT);
     }
 
     @Override

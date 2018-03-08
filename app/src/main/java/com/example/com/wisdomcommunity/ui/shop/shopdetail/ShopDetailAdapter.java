@@ -130,13 +130,11 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                 }
             });
         }
-
-
     }
 
 
     interface Callback {
-        void onCallback(String name, String shopId);
+        void onCallback(String name, String goodsID);
 
         void onPayBack(double price);
     }

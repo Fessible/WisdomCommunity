@@ -54,7 +54,7 @@ public class AddAddressFragment extends BaseFragment {
         recyclerView.setAdapter(addAddressAdapter);
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         addAddressAdapter.setOnItemClickListener(new AddAddressAdapter.OnItemClickListener() {
             @Override

@@ -47,7 +47,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     protected void initView(View view, Bundle savedInstanceState) {
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         addressAdapter = new AddressAdapter(getContext());
         recyclerView.setAdapter(addressAdapter);

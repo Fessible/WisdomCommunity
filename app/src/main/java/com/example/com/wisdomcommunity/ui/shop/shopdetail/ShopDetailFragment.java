@@ -26,6 +26,8 @@ import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoratio
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 
@@ -79,13 +81,13 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                 getActivity().finish();
             }
         });
-//        makeOrderLayout.setVisibility(View.GONE);
+        makeOrderLayout.setVisibility(View.GONE);
         adapter = new ShopDetailAdapter(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
 
         Bundle bundle = getArguments();
@@ -129,10 +131,10 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     private ShopDetailAdapter.Callback callback = new ShopDetailAdapter.Callback() {
         @Override
-        public void onCallback(String name, String shopId) {
+        public void onCallback(String name, String goodsID) {
             Bundle goodsArgs = new Bundle();
-            goodsArgs.putString(KEY_SHOP_ID, shopId);
-            goodsArgs.putString(KEY_SHOP_NAME, name);
+            goodsArgs.putString(KEY_GOODS_ID, goodsID);
+            goodsArgs.putString(KEY_GOODS_NAME, name);
             IntentUtil.startTemplateActivity(ShopDetailFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
         }
 

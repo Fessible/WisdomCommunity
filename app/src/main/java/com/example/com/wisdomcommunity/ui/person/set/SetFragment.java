@@ -47,7 +47,7 @@ public class SetFragment extends BaseFragment {
         title.setText(getContext().getString(R.string.setting));
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new SetAdapter(getContext());

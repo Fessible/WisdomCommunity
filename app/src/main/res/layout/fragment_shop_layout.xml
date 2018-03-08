@@ -16,24 +16,28 @@
             android:layout_height="wrap_content" />
 
         <android.support.v7.widget.Toolbar
-            app:navigationIcon="@null"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@null">
 
             <EditText
+                android:drawablePadding="15dp"
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
                 android:background="@drawable/bg_home_edittext"
+                android:drawableLeft="@drawable/icon_search"
                 android:ellipsize="end"
-                android:gravity="center"
+                android:hint="@string/edit_hint"
+                android:imeOptions="actionSearch"
                 android:maxLines="1"
-                android:padding="6dp"
-                android:text="@string/edit_hint"
-                android:textColor="@color/color_cdcdcd"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/color_333333"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="16sp" />
         </android.support.v7.widget.Toolbar>
 
@@ -42,6 +46,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -24,4 +24,12 @@ public class GoodsDetail implements Serializable {
      * 商品价格
      */
     public String price;
+    /**
+     * 规格
+     */
+    public String standard;
+    /**
+     * 剩余量
+     */
+    public int remain;
 }

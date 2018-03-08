@@ -61,7 +61,7 @@ public class EditInfoFragment extends BaseFragment  {
         adapter = new EditInfoAdapter(getContext());
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         recyclerView.setAdapter(adapter);
         adapter.setData(info);

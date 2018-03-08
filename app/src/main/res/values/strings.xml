@@ -93,9 +93,11 @@
     <string name="title_order_id">订单号</string>
     <string name="remark">备注</string>
     <string name="already_sale">已售：%1$d</string>
-    <string name="standard">规格: %1$s</string>
+    <string name="standard">规格：%1$s</string>
     <string name="all_goods">全部商品</string>
     <string name="no_shipment">(不包含运费)</string>
     <string name="make_sure">确认下单</string>
     <string name="shop_info">店铺简介</string>
+    <string name="goods_detail">商品详情</string>
+    <string name="remain">剩余：%s</string>
 </resources>

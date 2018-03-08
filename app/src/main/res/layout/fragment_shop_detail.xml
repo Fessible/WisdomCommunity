@@ -55,8 +55,7 @@
                     android:id="@+id/img_shop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/app_icon" />
+                    android:layout_marginRight="20dp" />
 
                 <TextView
                     android:id="@+id/work_time"

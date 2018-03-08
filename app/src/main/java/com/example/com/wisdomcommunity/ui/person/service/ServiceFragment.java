@@ -41,7 +41,7 @@ public class ServiceFragment extends BaseFragment {
         title.setText(getContext().getString(R.string.service));
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.img_line_n))
+                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ServiceAdapter(getContext());
