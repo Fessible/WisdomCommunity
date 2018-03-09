@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
                 android:drawableRight="@drawable/icon_down"
-                android:text="福州"
+                android:text="福建省"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 

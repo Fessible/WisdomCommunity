@@ -6,7 +6,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.home.Banner;
@@ -23,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
@@ -44,12 +50,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @BindView(R.id.banner)
     BGABanner banner;
 
-    private HomePresenter presenter;
+    @BindView(R.id.address)
+    TextView address;
+
+    private HomeContract.Presenter presenter;
 
     private List<String> imgUrlList = new ArrayList<>();
     private List<String> imgTipList = new ArrayList<>();
     private List<String> imgIDList = new ArrayList<>();
     private HomeAdapter adapter;
+    public LocationClient mLocationClient = null;
+    private MyLocationListener myListener = new MyLocationListener();
 
     @Override
     public int getResLayout() {
@@ -58,6 +69,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        //声明LocationClient类
+        mLocationClient = new LocationClient(getContext().getApplicationContext());
+        //注册监听函数
+        mLocationClient.registerLocationListener(myListener);
+
+        LocationClientOption option = new LocationClientOption();
+        //可选，是否需要地址信息，默认为不需要，即参数为false
+        //如果开发者需要获得当前点的地址信息，此处必须为true
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
 
         presenter = new HomePresenter(getContext(), HomeFragment.this);
         presenter.loadRecomends(false);
@@ -92,6 +114,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
         if (imgUrlList != null) {
             imgUrlList.clear();
+        }
+        if (mLocationClient != null) {
+            mLocationClient.stop();
         }
     }
 
@@ -171,4 +196,19 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         showShortToast(msg);
     }
 
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取地址相关的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+            String province = location.getProvince();    //获取省份
+            address.setText(province);
+        }
+    }
+
+    @OnClick(R.id.address)
+    public void address(){
+
+    }
 }
