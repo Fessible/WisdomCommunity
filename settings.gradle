@@ -1,1 +1,1 @@
-include ':app', ':support-sdk', ':support-business'
+include ':app', ':support-sdk', ':support-business', ':citypicker'

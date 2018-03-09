@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WisdomCommunity.iml" filepath="$PROJECT_DIR$/WisdomCommunity.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/citypicker/citypicker.iml" filepath="$PROJECT_DIR$/citypicker/citypicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/support-business/support-business.iml" filepath="$PROJECT_DIR$/support-business/support-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/support-sdk/support-sdk.iml" filepath="$PROJECT_DIR$/support-sdk/support-sdk.iml" />
     </modules>

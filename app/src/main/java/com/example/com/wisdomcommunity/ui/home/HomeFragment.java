@@ -1,6 +1,9 @@
 package com.example.com.wisdomcommunity.ui.home;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +22,14 @@ import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.HomeContract;
-import com.example.com.wisdomcommunity.ui.shop.ShopFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.zaaach.citypicker.CityPicker;
+import com.zaaach.citypicker.adapter.OnPickListener;
+import com.zaaach.citypicker.model.City;
+import com.zaaach.citypicker.model.LocateState;
+import com.zaaach.citypicker.model.LocatedCity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +76,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+
         //声明LocationClient类
         mLocationClient = new LocationClient(getContext().getApplicationContext());
         //注册监听函数
@@ -202,13 +210,45 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
             //以下只列举部分获取地址相关的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-            String province = location.getProvince();    //获取省份
-            address.setText(province);
+            String city = location.getCity();    //获取城市
+            address.setText(city);
+            locatedCity = city.substring(0, city.length() - 1);
         }
     }
 
-    @OnClick(R.id.address)
-    public void address(){
+    private String locatedCity = null;
 
+    @OnClick(R.id.address)
+    public void address() {
+
+        CityPicker.getInstance()
+                .setFragmentManager(getActivity().getSupportFragmentManager())
+                .setLocatedCity(new LocatedCity(locatedCity))
+                .setOnPickListener(new OnPickListener() {
+                    @Override
+                    public void onPick(int position, City data) {
+                        address.setText(data == null ? String.format("%s市", locatedCity) : String.format("%s市", data.getName()));
+                    }
+
+                    @Override
+                    public void onLocate() {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //定位完成之后更新数据
+                                CityPicker.getInstance()
+                                        .locateComplete(new LocatedCity(locatedCity), LocateState.SUCCESS);
+                            }
+                        }, 2000);
+                    }
+                }).show();
+    }
+
+    @OnClick(R.id.phone)
+    public void phone() {
+        String phoneNumber = "057187063728";
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phoneNumber));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
