@@ -43,7 +43,6 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
     public final static int TYPE_BACK = 5;//返回
 
 
-
     private final List<Item> itemList = new ArrayList<>();
     private OnItemClickListener clickListener;
     private Context context;
@@ -107,7 +106,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
 
     @Override
     public void onBindViewHolder(EditHolder holder, int position) {
-        holder.bindHolder(context, itemList.get(position), clickListener);
+        holder.bindHolder(context, itemList.get(position), position, clickListener);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
         }
 
         @Override
-        void bindHolder(Context context, final HeadItem item, final OnItemClickListener clickListener) {
+        void bindHolder(Context context, final HeadItem item, final int position, final OnItemClickListener clickListener) {
             final int placeholderResId = R.drawable.icon_head_address;
             //头像设置
             Glide.with(context)
@@ -139,7 +138,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(TYPE_HEAD_IMAGE, item.headUrl);
+                        clickListener.onItemClick(TYPE_HEAD_IMAGE, item.headUrl,position);
                     }
                 }
             });
@@ -148,7 +147,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(TYPE_BACK,null);
+                        clickListener.onItemClick(TYPE_BACK, null,position);
                     }
                 }
             });
@@ -169,14 +168,14 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
         }
 
         @Override
-        void bindHolder(Context context, final StandardItem item, final OnItemClickListener clickListener) {
+        void bindHolder(Context context, final StandardItem item, final int position, final OnItemClickListener clickListener) {
             content.setText(item.content);
             title.setText(item.title);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(item.type, item.content);
+                        clickListener.onItemClick(item.type, item.content,position);
                     }
                 }
             });
@@ -189,7 +188,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
         }
 
         @Override
-        void bindHolder(Context context, EmptyItem item, OnItemClickListener clickListener) {
+        void bindHolder(Context context, EmptyItem item, int position, OnItemClickListener clickListener) {
 
         }
     }
@@ -233,9 +232,9 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
     }
 
     interface Item {
-        final static int VIEW_HEAD = 0;
-        final static int VIEW_STANDARD = 1;
-        final static int VIEW_EMPTY = 2;
+        int VIEW_HEAD = 0;
+        int VIEW_STANDARD = 1;
+        int VIEW_EMPTY = 2;
 
         @IntDef({
                 VIEW_HEAD, VIEW_STANDARD, VIEW_EMPTY
@@ -254,11 +253,11 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
             super(context, parent, adapterLayoutResId);
         }
 
-        abstract void bindHolder(Context context, II item, OnItemClickListener clickListener);
+        abstract void bindHolder(Context context, II item, int position, OnItemClickListener clickListener);
     }
 
     interface OnItemClickListener {
-        void onItemClick(int type, String content);
+        void onItemClick(int type, String content,int position);
     }
 
 

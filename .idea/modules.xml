@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/citypicker/citypicker.iml" filepath="$PROJECT_DIR$/citypicker/citypicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/support-business/support-business.iml" filepath="$PROJECT_DIR$/support-business/support-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/support-sdk/support-sdk.iml" filepath="$PROJECT_DIR$/support-sdk/support-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/takephoto_library/takephoto_library.iml" filepath="$PROJECT_DIR$/takephoto_library/takephoto_library.iml" />
     </modules>
   </component>
 </project>

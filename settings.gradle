@@ -1,1 +1,1 @@
-include ':app', ':support-sdk', ':support-business', ':citypicker'
+include ':app', ':support-sdk', ':support-business', ':citypicker', ':takephoto_library'

@@ -113,6 +113,7 @@ public class CommunityServer extends RestyServer {
                     }
                 });
         add(compositeTag, disposable);
+
     }
 
     //标题栏

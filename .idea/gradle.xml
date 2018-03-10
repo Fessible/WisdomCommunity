@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/citypicker" />
             <option value="$PROJECT_DIR$/support-business" />
             <option value="$PROJECT_DIR$/support-sdk" />
+            <option value="$PROJECT_DIR$/takephoto_library" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

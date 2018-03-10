@@ -1,6 +1,9 @@
 package com.example.com.wisdomcommunity.ui.person.info;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +17,12 @@ import com.example.com.wisdomcommunity.mvp.EditInfoContract;
 import com.example.com.wisdomcommunity.ui.person.info.signature.SignatureFragment;
 import com.example.com.wisdomcommunity.ui.person.info.username.UserNameFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.util.photo.PathUtils;
+import com.example.com.wisdomcommunity.util.photo.PhotosClient;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
+
+import java.io.File;
 
 import butterknife.BindView;
 
@@ -31,7 +38,7 @@ import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYP
  * Created by rhm on 2018/2/28.
  */
 
-public class EditInfoFragment extends BaseFragment  {
+public class EditInfoFragment extends BaseFragment {
     public static final String TAG_INFO_FRAGMENT = "INFO_FRAGMENT";
     public static final int REQUEST_NAME = 0;
     public static final int REQUEST_SIGNATURE = 1;
@@ -40,11 +47,16 @@ public class EditInfoFragment extends BaseFragment  {
     private BottomSheetDialog photoSheetDialog;
     private BottomSheetDialog sexBottomDialog;
 
+    private static final int REQUEST_CODE_TAKE_A_PICTURE = 10086;
+    private static final int REQUEST_CODE_SELECT_FROM_ALBUM = 10087;
+    private static final int REQUEST_CODE_CROP_PICTURE = 10088;
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     private EditInfoAdapter adapter;
     private EditInfoPresenter presenter;
+    private PhotosClient photosClient;
 
     @Override
     public int getResLayout() {
@@ -53,9 +65,7 @@ public class EditInfoFragment extends BaseFragment  {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-//        presenter = new EditInfoPresenter(getContext(), EditInfoFragment.this);
-//        //todo userId
-//        presenter.loadInfo("123");
+
         Bundle bundle = getArguments();
         Info info = (Info) bundle.getSerializable(KEY_INFO);
         adapter = new EditInfoAdapter(getContext());
@@ -69,7 +79,7 @@ public class EditInfoFragment extends BaseFragment  {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.setClickListener(new EditInfoAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int type, String content) {
+            public void onItemClick(int type, String content, int position) {
                 switch (type) {
                     case TYPE_HEAD_IMAGE:
                         if (photoSheetDialog == null) {
@@ -133,13 +143,48 @@ public class EditInfoFragment extends BaseFragment  {
 
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        photosClient = new PhotosClient.Builder(this)
+                .cropSize(200)
+                .cropGalleryDir(PathUtils.getGalleryDir(getContext()))
+                .requestCodeTakeAPicture(REQUEST_CODE_TAKE_A_PICTURE)
+                .requestCodeSelectFromAlbum(REQUEST_CODE_SELECT_FROM_ALBUM)
+                .requestCodeCropPicture(REQUEST_CODE_CROP_PICTURE)
+                .callback(photosClientCallback)
+                .build();
+    }
+
+    private PhotosClient.Callback photosClientCallback = new PhotosClient.Callback() {
+        @Override
+        public void onCropPicture(Uri pictureUri) {
+            showShortToast(pictureUri.getPath());
+
+//            if (mineBoardPresenter != null) {
+//                mineBoardPresenter.editHeadImage(new File(pictureUri.getPath()));
+//            }
+        }
+    };
     private View.OnClickListener editAcatarOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.take_a_picture:
+                    if (photosClient != null) {
+                        photosClient.takeAPicture();
+                    }
+                    if (photoSheetDialog != null) {
+                        photoSheetDialog.dismiss();
+                    }
                     break;
                 case R.id.select_from_album:
+                    if (photosClient != null) {
+                        photosClient.selectFromAlbum();
+                    }
+                    if (photoSheetDialog != null) {
+                        photoSheetDialog.dismiss();
+                    }
                     break;
                 case R.id.opt_cancel:
                     if (photoSheetDialog != null) {
@@ -156,6 +201,13 @@ public class EditInfoFragment extends BaseFragment  {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (photosClient != null && photosClient.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+    }
 
 //    @Override
 //    public void loadInfoSuccess(Info info) {
