@@ -35,12 +35,12 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopAdapter.Item.VIEW_HEAD
  */
 
 public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
-    public final static int TYPE_HEAD_IMAGE = 0;
-    public final static int TYPE_NAME = 1;//用户名
-    public final static int TYPE_DISTRICT = 2;//小区名
-    public final static int TYPE_SIGNATURE = 3;//个性签名
-    public final static int TYPE_SEX = 4;//性别
-    public final static int TYPE_BACK = 5;//返回
+    final static int TYPE_HEAD_IMAGE = 0;
+    final static int TYPE_NAME = 1;//用户名
+    final static int TYPE_DISTRICT = 2;//小区名
+    final static int TYPE_SIGNATURE = 3;//个性签名
+    final static int TYPE_SEX = 4;//性别
+    final static int TYPE_BACK = 5;//返回
 
 
     private final List<Item> itemList = new ArrayList<>();
@@ -76,6 +76,19 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
     protected void destroy() {
         itemList.clear();
         unregisterAdapterDataObserver(observer);
+    }
+
+
+    public void setValue(String value, int position) {
+        StandardItem item = (StandardItem) itemList.get(position);
+        item.content = value;
+        notifyItemChanged(position);
+    }
+
+    public void setImage(String url, int position) {
+        HeadItem item = (HeadItem) itemList.get(position);
+        item.headUrl = url;
+        notifyItemChanged(position);
     }
 
     public void setClickListener(OnItemClickListener clickListener) {
@@ -138,7 +151,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(TYPE_HEAD_IMAGE, item.headUrl,position);
+                        clickListener.onItemClick(TYPE_HEAD_IMAGE, item.headUrl, position);
                     }
                 }
             });
@@ -147,7 +160,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(TYPE_BACK, null,position);
+                        clickListener.onItemClick(TYPE_BACK, null, position);
                     }
                 }
             });
@@ -175,7 +188,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
-                        clickListener.onItemClick(item.type, item.content,position);
+                        clickListener.onItemClick(item.type, item.content, position);
                     }
                 }
             });
@@ -257,7 +270,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
     }
 
     interface OnItemClickListener {
-        void onItemClick(int type, String content,int position);
+        void onItemClick(int type, String content, int position);
     }
 
 

@@ -15,6 +15,7 @@ import com.example.com.wisdomcommunity.base.BaseFragment;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KEY_SIGNATURE;
 
 /**
@@ -93,6 +94,7 @@ public class SignatureFragment extends BaseFragment {
         }
         Intent data = new Intent();
         data.putExtra(KEY_SIGNATURE, signature);
+        getActivity().setResult(RESULT_OK, data);
         getActivity().finish();
     }
 

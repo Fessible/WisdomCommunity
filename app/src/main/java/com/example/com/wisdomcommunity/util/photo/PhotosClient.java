@@ -71,10 +71,6 @@ public class PhotosClient {
     public void takeAPicture() {
         try {
             File picture = new File(cropGalleryDir, randomString() + ".jpg");
-//            takeAPictureUri = FileProvider.getUriForFile(
-//                    getContext(),
-//                    getContext().getPackageName() + ".provider",
-//                    picture);
 
             if (Build.VERSION.SDK_INT >= 24) {
                 takeAPictureUri = FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getApplicationContext().getPackageName() + ".provider", picture);
@@ -146,6 +142,7 @@ public class PhotosClient {
         }
         return false;
     }
+
 
     private void cropPicture(Uri uri) {
         try {

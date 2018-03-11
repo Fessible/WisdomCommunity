@@ -14,6 +14,7 @@ import com.example.com.wisdomcommunity.base.BaseFragment;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KEY_NAME;
 
 /**
@@ -71,6 +72,7 @@ public class UserNameFragment extends BaseFragment {
     public void sure() {
         Intent intent = new Intent();
         intent.putExtra(KEY_USER_NAME, strUserName);
+        getActivity().setResult(RESULT_OK,intent);
         getActivity().finish();
     }
 

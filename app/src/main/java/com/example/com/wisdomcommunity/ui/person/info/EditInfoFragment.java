@@ -1,6 +1,8 @@
 package com.example.com.wisdomcommunity.ui.person.info;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +24,8 @@ import com.example.com.wisdomcommunity.util.photo.PhotosClient;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import butterknife.BindView;
 
@@ -33,6 +36,7 @@ import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYP
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_NAME;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_SEX;
 import static com.example.com.wisdomcommunity.ui.person.info.EditInfoAdapter.TYPE_SIGNATURE;
+import static com.example.com.wisdomcommunity.ui.person.info.username.UserNameFragment.KEY_USER_NAME;
 
 /**
  * Created by rhm on 2018/2/28.
@@ -55,8 +59,11 @@ public class EditInfoFragment extends BaseFragment {
     RecyclerView recyclerView;
 
     private EditInfoAdapter adapter;
-    private EditInfoPresenter presenter;
+    private EditInfoContract.Presenter presenter;
     private PhotosClient photosClient;
+    private int headPosition = -1;
+    private int namePosition = -1;
+    private int signaturePosition = -1;
 
     @Override
     public int getResLayout() {
@@ -79,9 +86,10 @@ public class EditInfoFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.setClickListener(new EditInfoAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int type, String content, int position) {
+            public void onItemClick(int type, String content, final int position) {
                 switch (type) {
                     case TYPE_HEAD_IMAGE:
+                        headPosition = position;
                         if (photoSheetDialog == null) {
                             photoSheetDialog = new BottomSheetDialog(getContext(), R.style.Theme_Design_Admin_BottomSheetDialog);
                             photoSheetDialog.setContentView(R.layout.dialog_edit_head_image);
@@ -95,6 +103,7 @@ public class EditInfoFragment extends BaseFragment {
                     case TYPE_DISTRICT:
                         break;
                     case TYPE_NAME:
+                        namePosition = position;
                         Bundle bundle = new Bundle();
                         bundle.putString(KEY_NAME, content);
                         IntentUtil.startSecondActivityForResult(EditInfoFragment.this, UserNameFragment.class, bundle, UserNameFragment.TAG_USER_NAME_FRAGMENT, REQUEST_NAME);
@@ -108,7 +117,10 @@ public class EditInfoFragment extends BaseFragment {
                             men.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    sexBottomDialog.dismiss();
+                                    if (adapter != null) {
+                                        adapter.setValue(getContext().getString(R.string.men), position);
+                                    }
                                 }
                             });
 
@@ -117,7 +129,10 @@ public class EditInfoFragment extends BaseFragment {
                             women.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    sexBottomDialog.dismiss();
+                                    if (adapter != null) {
+                                        adapter.setValue(getContext().getString(R.string.woman), position);
+                                    }
                                 }
                             });
                             sexBottomDialog.findViewById(R.id.opt_cancel).setOnClickListener(new View.OnClickListener() {
@@ -130,6 +145,7 @@ public class EditInfoFragment extends BaseFragment {
                         sexBottomDialog.show();
                         break;
                     case TYPE_SIGNATURE:
+                        signaturePosition = position;
                         Bundle signature = new Bundle();
                         signature.putString(KEY_SIGNATURE, content);
                         IntentUtil.startSecondActivityForResult(EditInfoFragment.this, SignatureFragment.class, signature, SignatureFragment.TAG_SIGNATURE_FRAGMENT, REQUEST_SIGNATURE);
@@ -159,11 +175,10 @@ public class EditInfoFragment extends BaseFragment {
     private PhotosClient.Callback photosClientCallback = new PhotosClient.Callback() {
         @Override
         public void onCropPicture(Uri pictureUri) {
-            showShortToast(pictureUri.getPath());
-
-//            if (mineBoardPresenter != null) {
-//                mineBoardPresenter.editHeadImage(new File(pictureUri.getPath()));
-//            }
+            String path = pictureUri.getPath();
+            if (adapter != null) {
+                adapter.setImage(path,headPosition);
+            }
         }
     };
     private View.OnClickListener editAcatarOnClickListener = new View.OnClickListener() {
@@ -198,14 +213,35 @@ public class EditInfoFragment extends BaseFragment {
 
     @Override
     protected void destroyView() {
-
+        if (adapter != null) {
+            adapter.destroy();
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (photosClient != null && photosClient.onActivityResult(requestCode, resultCode, data)) {
-            return;
+
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_NAME:
+                    if (data != null) {
+                        String name = data.getStringExtra(KEY_USER_NAME);
+                        adapter.setValue(name, namePosition);
+                    }
+                    break;
+                case REQUEST_SIGNATURE:
+                    if (data != null) {
+                        String signature = data.getStringExtra(KEY_SIGNATURE);
+                        adapter.setValue(signature, signaturePosition);
+                    }
+                    break;
+                default:
+                    if (photosClient != null && photosClient.onActivityResult(requestCode, resultCode, data)) {
+                        return;
+                    }
+                    break;
+            }
         }
     }
 
