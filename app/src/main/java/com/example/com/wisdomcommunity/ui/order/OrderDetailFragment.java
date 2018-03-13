@@ -1,17 +1,20 @@
 package com.example.com.wisdomcommunity.ui.order;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.OrderDetailContract;
+import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -22,6 +25,7 @@ import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.V
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_PHONE;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_PRICE;
 import static com.example.com.wisdomcommunity.ui.order.OrderFragment.KEY_ORDER_ID;
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 
 /**
  * Created by rhm on 2018/3/3.
@@ -75,11 +79,20 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
 
     private OrderDetailAdapter.Callback callback = new OrderDetailAdapter.Callback() {
         @Override
-        public void onCallback(String value, int type) {
-            if (type == VIEW_HEADER_SHOP) {
-                //店铺页面
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_SHOP_ID, value);
+        public void onCallback(String value, String shopName, int type) {
+            switch (type) {
+                case VIEW_HEADER_SHOP:
+                    //店铺页面
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_SHOP_ID, value);
+                    bundle.putString(KEY_SHOP_NAME, shopName);
+                    IntentUtil.startTemplateActivity(OrderDetailFragment.this, ShopDetailFragment.class,bundle, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
+                    break;
+                case VIEW_PHONE:
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + value));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    break;
             }
         }
     };

@@ -96,10 +96,14 @@
     <string name="standard">规格：%1$s</string>
     <string name="all_goods">全部商品</string>
     <string name="no_shipment">(不包含运费)</string>
+    <string name="shipment_fee">(运费：%s)</string>
     <string name="make_sure">确认下单</string>
     <string name="shop_info">店铺简介</string>
     <string name="goods_detail">商品详情</string>
     <string name="remain">剩余：%s</string>
     <string name="no_enough_remain">库存不足</string>
     <string name="title_shop_cart">购物车</string>
+    <string name="pay_right">立即结算</string>
+    <string name="empty_cart">购物车空空哦</string>
+    <string name="to_select">去挑挑看</string>
 </resources>

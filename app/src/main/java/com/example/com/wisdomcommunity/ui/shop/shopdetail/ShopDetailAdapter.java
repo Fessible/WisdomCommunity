@@ -133,7 +133,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             minus.setBackgroundResource(R.drawable.icon_minus_n);
                         }
                         if (callback != null) {
-                            callback.onAddPayBack(item.goodsUrl, item.goodsId, item.goodsName, flPrice, count);
+                            callback.onAddPayBack(item, flPrice, count);
                         }
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_SHORT).show();
@@ -151,7 +151,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             changMinus(false);
                         }
                         if (callback != null) {
-                            callback.onMinusPayBack(item.goodsUrl, item.goodsId, item.goodsName, flPrice, count);
+                            callback.onMinusPayBack(item, flPrice, count);
                         }
                     } else {
                         changMinus(false);
@@ -169,9 +169,9 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     interface Callback {
         void onCallback(Goods goods, int count, int position);
 
-        void onAddPayBack(String goodsUrl, String goodsId, String goodsName, float price, int num);
+        void onAddPayBack(Goods goods, float price, int num);
 
-        void onMinusPayBack(String goodsUrl, String goodsId, String goodsName, float price, int num);
+        void onMinusPayBack(Goods goods, float price, int num);
     }
 
 }

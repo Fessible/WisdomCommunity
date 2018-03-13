@@ -105,7 +105,7 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
         @Override
         public void onClick(View view) {
             Intent data = new Intent();
-            OrderDetail.Order order = new OrderDetail.Order(goodId, name, count, strPrice);
+            OrderDetail.Order order = new OrderDetail.Order(goodId, name, count, strPrice, leave);
             data.putExtra(KEY_GOOD_ORDER, order);
             data.putExtra(KEY_POSITION, position);
             getActivity().setResult(Activity.RESULT_OK, data);

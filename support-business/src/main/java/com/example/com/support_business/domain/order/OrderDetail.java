@@ -104,15 +104,21 @@ public class OrderDetail implements Serializable {
          */
         public String price;
 
+        /**
+         * 剩余量
+         */
+        public int remain;
+
         public Order() {
 
         }
 
-        public Order(String goodsId, String goodsName, int number, String price) {
+        public Order(String goodsId, String goodsName, int number, String price,int remain) {
             this.goodsName = goodsName;
             this.goodsId = goodsId;
             this.number = number;
             this.price = price;
+            this.remain = remain;
         }
     }
 }

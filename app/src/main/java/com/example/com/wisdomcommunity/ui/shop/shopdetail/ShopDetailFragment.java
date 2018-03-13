@@ -26,6 +26,7 @@ import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -47,9 +48,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     public static final String KEY_GOODS_NUM = "goods_number";
     public static final String KEY_POSITION = "position";
     public static final int REQUEST_GOODS = 1;
-    private static final String KEY_GOODS_URL = "goods_url";
-    private static final String KEY_ORDER_LIST = "order_list";
+    public static final String KEY_GOODS_URL = "goods_url";
+    public static final String KEY_ORDER_LIST = "order_list";
     private static final int REQUEST_CART = 2;
+    public static final String KEY_SHIPMENT = "shipment";
+    public static final String KEY_TOTAL_MONEY = "total_price";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -88,6 +91,8 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private ShopDetailAdapter adapter;
     private String phoneNumber;
     private int clickCount;
+    private int fee;//配送费
+    private String strPrice;
 
     @Override
     public int getResLayout() {
@@ -112,9 +117,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                         .build()).build());
 
         Bundle bundle = getArguments();
-        String shopName = bundle.getString(KEY_SHOP_NAME);
-        shopId = bundle.getString(KEY_SHOP_ID);
-        title.setText(shopName);
+        if (bundle != null) {
+            String shopName = bundle.getString(KEY_SHOP_NAME);
+            shopId = bundle.getString(KEY_SHOP_ID);
+            title.setText(shopName);
+        }
     }
 
     @Override
@@ -138,6 +145,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     public void onLoadShopDetailSuccess(ShopDetail shopDetail) {
         if (shopDetail != null) {
             phoneNumber = shopDetail.shopPhone;
+            fee = shopDetail.shipment;
             int placeHolder = R.drawable.app_icon;
             Glide.with(getContext()).load(shopDetail.shopUrl)
                     .apply(new RequestOptions()
@@ -145,7 +153,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                             .placeholder(placeHolder).centerCrop())
                     .into(imgShop);
             workTime.setText(getContext().getString(R.string.work_time, shopDetail.workTime));
-            shipment.setText(getContext().getString(R.string.shipment, shopDetail.shipment));
+            shipment.setText(getContext().getString(R.string.shipment, String.valueOf(fee)));
             shopInfo.setText(shopDetail.info);
             adapter.setData(shopDetail.goodsList);
             adapter.notifyDataSetChanged();
@@ -171,43 +179,49 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
 
         @Override
-        public void onAddPayBack(String goodsUrl, String goodsId, String goodsName, float price, int num) {
+        public void onAddPayBack(Goods goods, float price, int num) {
             count += 1;
             totalPrice += price;
-            changeOrderhashMap(goodsUrl, goodsId, goodsName, price, num);
+            changeOrderhashMap(goods, price, num);
             showOrderlayout();
         }
 
         @Override
-        public void onMinusPayBack(String goodsUrl, String goodsId, String goodsName, float price, int num) {
+        public void onMinusPayBack(Goods goods, float price, int num) {
             count -= 1;
             totalPrice -= price;
-            changeOrderhashMap(goodsUrl, goodsId, goodsName, price, num);
+            changeOrderhashMap(goods, price, num);
             showOrderlayout();
         }
     };
 
-    private void changeOrderhashMap(String goodsUrl, String goodsId, String goodsName, float price, int num) {
+    private void changeOrderhashMap(Goods goods, float price, int num) {
         if (orderHashMap.isEmpty()) {
-            addOrderHashMap(goodsUrl, goodsId, goodsName, price, num);
+            addOrderHashMap(goods, price, num);
         } else {
-            if (orderHashMap.containsKey(goodsId)) {
-                order.number = num;
-                orderHashMap.put(goodsId, order);
+            if (orderHashMap.containsKey(goods.goodsId)) {
+                if (num == 0) {
+                    orderHashMap.remove(goods.goodsId);
+                } else {
+                    order.number = num;
+                    orderHashMap.put(goods.goodsId, order);
+                }
             } else {
-                addOrderHashMap(goodsUrl, goodsId, goodsName, price, num);
+                addOrderHashMap(goods, price, num);
             }
         }
     }
 
-    //添加新的内容
-    private void addOrderHashMap(String goodsUrl, String goodsId, String goodsName, float price, int num) {
-        order.goodsUrl = goodsUrl;
-        order.goodsName = goodsName;
-        order.goodsId = goodsId;
+    private void addOrderHashMap(Goods goods, float price, int num) {
+        OrderDetail.Order order = new OrderDetail.Order();
+        order.goodsUrl = goods.goodsUrl;
+        order.goodsName = goods.goodsName;
+        order.goodsId = goods.goodsId;
+        order.remain = goods.remain;
         order.number = num;
         order.price = String.valueOf(price);
-        orderHashMap.put(goodsId, order);
+        this.order = order;
+        orderHashMap.put(goods.goodsId, order);
     }
 
     private void showOrderlayout() {
@@ -215,7 +229,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             makeOrderLayout.setVisibility(View.GONE);
         } else {
             makeOrderLayout.setVisibility(View.VISIBLE);
-            txTotalPrice.setText(String.valueOf(totalPrice));
+            DecimalFormat decimalFormat = new DecimalFormat(".00");
+            strPrice = decimalFormat.format(totalPrice);
+            txTotalPrice.setText(strPrice);
         }
     }
 
@@ -235,6 +251,8 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     public void makeOrder() {
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_ORDER_LIST, orderHashMap);
+        bundle.putInt(KEY_SHIPMENT, fee);
+        bundle.putString(KEY_TOTAL_MONEY, strPrice);
         IntentUtil.startTemplateActivityForResult(ShopDetailFragment.this, CartFragment.class, bundle, CartFragment.TAG_CART_FRAGMENT, REQUEST_CART);
     }
 
@@ -250,7 +268,12 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                     totalPrice += (order.number - clickCount) * Float.valueOf(order.price);
                     count += order.number - clickCount;
                     showOrderlayout();
-                    changeOrderhashMap(order.goodsUrl, order.goodsId, order.goodsName, Float.valueOf(order.price), order.number);
+                    Goods goods = new Goods();
+                    goods.goodsUrl = order.goodsUrl;
+                    goods.goodsId = order.goodsId;
+                    goods.remain = order.remain;
+                    goods.goodsName = order.goodsName;
+                    changeOrderhashMap(goods, Float.valueOf(order.price), order.number);
                 }
             }
         }

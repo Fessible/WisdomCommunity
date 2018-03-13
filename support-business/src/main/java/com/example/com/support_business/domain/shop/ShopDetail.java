@@ -13,7 +13,7 @@ public class ShopDetail implements Serializable {
     /**
      * 配送费
      */
-    public String shipment;
+    public int shipment;
     /**
      * 商品列表
      */

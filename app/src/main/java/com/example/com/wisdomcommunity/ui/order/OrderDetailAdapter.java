@@ -168,7 +168,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onCallback(item.shopId, VIEW_HEADER_SHOP);
+                        callback.onCallback(item.shopId, item.shopName, VIEW_HEADER_SHOP);
                     }
                 }
             });
@@ -233,7 +233,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onCallback(item.shopPhone, VIEW_PHONE);
+                        callback.onCallback(item.shopPhone, "", VIEW_PHONE);
                     }
                 }
             });
@@ -403,7 +403,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
         }
 
         @ViewType
-        public int getViewType();
+        int getViewType();
     }
 
     static abstract class DetailHolder<II extends Item> extends BaseHolder {
@@ -416,7 +416,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
     }
 
     interface Callback {
-        void onCallback(String value, int type);
+        void onCallback(String value, String name, int type);
     }
 
 }
