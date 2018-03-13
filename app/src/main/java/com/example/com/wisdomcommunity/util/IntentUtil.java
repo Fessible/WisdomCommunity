@@ -68,6 +68,10 @@ public class IntentUtil {
         IntentUtil.startActivityForResult(TemplateActivity.class, fragment, fragmentClazz, null, tag, requstCode);
     }
 
+    public static void startTemplateActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz,Bundle args, String tag, int requstCode) {
+        IntentUtil.startActivityForResult(TemplateActivity.class, fragment, fragmentClazz, args, tag, requstCode);
+    }
+
     public static void startSecondActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag, int requstCode) {
         IntentUtil.startActivityForResult(SecondActivity.class, fragment, fragmentClazz, null, tag, requstCode);
     }

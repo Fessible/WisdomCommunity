@@ -106,7 +106,7 @@ public class TestActivity extends AppCompatActivity {
                 }
                 break;
         }
-    }
+     }
 
     private void openCamera() {
         // 创建File对象，用于存储拍照后的图片

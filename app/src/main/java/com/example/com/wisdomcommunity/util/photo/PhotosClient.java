@@ -70,7 +70,17 @@ public class PhotosClient {
 
     public void takeAPicture() {
         try {
-            File picture = new File(cropGalleryDir, randomString() + ".jpg");
+            //            File picture = new File(cropGalleryDir,  randomString()+".jpg");
+
+            File picture = new File(cropGalleryDir, "take_img.jpg");
+            try {
+                if (picture.exists()) {
+                    picture.delete();
+                }
+                picture.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             if (Build.VERSION.SDK_INT >= 24) {
                 takeAPictureUri = FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getApplicationContext().getPackageName() + ".provider", picture);
@@ -118,11 +128,17 @@ public class PhotosClient {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     Uri uri = data.getData();
+                    Uri selectAlbum;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         String imageAbsolutePath = CameraUtils.getImageAbsolutePath(getContext(), data.getData());
                         if (!TextUtils.isEmpty(imageAbsolutePath)) {
                             File imageFile = new File(imageAbsolutePath);
-                            cropPicture(Uri.fromFile(imageFile));
+                            if (Build.VERSION.SDK_INT >= 24) {
+                                selectAlbum = FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getApplicationContext().getPackageName() + ".provider", imageFile);
+                            } else {
+                                selectAlbum = Uri.fromFile(imageFile);
+                            }
+                            cropPicture(selectAlbum);
                         } else {
                             cropPicture(uri);
                         }
@@ -136,7 +152,8 @@ public class PhotosClient {
             if (resultCode == Activity.RESULT_OK) {
                 // delay after onResume
                 if (callback != null) {
-                    callback.onCropPicture(data != null && data.getData() != null ? data.getData() : cropPictureUri);
+//                    callback.onCropPicture(data != null && data.getData() != null ? data.getData() : cropPictureUri);
+                    callback.onCropPicture(cropPictureUri);
                 }
             }
         }
@@ -146,8 +163,8 @@ public class PhotosClient {
 
     private void cropPicture(Uri uri) {
         try {
-            // 创建File对象，用于存储裁剪后的图片，避免更改原图
-            File file = new File(cropGalleryDir, "crop_image.jpg");
+
+            File file = new File(cropGalleryDir, randomString()+"crop.jpg");
             try {
                 if (file.exists()) {
                     file.delete();
@@ -156,10 +173,29 @@ public class PhotosClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             cropPictureUri = Uri.fromFile(file);
-            Intent intent = CameraUtils.buildImageCropIntent(uri, cropPictureUri, cropWidth, cropHeight, false);
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            intent.setDataAndType(uri, "image/*");
+            //裁剪图片的宽高比例
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            intent.putExtra("crop", "true");//可裁剪
+            // 裁剪后输出图片的尺寸大小
+            //intent.putExtra("outputX", 400);
+            //intent.putExtra("outputY", 200);
+            intent.putExtra("scale", true);//支持缩放
+            intent.putExtra("return-data", false);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, cropPictureUri);
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());//输出图片格式
+            intent.putExtra("noFaceDetection", true);//取消人脸识别
             startActivityForResult(intent, requestCodeCropPicture);
+
+//            cropPictureUri = Uri.fromFile(file);
+//            Intent intent = CameraUtils.buildImageCropIntent(uri, cropPictureUri, cropWidth, cropHeight, false);
+//            startActivityForResult(intent, requestCodeCropPicture);
         } catch (Exception ignored) {
             Log.d("Camera", "$$$ No Gallery.");
         }

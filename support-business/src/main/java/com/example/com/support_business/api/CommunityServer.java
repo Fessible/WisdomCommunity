@@ -181,6 +181,8 @@ public class CommunityServer extends RestyServer {
     public void goodsDetail(String composite, String goodsId, final boolean refresh, final SSOCallback<ResultEntity<GoodsDetail>> callback) {
 
         Disposable disposable = communityApi.goodsDetail(goodsId)
+        //todo
+//        Disposable disposable = communityApi.goodsDetail()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ResultEntity<GoodsDetail>>>() {
@@ -225,6 +227,8 @@ public class CommunityServer extends RestyServer {
 //            }
 //        });
         Disposable disposable = communityApi.shopDetail(shopId)
+        //todo 测试
+//        Disposable disposable = communityApi.shopDetail()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ResultEntity<ShopDetail>>>() {

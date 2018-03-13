@@ -123,7 +123,6 @@ public class EditInfoFragment extends BaseFragment {
                                     }
                                 }
                             });
-
                             TextView women = sexBottomDialog.findViewById(R.id.select_from_album);
                             women.setText(getContext().getString(R.string.woman));
                             women.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +155,6 @@ public class EditInfoFragment extends BaseFragment {
                 }
             }
         });
-
     }
 
     @Override

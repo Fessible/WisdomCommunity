@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -14,6 +15,7 @@ import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseAdapter;
 import com.example.com.wisdomcommunity.base.BaseHolder;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +30,15 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     private Context context;
     private List<Goods> goodsList = new ArrayList<>();
     private Callback callback;
+    private int number;
 
-    public ShopDetailAdapter(Context context) {
+    ShopDetailAdapter(Context context) {
         this.context = context;
+    }
+
+    void setNum(int num, int position) {
+        number = num;
+        notifyItemChanged(position);
     }
 
     public void setData(List<Goods> goodsList) {
@@ -53,8 +61,9 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
 
     @Override
     public void onBindViewHolder(ShopDetailHolder holder, int position) {
-        holder.bindHolder(context, goodsList.get(position), callback);
+        holder.bindHolder(context, goodsList.get(position), number, position, callback);
     }
+
 
     @Override
     public int getItemCount() {
@@ -83,15 +92,20 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         @BindView(R.id.content_layout)
         RelativeLayout contentLayout;
 
-        private int count;
-        private double pay;
+        int count;
 
-        public ShopDetailHolder(Context context, ViewGroup parent) {
+        ShopDetailHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.adapter_shop_goods);
         }
 
-        public void bindHolder(Context context, final Goods item, final Callback callback) {
+        public void bindHolder(final Context context, final Goods item, int num, final int position, final Callback callback) {
             int placeHolder = R.drawable.app_icon;
+            final Float flPrice = Float.valueOf(item.price);
+            count = num;
+            number.setText(String.valueOf(count));
+            if (count > 0) {
+                changMinus(true);
+            }
             Glide.with(context).load(item.goodsUrl)
                     .apply(new RequestOptions()
                             .fallback(placeHolder)
@@ -99,22 +113,30 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             .centerCrop())
                     .into(iconGoods);
             goodsName.setText(item.goodsName);
+            price.setText(context.getString(R.string.sign_price, item.price));
 
             contentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onCallback(item.goodsName, item.goodsId);
+                        callback.onCallback(item, count, position);
                     }
                 }
             });
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    number.setText(String.valueOf(count++));
-                    pay = Double.valueOf(item.price) * count;
-                    if (callback != null) {
-                        callback.onPayBack(pay);
+
+                    if (count < item.remain) {
+                        number.setText(String.valueOf(++count));
+                        if (count > 0) {
+                            minus.setBackgroundResource(R.drawable.icon_minus_n);
+                        }
+                        if (callback != null) {
+                            callback.onAddPayBack(item.goodsUrl, item.goodsId, item.goodsName, flPrice, count);
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -122,21 +144,34 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             minus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    number.setText(String.valueOf(count--));
-                    pay = Double.valueOf(item.price) * count;
-                    if (callback != null) {
-                        callback.onPayBack(pay);
+                    if (count > 0) {
+                        changMinus(true);
+                        number.setText(String.valueOf(--count));
+                        if (count <= 0) {
+                            changMinus(false);
+                        }
+                        if (callback != null) {
+                            callback.onMinusPayBack(item.goodsUrl, item.goodsId, item.goodsName, flPrice, count);
+                        }
+                    } else {
+                        changMinus(false);
                     }
                 }
             });
+        }
+
+        private void changMinus(boolean isEnable) {
+            minus.setBackgroundResource(isEnable ? R.drawable.icon_minus_n : R.drawable.icon_minus_un);
         }
     }
 
 
     interface Callback {
-        void onCallback(String name, String goodsID);
+        void onCallback(Goods goods, int count, int position);
 
-        void onPayBack(double price);
+        void onAddPayBack(String goodsUrl, String goodsId, String goodsName, float price, int num);
+
+        void onMinusPayBack(String goodsUrl, String goodsId, String goodsName, float price, int num);
     }
 
 }

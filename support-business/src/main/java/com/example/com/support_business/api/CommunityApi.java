@@ -80,17 +80,25 @@ interface CommunityApi {
     /*************
      * 店铺
      ************/
-    //商品详情
+//    //商品详情
     @GET("shop/goods/{goodsId}")
     public Observable<Response<ResultEntity<GoodsDetail>>> goodsDetail(@Path("goodsId") String goodsId);
+
+    //todo 商品详情
+//    @GET("shop/goods")
+//    public Observable<Response<ResultEntity<GoodsDetail>>> goodsDetail();
 
     //店铺列表
     @GET("shop/list")
     public Observable<Response<ListEntity<ShopList>>> shopList();
 
-    //店铺详情
+//    //店铺详情
     @GET("shop/details/{shopId}")
     public Observable<Response<ResultEntity<ShopDetail>>> shopDetail(@Path("shopId") String shopId);
+
+    //todo 店铺详情
+//    @GET("shop/details")
+//    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail();
 
     /*************
      * 登录

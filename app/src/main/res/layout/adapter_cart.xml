@@ -50,7 +50,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="55dp"
             android:layout_marginStart="55dp"
-            android:background="@drawable/icon_minus_un"
+            android:background="@drawable/icon_minus_n"
             android:contentDescription="@string/sign_number" />
 
         <TextView

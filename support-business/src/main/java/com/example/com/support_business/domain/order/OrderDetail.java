@@ -82,7 +82,15 @@ public class OrderDetail implements Serializable {
     public String shopId;
 
 
-    public static class Order {
+    public static class Order implements Serializable {
+        /**
+         * 商品图片
+         */
+        public String goodsUrl;
+        /**
+         * 商品ID
+         */
+        public String goodsId;
         /**
          * 商品名称
          */
@@ -95,5 +103,16 @@ public class OrderDetail implements Serializable {
          * 价格
          */
         public String price;
+
+        public Order() {
+
+        }
+
+        public Order(String goodsId, String goodsName, int number, String price) {
+            this.goodsName = goodsName;
+            this.goodsId = goodsId;
+            this.number = number;
+            this.price = price;
+        }
     }
 }
