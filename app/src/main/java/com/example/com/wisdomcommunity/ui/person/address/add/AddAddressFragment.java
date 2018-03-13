@@ -76,7 +76,10 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
             type = bundle.getInt(TYPE);
             position = bundle.getInt(KEY_POSITION);
             address = (Address) bundle.getSerializable(KEY_ADDRESS);
-
+            addressId = address.addressId;
+            if (addAddressAdapter != null) {
+                addAddressAdapter.setData(address);
+            }
         }
         title.setText(strTitle);
         delete.setVisibility(type == TYPE_ADD ? View.GONE : View.VISIBLE);
@@ -114,10 +117,10 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
                 showShortToast(getString(R.string.please_input_phone));
                 return;
             }
-            if (TextUtils.isEmpty(addAddressAdapter.getDistrict())) {
-                showShortToast(getString(R.string.please_input_district));
-                return;
-            }
+//            if (TextUtils.isEmpty(addAddressAdapter.getDistrict())) {
+//                showShortToast(getString(R.string.please_input_district));
+//                return;
+//            }
             if (TextUtils.isEmpty(addAddressAdapter.getDetailAddress())) {
                 showShortToast(getString(R.string.please_input_address));
                 return;
@@ -193,7 +196,7 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
     }
 
     @Override
-    public void deleteSuccess(String msg,String addressId) {
+    public void deleteSuccess(String msg, String addressId) {
         showShortToast(msg);
     }
 

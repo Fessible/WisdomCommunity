@@ -43,6 +43,14 @@ interface CommunityApi {
     @GET("personal/address/{userId}")
     public Observable<Response<ListEntity<Address>>> address(@Path("userId") String userId);
 
+    //修改地址
+    @POST("personal/address/edit")
+    public Observable<Response<Entity>> editAddress(@Body Address address);
+
+    //删除地址
+    @GET("personal/address/delete/{addressId}")
+    public Observable<Response<Entity>> deleteAddress(@Path("addressId") String addressId);
+
     //头像编辑
     @Multipart
     @POST("personal/headImage")
@@ -92,7 +100,7 @@ interface CommunityApi {
     @GET("shop/list")
     public Observable<Response<ListEntity<ShopList>>> shopList();
 
-//    //店铺详情
+    //    //店铺详情
     @GET("shop/details/{shopId}")
     public Observable<Response<ResultEntity<ShopDetail>>> shopDetail(@Path("shopId") String shopId);
 

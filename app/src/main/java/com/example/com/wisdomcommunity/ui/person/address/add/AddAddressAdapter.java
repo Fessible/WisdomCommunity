@@ -101,7 +101,7 @@ public class AddAddressAdapter extends BaseAdapter<AddAddressAdapter.AddHolder> 
             itemList.add(new StandardItem(mContext.getString(R.string.name), mContext.getString(R.string.name_hint), name, TYPE_NAME));
             itemList.add(new SexItem(sex));
             itemList.add(new StandardItem(mContext.getString(R.string.phone), mContext.getString(R.string.phont_hint), phone, Constants.TYPE_PHONE));
-            itemList.add(new ChoseItem(district));
+//            itemList.add(new ChoseItem(district));
             itemList.add(new StandardItem(mContext.getString(R.string.detail_address), mContext.getString(R.string.address_hint), detailAddress, Constants.TYPE_OTHER));
         }
     };
