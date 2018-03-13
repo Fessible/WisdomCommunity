@@ -106,4 +106,12 @@
     <string name="pay_right">立即结算</string>
     <string name="empty_cart">购物车空空哦</string>
     <string name="to_select">去挑挑看</string>
+    <string name="delete_address">删除地址</string>
+    <string name="delete">删除</string>
+    <string name="please_input_name">请输入姓名</string>
+    <string name="please_input_phone">请输入手机号</string>
+    <string name="please_input_district">请选择小区</string>
+    <string name="please_input_address">请输入详细地址</string>
+    <string name="wheather_delete_address">确定删除地址?</string>
+
 </resources>

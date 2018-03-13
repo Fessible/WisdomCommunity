@@ -1,5 +1,7 @@
 package com.example.com.support_business.domain.personal;
 
+import com.example.com.support_business.Constants;
+
 import java.io.Serializable;
 
 /**
@@ -22,4 +24,18 @@ public class Address implements Serializable {
      * 电话
      */
     public String phone;
+    /**
+     * 小区
+     */
+    public String district;
+    /**
+     * 性别
+     */
+    @Constants.Gender
+    public int sex;
+
+    /**
+     * 地址ID
+     */
+    public String addressId;
 }

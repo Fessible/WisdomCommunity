@@ -11,7 +11,6 @@ import com.example.com.support_business.domain.personal.Address;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseAdapter;
 import com.example.com.wisdomcommunity.base.BaseHolder;
-import com.example.com.wisdomcommunity.ui.order.OrderAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -83,7 +82,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
 
     @Override
     public void onBindViewHolder(AddressHolder holder, int position) {
-        holder.bindHolder(mContext, itemList.get(position), onItemClickListener);
+        holder.bindHolder(mContext, itemList.get(position),position, onItemClickListener);
     }
 
     @Override
@@ -112,8 +111,8 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
         }
 
         @Override
-        public void bindHolder(Context context, StandardItem item, final OnItemClickListener onItemClickListener) {
-            Address address = item.address;
+        public void bindHolder(Context context, StandardItem item, final int position, final OnItemClickListener onItemClickListener) {
+            final Address address = item.address;
             tvName.setText(address.name);
             tvAddress.setText(address.address);
             tvPhone.setText(address.phone);
@@ -121,7 +120,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick();
+                        onItemClickListener.onItemClick(address,position);
                     }
                 }
             });
@@ -134,7 +133,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
         }
 
         @Override
-        public void bindHolder(Context context, EmptyItem item, OnItemClickListener onItemClickListener) {
+        public void bindHolder(Context context, EmptyItem item, int position, OnItemClickListener onItemClickListener) {
 
         }
     }
@@ -180,11 +179,11 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
             super(context, parent, adapterLayoutResId);
         }
 
-        public abstract void bindHolder(Context context, II item, final OnItemClickListener onItemClickListener);
+        public abstract void bindHolder(Context context, II item, int position, final OnItemClickListener onItemClickListener);
 
     }
 
     public interface OnItemClickListener {
-        void onItemClick();
+        void onItemClick(Address addressId, int position);
     }
 }

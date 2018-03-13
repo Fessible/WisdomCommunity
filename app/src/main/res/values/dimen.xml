@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="palette_primary_text_size">18sp</dimen>
+    <dimen name="palette_secondary_text_size">16sp</dimen>
+    <dimen name="text_15_size">15sp</dimen>
+    <dimen name="palette_tertiary_text_size">14sp</dimen>
+    <dimen name="palette_quaternary_text_size">12sp</dimen>
+    <dimen name="palette_special_text_size">11sp</dimen>
+    <dimen name="palette_quinary_text_size">10sp</dimen>
+    <dimen name="palette_senary_text_size">8sp</dimen>
+</resources>

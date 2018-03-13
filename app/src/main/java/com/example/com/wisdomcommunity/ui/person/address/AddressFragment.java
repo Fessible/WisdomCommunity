@@ -21,6 +21,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
+
 /**
  * Created by rhm on 2018/2/26.
  */
@@ -29,6 +31,10 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     public static final String TAG_ADDRESS_FRAGMENT = "ADDRESS_FRAGMENT";
     public static final int REQUEST_CODE = 1;
     public static final String TITLE = "title";
+    public static final String TYPE = "type";
+    public static final int TYPE_EDIT = 0;//修改地址
+    public static final int TYPE_ADD = 1;//添加地址
+    public static final String KEY_ADDRESS = "address";
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -56,10 +62,13 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         presenter.loadAddress("123");
         addressAdapter.setOnItemClickListener(new AddressAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick() {
+            public void onItemClick(Address address, int position) {
                 Bundle bundle = new Bundle();
-                bundle.putString(TITLE,getContext().getString(R.string.edit_address));
-                IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle,AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT,REQUEST_CODE);
+                bundle.putString(TITLE, getContext().getString(R.string.edit_address));
+                bundle.putInt(TYPE, TYPE_EDIT);
+                bundle.putInt(KEY_POSITION, position);
+                bundle.putSerializable(KEY_ADDRESS, address);
+                IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_CODE);
             }
         });
 
@@ -75,8 +84,9 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     @OnClick(R.id.add_layout)
     public void add() {
         Bundle bundle = new Bundle();
-        bundle.putString(TITLE,getContext().getString(R.string.title_add_address));
-        IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle,AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT,REQUEST_CODE);
+        bundle.putString(TITLE, getContext().getString(R.string.title_add_address));
+        bundle.putInt(TYPE, TYPE_ADD);
+        IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_CODE);
     }
 
     @Override
@@ -107,9 +117,10 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
 
     @Override
     public void onLoadAddressSuccess(List<Address> addressList) {
-        addressAdapter.setData(addressList);
-        addressAdapter.notifyDataSetChanged();
-
+        if (addressAdapter != null) {
+            addressAdapter.setData(addressList);
+            addressAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

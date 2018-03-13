@@ -5,12 +5,14 @@
     android:background="@color/white">
 
     <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/rb_men"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_rb"
@@ -20,6 +22,7 @@
             android:textColor="@color/text_normal" />
 
         <RadioButton
+            android:id="@+id/rb_woman"
             android:layout_marginLeft="10dp"
             android:button="@drawable/selector_rb"
             android:padding="10dp"

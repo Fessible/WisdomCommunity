@@ -2,6 +2,7 @@ package com.example.com.wisdomcommunity.ui.person.info.username;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -30,6 +31,9 @@ public class UserNameFragment extends BaseFragment {
     @BindView(R.id.sure)
     TextView sure;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private String strUserName;
 
     @Override
@@ -44,6 +48,12 @@ public class UserNameFragment extends BaseFragment {
         userName.setText(name);
         userName.setSelection(name != null ? name.length() : 0);
         userName.addTextChangedListener(textWatcher);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -72,7 +82,7 @@ public class UserNameFragment extends BaseFragment {
     public void sure() {
         Intent intent = new Intent();
         intent.putExtra(KEY_USER_NAME, strUserName);
-        getActivity().setResult(RESULT_OK,intent);
+        getActivity().setResult(RESULT_OK, intent);
         getActivity().finish();
     }
 
