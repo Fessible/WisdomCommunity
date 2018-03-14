@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">智慧社区直销平台</string>
+    <string name="app_name">智慧社区</string>
     <!--登录-->
     <string name="login_forget_pass">忘记密码</string>
     <string name="hint_input_phone">请输入手机号</string>
@@ -113,5 +113,10 @@
     <string name="please_input_district">请选择小区</string>
     <string name="please_input_address">请输入详细地址</string>
     <string name="wheather_delete_address">确定删除地址?</string>
+    <string name="wheather_clear_cart">是否清空购物车？</string>
+    <string name="to_pay">去支付</string>
+    <string name="total">总计</string>
+    <string name="make_order">确认订单</string>
+    <string name="money">商品金额</string>
 
 </resources>

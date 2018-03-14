@@ -1,18 +1,26 @@
 package com.example.com.wisdomcommunity.ui.shop.cart;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +94,61 @@ public class CartFragment extends BaseFragment {
             txShipment.setText(getContext().getString(R.string.shipment_fee, String.valueOf(shipment)));
         }
 
+        adapter.setCallback(callback);
+
+    }
+
+    private CartAdapter.Callback callback = new CartAdapter.Callback() {
+        @Override
+        public void onDelete(final int position, OrderDetail.Order order, final Float price) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage("是否删除该商品？")
+                    .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            if (adapter != null) {
+                                adapter.remove(position);
+                                checkIsEmpty();
+                                totalPay -= price;
+                                showTotalPrice();
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+
+        @Override
+        public void onAddItem(OrderDetail.Order order, float price, int num) {
+            totalPay += price;
+            showTotalPrice();
+        }
+
+        @Override
+        public void onMinusItem(OrderDetail.Order order, float price, int num) {
+            totalPay -= price;
+            showTotalPrice();
+        }
+    };
+
+    private void showTotalPrice() {
+        DecimalFormat decimalFormat = new DecimalFormat(".00");
+        String strPrice = decimalFormat.format(totalPay);
+        totalPrice.setText(strPrice);
+    }
+
+    private void checkIsEmpty() {
+        if (adapter != null) {
+            if (adapter.getItemCount() == 0) {
+                showEmpty(true);
+            }
+        }
     }
 
     private void parseHashMap(HashMap<String, OrderDetail.Order> orderHashMap) {
@@ -102,18 +165,54 @@ public class CartFragment extends BaseFragment {
     private View.OnClickListener navigationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            Intent data = new Intent();
             getActivity().finish();
         }
     };
 
     @OnClick(R.id.delete)
     public void Delete() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.wheather_clear_cart)
+                .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if (adapter != null) {
+                            adapter.destroy();
+                            adapter.notifyDataSetChanged();
+                            showEmpty(true);
+                        }
 
+                    }
+                })
+                .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     @OnClick(R.id.buy)
     public void buy() {
+        IntentUtil.startTemplateActivity(CartFragment.this, PayFragment.class, PayFragment.TAG_PAY_FRAGMENT);
+    }
 
+    @BindView(R.id.delete)
+    ImageView delete;
+
+    @BindView(R.id.buy_layout)
+    RelativeLayout buyLayout;
+
+    @BindView(R.id.empty_layout)
+    RelativeLayout emptyLayout;
+
+    private void showEmpty(boolean isEmpty) {
+        delete.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        emptyLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        buyLayout.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
     @Override

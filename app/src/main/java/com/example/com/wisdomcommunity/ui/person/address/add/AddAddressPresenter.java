@@ -16,7 +16,7 @@ import java.util.Date;
  */
 
 public class AddAddressPresenter extends EditAddressContract.Presenter {
-    public AddAddressPresenter(Context context, EditAddressContract.View view) {
+    AddAddressPresenter(Context context, EditAddressContract.View view) {
         super(context, view);
     }
 
@@ -38,7 +38,7 @@ public class AddAddressPresenter extends EditAddressContract.Presenter {
                 if (entity != null) {
                     if (entity.isOk()) {
                         if (view != null) {
-                            view.saveSuccess(entity.msg,address);
+                            view.saveSuccess(entity.msg, address);
                         }
                     } else {
                         if (view != null) {
@@ -55,7 +55,7 @@ public class AddAddressPresenter extends EditAddressContract.Presenter {
             @Override
             public void onFailure(Throwable throwable) {
                 hideProgress();
-                if (view!=null)
+                if (view != null)
                     view.saveFailure(networkError);
             }
         });
@@ -79,7 +79,7 @@ public class AddAddressPresenter extends EditAddressContract.Presenter {
                 if (entity != null) {
                     if (entity.isOk()) {
                         if (view != null) {
-                            view.deleteSuccess(entity.msg,addressId);
+                            view.deleteSuccess(entity.msg, addressId);
                         }
                     } else {
                         if (view != null) {
@@ -96,7 +96,7 @@ public class AddAddressPresenter extends EditAddressContract.Presenter {
             @Override
             public void onFailure(Throwable throwable) {
                 hideProgress();
-                if (view!=null)
+                if (view != null)
                     view.deleteFailure(networkError);
             }
         });

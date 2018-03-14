@@ -1,8 +1,6 @@
 package com.example.com.wisdomcommunity.ui.shop.cart;
 
 import android.content.Context;
-import android.media.Image;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,7 +15,6 @@ import com.example.com.wisdomcommunity.base.BaseAdapter;
 import com.example.com.wisdomcommunity.base.BaseHolder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,6 +45,11 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
         if (orderList != null) {
             orderList.clear();
         }
+    }
+
+    public void remove(int position) {
+        orderList.remove(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -108,6 +110,7 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
                 public void onClick(View view) {
                     if (count < order.remain) {
                         number.setText(String.valueOf(++count));
+                        callback.onAddItem(order, Float.valueOf(order.price), count);
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_LONG).show();
                     }
@@ -117,12 +120,15 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
             minus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (count > 0) {
+                    if (count > 1) {
                         number.setText(String.valueOf(--count));
+                        if (callback != null) {
+                            callback.onMinusItem(order, Float.valueOf(order.price), count);
+                        }
                     } else {
                         //delete
                         if (callback != null) {
-                            callback.onDelete(position);
+                            callback.onDelete(position,order,Float.valueOf(order.price));
                         }
                     }
                 }
@@ -130,12 +136,16 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
         }
     }
 
-    interface Item{
+    interface Item {
 
     }
 
     interface Callback {
-        void onDelete(int position);
+        void onDelete(int position, OrderDetail.Order order, Float aFloat);
+
+        void onAddItem(OrderDetail.Order order, float price, int num);
+
+        void onMinusItem(OrderDetail.Order order, float price, int num);
     }
 
 }

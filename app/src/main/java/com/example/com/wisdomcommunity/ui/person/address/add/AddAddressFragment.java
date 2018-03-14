@@ -27,6 +27,8 @@ import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.
 import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.TITLE;
 import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.TYPE;
 import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.TYPE_ADD;
+import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.TYPE_DELETE;
+import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.TYPE_EDIT;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
 
 /**
@@ -35,6 +37,8 @@ import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragm
 
 public class AddAddressFragment extends BaseFragment implements EditAddressContract.View {
     public static final String TAG_ADD_ADDRESS_FRAGMENT = "ADD_ADDRESS_FRAGMENT";
+    public static final String KEY_ADDRESS_ID = "key_id";
+
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -76,7 +80,9 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
             type = bundle.getInt(TYPE);
             position = bundle.getInt(KEY_POSITION);
             address = (Address) bundle.getSerializable(KEY_ADDRESS);
-            addressId = address.addressId;
+            if (address != null) {
+                addressId = address.addressId;
+            }
             if (addAddressAdapter != null) {
                 addAddressAdapter.setData(address);
             }
@@ -128,7 +134,12 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
 
             Address address = new Address();
             address.sex = addAddressAdapter.getSex();
-            address.addressId = addressId;
+            if (addressId != null) {
+                address.addressId = addressId;
+            } else {
+                address.addressId = String.valueOf(Math.random() * 1000);
+            }
+            address.sex = addAddressAdapter.getSex();
             address.name = addAddressAdapter.getName();
             address.phone = addAddressAdapter.getPhone();
             address.district = addAddressAdapter.getDistrict();
@@ -185,6 +196,10 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
         if (address != null) {
             Intent intent = new Intent();
             intent.putExtra(KEY_ADDRESS, address);
+            intent.putExtra(TYPE, type);
+            if (type == TYPE_EDIT) {
+                intent.putExtra(KEY_POSITION, position);
+            }
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         }
@@ -198,6 +213,12 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
     @Override
     public void deleteSuccess(String msg, String addressId) {
         showShortToast(msg);
+        Intent data = new Intent();
+        data.putExtra(KEY_ADDRESS_ID, addressId);
+        data.putExtra(TYPE, TYPE_DELETE);
+        data.putExtra(KEY_POSITION, position);
+        getActivity().setResult(Activity.RESULT_OK, data);
+        getActivity().finish();
     }
 
     @Override

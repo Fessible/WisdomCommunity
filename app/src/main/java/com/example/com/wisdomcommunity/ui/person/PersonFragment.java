@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.personal.Info;
+import com.example.com.wisdomcommunity.InfoContract;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.EditInfoContract;
@@ -34,17 +35,20 @@ import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_ADDRE
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_FEEDBACK;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_SERVICE;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_SET;
+import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KEY_HEADIMAGE;
+import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KEY_NAME;
+import static com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment.KEY_SIGNATURE;
 
 /**
  * 个人中心
  * Created by rhm on 2018/1/16.
  */
 
-public class PersonFragment extends BaseFragment implements EditInfoContract.View {
+public class PersonFragment extends BaseFragment implements InfoContract.View {
     public static final String TAG_PERSON_FRAGMENT = "PERSON_FRAGMENT";
     public static final String KEY_INFO = "INFO";
 
-    public static int REQUEST_CODE = 1;
+    public static final int REQUEST_CODE = 2;
     private Info info;
 
     @BindView(R.id.recycler_view)
@@ -60,7 +64,7 @@ public class PersonFragment extends BaseFragment implements EditInfoContract.Vie
     TextView signature;
 
     private PersonAdapter adapter;
-    private EditInfoPresenter infoPresenter;
+    private InfoContract.Presenter infoPresenter;
 
     @Override
     public int getResLayout() {
@@ -69,7 +73,7 @@ public class PersonFragment extends BaseFragment implements EditInfoContract.Vie
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        infoPresenter = new EditInfoPresenter(getContext(), PersonFragment.this);
+        infoPresenter = new PersonPresenter(getContext(), PersonFragment.this);
         //todo userId
         infoPresenter.loadInfo("122");
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -106,15 +110,23 @@ public class PersonFragment extends BaseFragment implements EditInfoContract.Vie
     public void editInfo() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("INFO", info);
-        IntentUtil.startTemplateActivityForResult(getActivity(), EditInfoFragment.class, bundle,EditInfoFragment.TAG_INFO_FRAGMENT, REQUEST_CODE);
+        IntentUtil.startTemplateActivityForResult(PersonFragment.this, EditInfoFragment.class, bundle, EditInfoFragment.TAG_INFO_FRAGMENT, REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            switch (REQUEST_CODE) {
-
+            switch (requestCode) {
+                case REQUEST_CODE:
+                    signature.setText(data.getStringExtra(KEY_SIGNATURE));
+                    nickName.setText(data.getStringExtra(KEY_NAME));
+                    final int placeholderResId = R.drawable.icon_head_address;
+                    Glide.with(getContext())
+                            .load(data.getStringExtra(KEY_HEADIMAGE))
+                            .apply(new RequestOptions().placeholder(placeholderResId).centerCrop().fallback(placeholderResId))
+                            .into(headImage);
+                    break;
             }
         }
     }

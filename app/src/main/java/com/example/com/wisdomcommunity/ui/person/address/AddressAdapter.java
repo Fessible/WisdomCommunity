@@ -33,7 +33,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
     private OnItemClickListener onItemClickListener;
     private final List<Item> itemList = new ArrayList<>();
 
-    public AddressAdapter(Context context) {
+    AddressAdapter(Context context) {
         this.mContext = context;
         registerAdapterDataObserver(observer);
     }
@@ -42,8 +42,9 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
         @Override
         public void onChanged() {
             super.onChanged();
+            itemList.clear();
             if (addressList != null && !addressList.isEmpty()) {
-                for (int i=0;i<addressList.size();i++) {
+                for (int i = 0; i < addressList.size(); i++) {
                     itemList.add(new StandardItem(addressList.get(i)));
                 }
             } else {
@@ -52,11 +53,22 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
         }
     };
 
+    void setItemData(Address address, int position) {
+        StandardItem standardItem = (StandardItem) itemList.get(position);
+        standardItem.address = address;
+        notifyItemChanged(position);
+    }
+
+    void removeItem(int position) {
+        addressList.remove(position);
+        notifyDataSetChanged();
+    }
+
     public void setData(List<Address> addressList) {
         this.addressList = addressList;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
 
@@ -82,7 +94,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
 
     @Override
     public void onBindViewHolder(AddressHolder holder, int position) {
-        holder.bindHolder(mContext, itemList.get(position),position, onItemClickListener);
+        holder.bindHolder(mContext, itemList.get(position), position, onItemClickListener);
     }
 
     @Override
@@ -120,7 +132,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(address,position);
+                        onItemClickListener.onItemClick(address, position);
                     }
                 }
             });

@@ -16,11 +16,13 @@ import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
 
 /**
@@ -29,12 +31,15 @@ import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragm
 
 public class AddressFragment extends BaseFragment implements AddressContract.View {
     public static final String TAG_ADDRESS_FRAGMENT = "ADDRESS_FRAGMENT";
-    public static final int REQUEST_CODE = 1;
+    public static final int REQUEST_ADD = 0;
+    public static final int REQUEST_EDIT = 1;
     public static final String TITLE = "title";
     public static final String TYPE = "type";
     public static final int TYPE_EDIT = 0;//修改地址
     public static final int TYPE_ADD = 1;//添加地址
+    public static final int TYPE_DELETE = 2;//添加地址
     public static final String KEY_ADDRESS = "address";
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -43,6 +48,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
 
     private AddressAdapter addressAdapter;
     private AddressPresenter presenter;
+    private List<Address> addressList = new ArrayList<>();
 
     @Override
     public int getResLayout() {
@@ -68,7 +74,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
                 bundle.putInt(TYPE, TYPE_EDIT);
                 bundle.putInt(KEY_POSITION, position);
                 bundle.putSerializable(KEY_ADDRESS, address);
-                IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_CODE);
+                IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_EDIT);
             }
         });
 
@@ -80,19 +86,52 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         });
     }
 
-
     @OnClick(R.id.add_layout)
     public void add() {
         Bundle bundle = new Bundle();
         bundle.putString(TITLE, getContext().getString(R.string.title_add_address));
         bundle.putInt(TYPE, TYPE_ADD);
-        IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_CODE);
+        IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_ADD);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_EDIT:
+                    int position = data.getIntExtra(KEY_POSITION, 0);
+                    int type = data.getIntExtra(TYPE, 0);
+                    switch (type) {
+                        case TYPE_DELETE:
+                            if (addressAdapter != null) {
+                                addressAdapter.removeItem(position);
+                            }
+                            break;
+                        case TYPE_EDIT:
+                            Address address = (Address) data.getSerializableExtra(KEY_ADDRESS);
+                            if (addressAdapter != null) {
+                                addressAdapter.setItemData(address, position);
+                            }
+                            break;
+                    }
+                    break;
+                case REQUEST_ADD:
+                    Address address = (Address) data.getSerializableExtra(KEY_ADDRESS);
+                    if (addressList != null) {
+                        addressList.add(address);
+                        notifyData();
+                    }
+                    break;
+            }
+        }
+    }
 
+    private void notifyData() {
+        if (addressAdapter != null) {
+            addressAdapter.setData(addressList);
+            addressAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -117,10 +156,8 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
 
     @Override
     public void onLoadAddressSuccess(List<Address> addressList) {
-        if (addressAdapter != null) {
-            addressAdapter.setData(addressList);
-            addressAdapter.notifyDataSetChanged();
-        }
+        this.addressList = addressList;
+        notifyData();
     }
 
     @Override

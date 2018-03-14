@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -63,7 +64,8 @@ public class AddAddressAdapter extends BaseAdapter<AddAddressAdapter.AddHolder> 
         }
 
         @Override
-        public void onSexItem(int sex) {
+        public void onSexItem(int iSex) {
+            sex = iSex;
         }
 
         @Override
@@ -114,19 +116,19 @@ public class AddAddressAdapter extends BaseAdapter<AddAddressAdapter.AddHolder> 
         return name;
     }
 
-    public String getPhone() {
+    String getPhone() {
         return phone;
     }
 
-    public int getSex() {
+    int getSex() {
         return sex;
     }
 
-    public String getDistrict() {
+    String getDistrict() {
         return district;
     }
 
-    public String getDetailAddress() {
+    String getDetailAddress() {
         return detailAddress;
     }
 
@@ -174,7 +176,7 @@ public class AddAddressAdapter extends BaseAdapter<AddAddressAdapter.AddHolder> 
         TextView title;
 
         @BindView(R.id.edit)
-        TextView edit;
+        EditText edit;
 
         private int type;
         private OnItemClickListener clickListener;
@@ -187,7 +189,9 @@ public class AddAddressAdapter extends BaseAdapter<AddAddressAdapter.AddHolder> 
         public void bindHolder(Context context, StandardItem Item, OnItemClickListener clickListener) {
             if (!TextUtils.isEmpty(Item.value)) {
                 edit.setText(Item.value);
+                edit.setSelection(Item.value.length());
             }
+
             type = Item.type;
             this.clickListener = clickListener;
             title.setText(Item.title);

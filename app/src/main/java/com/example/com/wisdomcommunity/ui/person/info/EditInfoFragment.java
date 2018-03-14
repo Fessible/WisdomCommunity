@@ -2,7 +2,6 @@ package com.example.com.wisdomcommunity.ui.person.info;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.com.support_business.domain.personal.HeadImage;
 import com.example.com.support_business.domain.personal.Info;
+import com.example.com.support_business.params.PersonParams;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.EditInfoContract;
@@ -24,8 +25,7 @@ import com.example.com.wisdomcommunity.util.photo.PhotosClient;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.File;
 
 import butterknife.BindView;
 
@@ -42,12 +42,13 @@ import static com.example.com.wisdomcommunity.ui.person.info.username.UserNameFr
  * Created by rhm on 2018/2/28.
  */
 
-public class EditInfoFragment extends BaseFragment {
+public class EditInfoFragment extends BaseFragment implements EditInfoContract.View {
     public static final String TAG_INFO_FRAGMENT = "INFO_FRAGMENT";
     public static final int REQUEST_NAME = 0;
     public static final int REQUEST_SIGNATURE = 1;
     public static final String KEY_NAME = "user_name";
     public static final String KEY_SIGNATURE = "signature";
+    public static final String KEY_HEADIMAGE = "headImage";
     private BottomSheetDialog photoSheetDialog;
     private BottomSheetDialog sexBottomDialog;
 
@@ -64,6 +65,8 @@ public class EditInfoFragment extends BaseFragment {
     private int headPosition = -1;
     private int namePosition = -1;
     private int signaturePosition = -1;
+    private PersonParams personParams = new PersonParams();
+    private String headImageUrl;
 
     @Override
     public int getResLayout() {
@@ -73,15 +76,26 @@ public class EditInfoFragment extends BaseFragment {
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
 
-        Bundle bundle = getArguments();
-        Info info = (Info) bundle.getSerializable(KEY_INFO);
         adapter = new EditInfoAdapter(getContext());
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
                         .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         recyclerView.setAdapter(adapter);
-        adapter.setData(info);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Info info = (Info) bundle.getSerializable(KEY_INFO);
+            if (info != null) {
+                headImageUrl = info.headImage;
+                personParams.districtName = info.districtName;
+                personParams.nickName = info.userName;
+                personParams.sex = info.sex;
+                personParams.signature = info.signature;
+                adapter.setData(info);
+            }
+        }
+
         adapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.setClickListener(new EditInfoAdapter.OnItemClickListener() {
@@ -150,6 +164,14 @@ public class EditInfoFragment extends BaseFragment {
                         IntentUtil.startSecondActivityForResult(EditInfoFragment.this, SignatureFragment.class, signature, SignatureFragment.TAG_SIGNATURE_FRAGMENT, REQUEST_SIGNATURE);
                         break;
                     case TYPE_BACK:
+                        if (presenter != null) {
+                            presenter.editInfo(personParams);
+                        }
+                        Intent intent = new Intent();
+                        intent.putExtra(KEY_NAME, personParams.nickName);
+                        intent.putExtra(KEY_SIGNATURE, personParams.signature);
+                        intent.putExtra(KEY_HEADIMAGE, headImageUrl);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                         break;
                 }
@@ -160,6 +182,8 @@ public class EditInfoFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        presenter = new EditInfoPresenter(getContext(), EditInfoFragment.this);
+
         photosClient = new PhotosClient.Builder(this)
                 .cropSize(200)
                 .cropGalleryDir(PathUtils.getGalleryDir(getContext()))
@@ -173,9 +197,10 @@ public class EditInfoFragment extends BaseFragment {
     private PhotosClient.Callback photosClientCallback = new PhotosClient.Callback() {
         @Override
         public void onCropPicture(Uri pictureUri) {
-            String path = pictureUri.getPath();
-            if (adapter != null) {
-                adapter.setImage(path,headPosition);
+            headImageUrl = pictureUri.getPath();
+            if (adapter != null && presenter != null) {
+                adapter.setImage(headImageUrl, headPosition);
+                presenter.editHeadImage(new File(pictureUri.getPath()));
             }
         }
     };
@@ -225,12 +250,14 @@ public class EditInfoFragment extends BaseFragment {
                 case REQUEST_NAME:
                     if (data != null) {
                         String name = data.getStringExtra(KEY_USER_NAME);
+                        personParams.nickName = name;
                         adapter.setValue(name, namePosition);
                     }
                     break;
                 case REQUEST_SIGNATURE:
                     if (data != null) {
                         String signature = data.getStringExtra(KEY_SIGNATURE);
+                        personParams.signature = signature;
                         adapter.setValue(signature, signaturePosition);
                     }
                     break;
@@ -241,6 +268,51 @@ public class EditInfoFragment extends BaseFragment {
                     break;
             }
         }
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void onUnauthorized() {
+
+    }
+
+    @Override
+    public void loadInfoSuccess(Info info) {
+
+    }
+
+    @Override
+    public void loadInfoFailure(String msg) {
+
+    }
+
+    @Override
+    public void editHeadImageSuccess(HeadImage headImage, String msg) {
+//        headImageUrl = headImage.avatarURL;
+    }
+
+    @Override
+    public void editHeadImageFailure(String msg) {
+        showShortToast(msg);
+    }
+
+    @Override
+    public void editInfoSuccess(String msg) {
+        showShortToast(msg);
+    }
+
+    @Override
+    public void editInfoFailure(String msg) {
+        showShortToast(msg);
     }
 
 //    @Override

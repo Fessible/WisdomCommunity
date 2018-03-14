@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="张三"
+        android:textColor="@color/color_333333"
         android:textSize="16sp" />
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/name"
         android:text="122222222222"
+        android:textColor="@color/color_333333"
         android:textSize="16sp" />
 
     <TextView
@@ -28,12 +30,12 @@
         android:layout_below="@id/name"
         android:layout_marginTop="5dp"
         android:text="某市场化车超好吃"
-        android:textColor="@color/color_333333"
+        android:textColor="@color/text_normal"
         android:textSize="16sp" />
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/icon_edit" />

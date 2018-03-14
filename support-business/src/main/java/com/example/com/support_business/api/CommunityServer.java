@@ -1,6 +1,8 @@
 package com.example.com.support_business.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.webkit.MimeTypeMap;
 
 import com.example.com.support_business.SeverHelper;
 import com.example.com.support_business.domain.home.Banner;
@@ -8,6 +10,7 @@ import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
+import com.example.com.support_business.domain.personal.HeadImage;
 import com.example.com.support_business.domain.personal.Info;
 import com.example.com.support_business.domain.search.Search;
 import com.example.com.support_business.domain.shop.GoodsDetail;
@@ -16,11 +19,18 @@ import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
 import com.example.com.support_business.module.ResultEntity;
+import com.example.com.support_business.params.PersonParams;
+import com.example.com.support_business.util.FilenameUtils;
+
+import java.io.File;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 
 /**
@@ -410,6 +420,66 @@ public class CommunityServer extends RestyServer {
                         }
                     }
 
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
+    //头像编辑
+    public void editHeadImage(String compositeTag, @NonNull File headImageFile, final SSOCallback<ResultEntity<HeadImage>> callback) {
+        RequestBody headImage = RequestBody.create(MediaType.parse(MimeTypeMap.getSingleton().getMimeTypeFromExtension(FilenameUtils.getExtension(headImageFile.getAbsolutePath()))), headImageFile);
+        Disposable disposable = communityApi.headImage(MultipartBody.Part.createFormData("headImage", headImageFile.getName(), headImage))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResultEntity<HeadImage>>>() {
+                    @Override
+                    public void accept(Response<ResultEntity<HeadImage>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(compositeTag, disposable);
+    }
+
+    //个人信息编辑
+    public void editInfo(String composite, PersonParams params, final SSOCallback<Entity> callback) {
+        Disposable disposable = communityApi.edit(params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<Entity>>() {
+                    @Override
+                    public void accept(Response<Entity> entityResponse) throws Exception {
+                        if (entityResponse != null) {
+                            if (entityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, entityResponse);
+                            } else if (entityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+
+                    }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
