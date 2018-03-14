@@ -47,7 +47,11 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
         }
     }
 
-    public void remove(int position) {
+    public List<OrderDetail.Order> getOrderList() {
+        return orderList;
+    }
+
+    void remove(int position) {
         orderList.remove(position);
         notifyDataSetChanged();
     }
@@ -110,6 +114,7 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
                 public void onClick(View view) {
                     if (count < order.remain) {
                         number.setText(String.valueOf(++count));
+                        order.number = count;
                         callback.onAddItem(order, Float.valueOf(order.price), count);
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_LONG).show();
@@ -122,22 +127,19 @@ public class CartAdapter extends BaseAdapter<CartAdapter.CartHolder> {
                 public void onClick(View view) {
                     if (count > 1) {
                         number.setText(String.valueOf(--count));
+                        order.number = count;
                         if (callback != null) {
                             callback.onMinusItem(order, Float.valueOf(order.price), count);
                         }
                     } else {
                         //delete
                         if (callback != null) {
-                            callback.onDelete(position,order,Float.valueOf(order.price));
+                            callback.onDelete(position, order, Float.valueOf(order.price));
                         }
                     }
                 }
             });
         }
-    }
-
-    interface Item {
-
     }
 
     interface Callback {

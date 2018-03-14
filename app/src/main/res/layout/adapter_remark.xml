@@ -4,18 +4,28 @@
     android:layout_height="50dp"
     android:background="@drawable/selector_normal"
     android:gravity="center_vertical"
-    android:paddingLeft="18dp"
-    android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:paddingRight="18dp">
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="10dp">
 
     <TextView
-        android:text="hhhhhh"
-        android:textSize="16sp"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_333333" />
+        android:text="@string/remark"
+        android:textColor="@color/color_333333"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/right_arrow"
+        android:layout_toRightOf="@id/title"
+        android:gravity="right" />
 
     <TextView
         android:id="@+id/right_arrow"

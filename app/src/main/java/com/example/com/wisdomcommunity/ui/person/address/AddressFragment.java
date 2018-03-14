@@ -23,6 +23,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.wisdomcommunity.ui.shop.pay.PayFragment.KEY_TYPE;
+import static com.example.com.wisdomcommunity.ui.shop.pay.PayFragment.TYPE_CHOOSE;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
 
 /**
@@ -49,6 +51,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     private AddressAdapter addressAdapter;
     private AddressPresenter presenter;
     private List<Address> addressList = new ArrayList<>();
+    private int type;
 
     @Override
     public int getResLayout() {
@@ -57,6 +60,11 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            type = bundle.getInt(KEY_TYPE);
+        }
+
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
                         .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
@@ -69,6 +77,16 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         addressAdapter.setOnItemClickListener(new AddressAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Address address, int position) {
+                if (type == TYPE_CHOOSE) {
+                    Intent data = new Intent();
+                    data.putExtra(KEY_ADDRESS, address);
+                    getActivity().setResult(RESULT_OK, data);
+                    getActivity().finish();
+                }
+            }
+
+            @Override
+            public void editItem(Address address, int position) {
                 Bundle bundle = new Bundle();
                 bundle.putString(TITLE, getContext().getString(R.string.edit_address));
                 bundle.putInt(TYPE, TYPE_EDIT);

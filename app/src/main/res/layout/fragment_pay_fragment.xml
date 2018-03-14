@@ -71,8 +71,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
             android:layout_toRightOf="@id/sign"
             android:text="89"
             android:textColor="@color/color_ffff4444"

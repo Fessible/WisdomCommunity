@@ -2,13 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_normal"
+    android:background="@color/white"
+    android:minHeight="50dp"
     android:padding="18dp">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLength="10"
         android:text="张三"
         android:textColor="@color/color_333333"
         android:textSize="16sp" />
@@ -29,15 +31,37 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name"
         android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/edit_layout"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="某市场化车超好吃"
         android:textColor="@color/text_normal"
         android:textSize="16sp" />
 
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+    <RelativeLayout
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/icon_edit" />
+        android:id="@+id/edit_layout"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/ic_edit"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_bullet_box_line_v" />
+
+        <ImageView
+            android:id="@+id/ic_edit"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_edit" />
+    </RelativeLayout>
+
 
 </RelativeLayout>

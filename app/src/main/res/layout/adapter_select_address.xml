@@ -3,35 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_normal"
-    android:paddingTop="20dp"
     android:paddingBottom="20dp"
     android:paddingLeft="18dp"
-    android:paddingRight="18dp">
+    android:paddingRight="18dp"
+    android:paddingTop="20dp">
 
     <TextView
-        android:text="暂无收货地址，请点击添加！"
-        android:drawablePadding="10dp"
-        android:drawableLeft="@drawable/icon_input_address"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/icon_input_address"
+        android:drawablePadding="10dp"
+        android:text="@string/please_add_address"
         android:textColor="@color/color_333333" />
-    <TextView
-        android:textColor="@color/text_normal"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentLeft="true"
-        android:text="啦啦啦啦啦啦啦啦啦啦了扩女女女女扩扩扩；； 考虑考虑考虑顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
-        android:layout_toLeftOf="@id/right_arrow"
-        android:layout_below="@id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_centerVertical="true"
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/title"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@id/right_arrow"
+        android:textColor="@color/text_normal"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/right_arrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/right_arrow" />
 
 

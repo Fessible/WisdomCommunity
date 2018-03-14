@@ -5,6 +5,7 @@ import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.com.support_business.domain.personal.Address;
@@ -117,6 +118,9 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
 
         @BindView(R.id.phone)
         TextView tvPhone;
+        
+        @BindView(R.id.edit_layout)
+        RelativeLayout editlayout;
 
         public StandardHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.item_address_manager);
@@ -133,6 +137,14 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
                         onItemClickListener.onItemClick(address, position);
+                    }
+                }
+            });
+            editlayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.editItem(address, position);
                     }
                 }
             });
@@ -197,5 +209,7 @@ public class AddressAdapter extends BaseAdapter<AddressAdapter.AddressHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Address addressId, int position);
+
+        void editItem(Address address, int position);
     }
 }

@@ -20,6 +20,7 @@ import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +112,7 @@ public class CartFragment extends BaseFragment {
                                 adapter.remove(position);
                                 checkIsEmpty();
                                 totalPay -= price;
-                                showTotalPrice();
+                                showTotalPrice(totalPay);
                             }
                         }
                     })
@@ -127,19 +128,19 @@ public class CartFragment extends BaseFragment {
         @Override
         public void onAddItem(OrderDetail.Order order, float price, int num) {
             totalPay += price;
-            showTotalPrice();
+            showTotalPrice(totalPay);
         }
 
         @Override
         public void onMinusItem(OrderDetail.Order order, float price, int num) {
             totalPay -= price;
-            showTotalPrice();
+            showTotalPrice(totalPay);
         }
     };
 
-    private void showTotalPrice() {
+    private void showTotalPrice(Float totalPay) {
         DecimalFormat decimalFormat = new DecimalFormat(".00");
-        String strPrice = decimalFormat.format(totalPay);
+        String strPrice = decimalFormat.format(this.totalPay);
         totalPrice.setText(strPrice);
     }
 
@@ -197,7 +198,13 @@ public class CartFragment extends BaseFragment {
 
     @OnClick(R.id.buy)
     public void buy() {
-        IntentUtil.startTemplateActivity(CartFragment.this, PayFragment.class, PayFragment.TAG_PAY_FRAGMENT);
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_TOTAL_MONEY, totalPrice.getText().toString());
+        bundle.putInt(KEY_SHIPMENT, shipment);
+        if (adapter != null) {
+            bundle.putSerializable(KEY_ORDER_LIST, (Serializable) adapter.getOrderList());
+        }
+        IntentUtil.startTemplateActivity(CartFragment.this, PayFragment.class, bundle, PayFragment.TAG_PAY_FRAGMENT);
     }
 
     @BindView(R.id.delete)
