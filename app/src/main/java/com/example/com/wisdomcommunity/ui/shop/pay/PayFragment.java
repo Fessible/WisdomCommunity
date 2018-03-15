@@ -5,25 +5,36 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.com.support_business.Constants;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.personal.Address;
+import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.ui.order.OrderDetailFragment;
 import com.example.com.wisdomcommunity.ui.person.address.AddressFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.wisdomcommunity.ui.order.OrderDetailFragment.KEY_ORDER_DETAIL;
+import static com.example.com.wisdomcommunity.ui.order.OrderDetailFragment.KEY_SHOP_ID;
 import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.KEY_ADDRESS;
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.pay.RemarkFragment.KEY_REMARK;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_ORDER_LIST;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_SHIPMENT;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_SHOP;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_TOTAL_MONEY;
 
 /**
@@ -53,6 +64,15 @@ public class PayFragment extends BaseFragment {
     private PayAdapter adapter;
     private int remarkPosition;
     private int addressPosition;
+    private ShopDetail shopDetail;
+    private String shopId;
+    private String shopName;
+    private Address address;
+    private int ishipment;
+    private String strPrice;//实际支付
+    private String total;//总价
+    private String remark;
+    private List<OrderDetail.Order> orderList;
 
     @Override
     public int getResLayout() {
@@ -70,11 +90,16 @@ public class PayFragment extends BaseFragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            String strPrice = bundle.getString(KEY_TOTAL_MONEY);
+            shopDetail = (ShopDetail) bundle.getSerializable(KEY_SHOP);
+            shopId = bundle.getString(KEY_SHOP_ID);
+            shopName = bundle.getString(KEY_SHOP_NAME);
+
+            strPrice = bundle.getString(KEY_TOTAL_MONEY);
             totalPrice.setText(strPrice);
-            int shipment = bundle.getInt(KEY_SHIPMENT);
-            List<OrderDetail.Order> orderList = (List<OrderDetail.Order>) bundle.getSerializable(KEY_ORDER_LIST);
-            adapter.setData(orderList, shipment, String.valueOf(Float.valueOf(strPrice) - shipment));
+            ishipment = bundle.getInt(KEY_SHIPMENT);
+            total = String.valueOf(Float.valueOf(strPrice) - ishipment);
+            orderList = (List<OrderDetail.Order>) bundle.getSerializable(KEY_ORDER_LIST);
+            adapter.setData(orderList, ishipment, total);
             adapter.notifyDataSetChanged();
         }
 
@@ -111,18 +136,52 @@ public class PayFragment extends BaseFragment {
             switch (requestCode) {
                 case REQUEST_REMARK:
                     if (data != null && adapter != null) {
-                        String remark = data.getStringExtra(KEY_REMARK);
+                        remark = data.getStringExtra(KEY_REMARK);
                         adapter.setRemark(remark, remarkPosition);
                     }
                     break;
                 case REQUEST_ADDRESS:
                     if (data != null && adapter != null) {
-                        Address address = (Address) data.getSerializableExtra(KEY_ADDRESS);
+                        address = (Address) data.getSerializableExtra(KEY_ADDRESS);
                         adapter.setAddress(address.name + " " + address.phone, address.address, addressPosition);
                     }
                     break;
             }
         }
+    }
+
+    @OnClick(R.id.buy)
+    public void buy() {
+        if (address == null) {
+            showShortToast(getContext().getString(R.string.add_address));
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.shopPhone = shopDetail.shopPhone;
+        orderDetail.shopId = shopId;
+        orderDetail.shopName = shopName;
+        //收货人
+        orderDetail.address = address.address;
+        orderDetail.receiverPhone = address.phone;
+        orderDetail.receiverName = address.name;
+        orderDetail.remark = remark;
+        orderDetail.orderTime = new Date().getTime();//获取当前时间的时间戳
+
+        orderDetail.orderId = orderDetail.orderTime + String.valueOf(Math.abs(UUID.randomUUID().hashCode()));
+
+        orderDetail.shipment = ishipment;
+        orderDetail.total = total;
+        orderDetail.pay = strPrice;
+
+        orderDetail.orderStatus = Constants.STATUS_SUBMIT;
+        orderDetail.details = orderList;
+
+        bundle.putSerializable(KEY_ORDER_DETAIL, orderDetail);
+
+        IntentUtil.startTemplateActivity(PayFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT);
+        getActivity().finish();
     }
 
     @Override

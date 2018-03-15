@@ -84,7 +84,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/btn_blue_selector"
             android:gravity="center"
-            android:text="@string/to_pay"
+            android:text="@string/submit_order"
             android:textColor="@color/white" />
     </RelativeLayout>
 </LinearLayout>

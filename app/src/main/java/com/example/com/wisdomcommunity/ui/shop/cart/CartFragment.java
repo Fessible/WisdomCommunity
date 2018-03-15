@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.com.support_business.domain.order.OrderDetail;
+import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
@@ -30,8 +31,11 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_ORDER_LIST;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_SHIPMENT;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_SHOP;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_TOTAL_MONEY;
 
 /**
@@ -61,6 +65,9 @@ public class CartFragment extends BaseFragment {
     private Float totalPay;
     private int shipment;
 
+    private ShopDetail shopDetail;
+    private String shopId;
+    private String shopName;
 
     @Override
     public int getResLayout() {
@@ -85,6 +92,10 @@ public class CartFragment extends BaseFragment {
                         .build()).build());
 
         if (bundle != null) {
+            shopDetail = (ShopDetail) bundle.getSerializable(KEY_SHOP);
+            shopId = bundle.getString(KEY_SHOP_ID);
+            shopName = bundle.getString(KEY_SHOP_NAME);
+
             HashMap<String, OrderDetail.Order> orderHashMap = (HashMap<String, OrderDetail.Order>) bundle.getSerializable(KEY_ORDER_LIST);
             shipment = bundle.getInt(KEY_SHIPMENT);
             String total = bundle.getString(KEY_TOTAL_MONEY);
@@ -199,6 +210,9 @@ public class CartFragment extends BaseFragment {
     @OnClick(R.id.buy)
     public void buy() {
         Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_SHOP, shopDetail);
+        bundle.putString(KEY_SHOP_ID, shopId);
+        bundle.putString(KEY_SHOP_NAME, shopName);
         bundle.putString(KEY_TOTAL_MONEY, totalPrice.getText().toString());
         bundle.putInt(KEY_SHIPMENT, shipment);
         if (adapter != null) {

@@ -24,6 +24,16 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="Widget.Design.ProgressBar.Large" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/icon_box_load_ring_spinner</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDuration">1000</item>
+        <item name="android:minWidth">70dp</item>
+        <item name="android:maxWidth">70dp</item>
+        <item name="android:minHeight">70dp</item>
+        <item name="android:maxHeight">70dp</item>
+    </style>
+
     <style name="AlertDialogStyle">
         <item name="android:layout">@layout/dialog_altert_layout</item>
     </style>

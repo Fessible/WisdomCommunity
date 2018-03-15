@@ -46,10 +46,17 @@ public interface Constants {
      */
     public static final int STATUS_WAIT_PAY = 2;
 
+    /**
+     * 已提交
+     */
+    public static final int STATUS_SUBMIT = 3;
+
     @IntDef({
             STATUS_FINISHED,
             STATUS_SENDING,
-            STATUS_WAIT_PAY})
+            STATUS_WAIT_PAY,
+            STATUS_SUBMIT
+    })
     @Retention(RetentionPolicy.SOURCE)
     public @interface STATUS {
     }

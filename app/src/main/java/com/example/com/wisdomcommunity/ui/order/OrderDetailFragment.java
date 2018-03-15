@@ -34,7 +34,8 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME
 public class OrderDetailFragment extends BaseFragment implements OrderDetailContract.View {
     public static final String TAG_DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String KEY_SHOP_ID = "shop_id";
-    private OrderDetailPresenter presenter;
+    public static final String KEY_ORDER_DETAIL = "order_detail";
+    private OrderDetailContract.Presenter presenter;
     private OrderDetailAdapter adapter;
 
     @BindView(R.id.toolbar)
@@ -53,10 +54,7 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        String orderId = bundle.getString(KEY_ORDER_ID);
-        presenter = new OrderDetailPresenter(getContext(), OrderDetailFragment.this);
-        presenter.loadDetail(orderId);
+
         title.setText(getContext().getString(R.string.order_detail));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +73,19 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
                         .dividerResId(R.drawable.icon_horizontal_line).build())
                 .build());
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String orderId = bundle.getString(KEY_ORDER_ID);
+            if (orderId != null) {
+                presenter = new OrderDetailPresenter(getContext(), OrderDetailFragment.this);
+                presenter.loadDetail(orderId);
+            }
+
+            OrderDetail orderDetail = (OrderDetail) bundle.getSerializable(KEY_ORDER_DETAIL);
+            adapter.setData(orderDetail);
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     private OrderDetailAdapter.Callback callback = new OrderDetailAdapter.Callback() {
@@ -86,7 +97,7 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
                     Bundle bundle = new Bundle();
                     bundle.putString(KEY_SHOP_ID, value);
                     bundle.putString(KEY_SHOP_NAME, shopName);
-                    IntentUtil.startTemplateActivity(OrderDetailFragment.this, ShopDetailFragment.class,bundle, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
+                    IntentUtil.startTemplateActivity(OrderDetailFragment.this, ShopDetailFragment.class, bundle, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
                     break;
                 case VIEW_PHONE:
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + value));

@@ -59,7 +59,7 @@ public class OrderDetail implements Serializable {
     /**
      * 配送费
      */
-    public String shipment;
+    public int shipment;
 
     /**
      * 店铺名称

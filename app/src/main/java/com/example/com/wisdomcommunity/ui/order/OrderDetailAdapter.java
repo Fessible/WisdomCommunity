@@ -64,7 +64,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
             if (detail != null) {
                 itemList.add(new EmptyItem());
                 itemList.add(new HeaderItem(detail.shopName, detail.shopId));
-                itemList.add(new PriceItem(detail.total, detail.shipment, detail.pay));
+                itemList.add(new PriceItem(detail.total, String.valueOf(detail.shipment), detail.pay));
                 List<OrderDetail.Order> orderList = detail.details;
                 if (orderList != null && !orderList.isEmpty()) {//清单详情
                     for (int i = 0; i < orderList.size(); i++) {
@@ -82,7 +82,9 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 itemList.add(new EmptyItem());
                 itemList.add(new AddressItem(context.getString(R.string.title_address), detail.address));
                 itemList.add(new EmptyItem());
-                itemList.add(new AddressItem(context.getString(R.string.remark), detail.remark));
+                if (detail.remark != null) {
+                    itemList.add(new AddressItem(context.getString(R.string.remark), detail.remark));
+                }
                 itemList.add(new EmptyItem());
             }
         }
@@ -99,6 +101,9 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 break;
             case Constants.STATUS_SENDING:
                 status = context.getString(R.string.status_sending);
+                break;
+            case Constants.STATUS_SUBMIT:
+                status = context.getString(R.string.status_submit);
                 break;
         }
         return status;

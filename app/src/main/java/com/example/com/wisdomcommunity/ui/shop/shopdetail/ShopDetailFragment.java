@@ -53,6 +53,8 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private static final int REQUEST_CART = 2;
     public static final String KEY_SHIPMENT = "shipment";
     public static final String KEY_TOTAL_MONEY = "total_price";
+    public static final String KEY_SHOP = "shop_detail";
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -93,6 +95,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private int clickCount;
     private int fee;//配送费
     private String strPrice;
+    private String shopName;
 
     @Override
     public int getResLayout() {
@@ -118,7 +121,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            String shopName = bundle.getString(KEY_SHOP_NAME);
+             shopName = bundle.getString(KEY_SHOP_NAME);
             shopId = bundle.getString(KEY_SHOP_ID);
             title.setText(shopName);
         }
@@ -141,9 +144,12 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
     }
 
+    private ShopDetail shopDetail;
+
     @Override
     public void onLoadShopDetailSuccess(ShopDetail shopDetail) {
         if (shopDetail != null) {
+            this.shopDetail = shopDetail;
             phoneNumber = shopDetail.shopPhone;
             fee = shopDetail.shipment;
             int placeHolder = R.drawable.app_icon;
@@ -250,6 +256,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @OnClick(R.id.sure)
     public void makeOrder() {
         Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_SHOP, shopDetail);
+        bundle.putString(KEY_SHOP_ID, shopId);
+        bundle.putString(KEY_SHOP_NAME,shopName);
         bundle.putSerializable(KEY_ORDER_LIST, orderHashMap);
         bundle.putInt(KEY_SHIPMENT, fee);
         bundle.putString(KEY_TOTAL_MONEY, strPrice);

@@ -120,7 +120,12 @@
     <string name="make_order">确认订单</string>
     <string name="money">商品金额</string>
     <string name="please_add_address">暂无收货地址，请点击添加！</string>
+    <string name="add_address">请添加收货地址！</string>
     <string name="edit_remark">填写备注</string>
     <string name="edit_hint_remark">请输入备注信息</string>
+    <string name="submit_order">提交订单</string>
+    <string name="status_submit">已提交</string>
+    <string name="no_data">暂时没有数据</string>
+    <string name="no_network">当前无网络连接，请检查网络</string>
 
 </resources>
