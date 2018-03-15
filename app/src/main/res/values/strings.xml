@@ -127,5 +127,15 @@
     <string name="status_submit">已提交</string>
     <string name="no_data">暂时没有数据</string>
     <string name="no_network">当前无网络连接，请检查网络</string>
+    <string name="food">美味食物</string>
+    <string name="fruit">新鲜水果</string>
+    <string name="drink">鲜奶饮品</string>
+    <string name="flower">鲜花配送</string>
+    <string name="save_area">优惠专区</string>
+    <string name="recommend_to">为你推荐</string>
+    <string name="opt_pull">下拉即可刷新</string>
+    <string name="tag_refresh">下拉即可刷新</string>
+    <string name="tag_release">释放即可刷新</string>
+    <string name="tag_loading">努力加载中...</string>
 
 </resources>

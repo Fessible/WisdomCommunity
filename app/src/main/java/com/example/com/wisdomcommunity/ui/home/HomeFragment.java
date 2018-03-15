@@ -25,6 +25,9 @@ import com.example.com.wisdomcommunity.mvp.HomeContract;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.view.MultipleRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshWizard;
 import com.zaaach.citypicker.CityPicker;
 import com.zaaach.citypicker.adapter.OnPickListener;
 import com.zaaach.citypicker.model.City;
@@ -50,6 +53,9 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
     public static final String TAG_HOME_FRAGMENT = "HOME_FRAGMENT";
+
+    @BindView(R.id.multiple_refresh_layout)
+    MultipleRefreshLayout multipleRefreshLayout;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -89,6 +95,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         mLocationClient.setLocOption(option);
         mLocationClient.start();
 
+        multipleRefreshLayout.setRefreshWizard(new SwipeRefreshWizard(getContext(), multipleRefreshLayout));
+        multipleRefreshLayout.setOnRefreshListener(onRefreshListener);
+
         presenter = new HomePresenter(getContext(), HomeFragment.this);
         presenter.loadRecomends(false);
         presenter.loadBanners(false);
@@ -106,6 +115,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             goodsArgs.putString(KEY_GOODS_ID, goodsID);
             goodsArgs.putString(KEY_GOODS_NAME, goodsName);
             IntentUtil.startTemplateActivity(HomeFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
+        }
+    };
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
         }
     };
 
@@ -247,7 +262,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @OnClick(R.id.phone)
     public void phone() {
         String phoneNumber = "057187063728";
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phoneNumber));
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
