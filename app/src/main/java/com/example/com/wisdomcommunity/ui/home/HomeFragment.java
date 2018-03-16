@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,7 +19,7 @@ import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.home.Banner;
-import com.example.com.support_business.domain.home.Recommend;
+import com.example.com.support_business.domain.home.Home;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.HomeContract;
@@ -28,6 +29,8 @@ import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.MultipleRefreshLayout;
 import com.example.com.wisdomcommunity.view.SwipeRefreshLayout;
 import com.example.com.wisdomcommunity.view.SwipeRefreshWizard;
+import com.example.com.wisdomcommunity.view.itemdecoration.EmptyDecor;
+import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 import com.zaaach.citypicker.CityPicker;
 import com.zaaach.citypicker.adapter.OnPickListener;
 import com.zaaach.citypicker.model.City;
@@ -66,6 +69,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @BindView(R.id.address)
     TextView address;
 
+    @BindView(R.id.second_kill)
+    ImageView secondKill;
+
+    @BindView(R.id.recommend)
+    ImageView recommend;
+
     private HomeContract.Presenter presenter;
 
     private List<String> imgUrlList = new ArrayList<>();
@@ -74,6 +83,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private HomeAdapter adapter;
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
+
 
     @Override
     public int getResLayout() {
@@ -106,6 +116,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         adapter.setCallback(callback);
+
+        recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext()).typeSelf(0,new EmptyDecor()).build());
     }
 
     private HomeAdapter.Callback callback = new HomeAdapter.Callback() {
@@ -182,17 +194,36 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void onLoadRecommendSuccess(List<Recommend> recommendList) {
-        if (recommendList != null) {
-            adapter.setData(recommendList);
+    public void onLoadRecommendSuccess(Home home) {
+        if (home != null) {
+            Glide.with(getContext())
+                    .load(home.secondKillUrl)
+                    .into(secondKill);
+
+            Glide.with(getContext())
+                    .load(home.secondKillUrl)
+                    .into(recommend);
+
+            adapter.setData(home.list);
             adapter.notifyDataSetChanged();
         }
+    }
 
+    //新品推荐
+    @OnClick(R.id.recommend)
+    public void recommend() {
+
+    }
+
+    //秒杀
+    @OnClick(R.id.second_kill)
+    public void SecondKill() {
 
     }
 
     @Override
     public void onLoadRecommendFailure(String msg) {
+
         showShortToast(msg);
     }
 

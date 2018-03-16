@@ -14,12 +14,12 @@
         android:paddingTop="4dp">
 
         <RadioButton
-            android:checked="true"
             android:id="@+id/rb_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
+            android:checked="true"
             android:drawableTop="@drawable/icon_home_selector"
             android:gravity="center"
             android:text="@string/nav_home"
@@ -74,4 +74,14 @@
         android:layout_height="0.1dp"
         android:layout_above="@id/radioGroup"
         android:background="@color/color_bfbfbf" />
+
+    <ImageView
+        android:id="@+id/icon_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/icon_cart" />
 </RelativeLayout>

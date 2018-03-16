@@ -103,4 +103,11 @@
     <color name="primary_dark">#ff757575</color>
     <color name="window_background">#ffffff</color>
     <dimen name="action_bar_size">48dp</dimen>
+
+    <color name="line">#dddddd</color>
+    <color name="title_red">#fc404e</color>
+    <color name="bj">#efeff4</color>
+    <color name="xian">#ecedef</color>
+    <color name="gray">#888888</color>
+    <color name="gray1">#f8f8f8</color>
 </resources>

@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
 
     <ImageView
         android:id="@+id/imge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop" />
 
     <TextView
+        android:layout_marginTop="10dp"
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imge"
+        android:layout_centerHorizontal="true"
         android:ellipsize="end"
         android:maxLength="5"
         android:textColor="@color/color_666666"
         android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imge"
-        android:textColor="@color/color_ffff4444"
-        android:textSize="16sp" />
 </RelativeLayout>

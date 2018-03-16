@@ -1,6 +1,7 @@
 package com.example.com.support_business.api;
 
 import com.example.com.support_business.domain.home.Banner;
+import com.example.com.support_business.domain.home.Home;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.login.Register;
 import com.example.com.support_business.domain.order.OrderDetail;
@@ -77,7 +78,7 @@ interface CommunityApi {
      *************/
     //商品推荐
     @GET("home/recommend")
-    public Observable<Response<ListEntity<Recommend>>> recommend();
+    public Observable<Response<ResultEntity<Home>>> recommend();
 //    public rx.Observable<Response<ListEntity<Recommend>>> recommend();
 
 

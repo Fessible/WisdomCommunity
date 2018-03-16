@@ -19,11 +19,6 @@ public class Recommend implements Serializable {
     public String name;
 
     /**
-     * 商品价格
-     */
-    public String price;
-
-    /**
      * 商品ID
      */
     public String goodsId;

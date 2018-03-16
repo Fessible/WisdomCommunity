@@ -6,6 +6,7 @@ import android.webkit.MimeTypeMap;
 
 import com.example.com.support_business.SeverHelper;
 import com.example.com.support_business.domain.home.Banner;
+import com.example.com.support_business.domain.home.Home;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
@@ -61,7 +62,7 @@ public class CommunityServer extends RestyServer {
      * 主页
      */
     //商品推荐
-    public void recommend(String compositeTag, boolean refresh, final SSOCallback<ListEntity<Recommend>> callback) {
+    public void recommend(String compositeTag, boolean refresh, final SSOCallback<ResultEntity<Home>> callback) {
 //        OkHttpClient client = new OkHttpClient();
 //        Request request = new Request.Builder().url("http://39.108.158.246:8080/community/home/recommend").build();
 ////        Request request = new Request.Builder().url("http://rapapi.org/mockjs/30782/community/home/recommend?").build();
@@ -81,13 +82,13 @@ public class CommunityServer extends RestyServer {
         Disposable disposable = communityApi.recommend()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Response<ListEntity<Recommend>>>() {
+                .subscribe(new Consumer<Response<ResultEntity<Home>>>() {
                     @Override
-                    public void accept(Response<ListEntity<Recommend>> listEntityResponse) throws Exception {
-                        if (listEntityResponse != null) {
-                            if (listEntityResponse.isSuccessful()) {
-                                callOnResponseMethod(callback, listEntityResponse);
-                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                    public void accept(Response<ResultEntity<Home>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
                                 callOnUnauthorizedMethod(callback);
                             } else {
                                 throwNullOrFailureResponse();

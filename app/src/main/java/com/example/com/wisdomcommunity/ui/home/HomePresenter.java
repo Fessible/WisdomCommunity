@@ -6,8 +6,10 @@ import android.text.TextUtils;
 import com.example.com.support_business.api.CommunityServer;
 import com.example.com.support_business.api.RestyServer;
 import com.example.com.support_business.domain.home.Banner;
+import com.example.com.support_business.domain.home.Home;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.module.ListEntity;
+import com.example.com.support_business.module.ResultEntity;
 import com.example.com.wisdomcommunity.mvp.HomeContract;
 
 import java.util.Date;
@@ -31,14 +33,14 @@ public class HomePresenter extends HomeContract.Presenter {
             return;
         }
         showProgress();
-        CommunityServer.with(context).recommend(compositeTag, refresh, new RestyServer.SSOCallback<ListEntity<Recommend>>() {
+        CommunityServer.with(context).recommend(compositeTag, refresh, new RestyServer.SSOCallback<ResultEntity<Home>>() {
             @Override
             public void onUnauthorized() {
 
             }
 
             @Override
-            public void onResponse(Date receivedDate, Date servedDate, ListEntity<Recommend> entity) {
+            public void onResponse(Date receivedDate, Date servedDate, ResultEntity<Home> entity) {
                 hideProgress();
                 if (entity != null) {
                     if (entity.isOk()) {

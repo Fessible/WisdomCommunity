@@ -60,9 +60,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
         @BindView(R.id.imge)
         ImageView imge;
 
-        @BindView(R.id.price)
-        TextView price;
-
         @BindView(R.id.name)
         TextView name;
 
@@ -72,7 +69,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
 
         void bindHolder(Context context, final Recommend recommend, final Callback callback) {
             name.setText(recommend.name);
-            price.setText(recommend.price);
             Glide.with(context)
                     .load(recommend.goodsUrl)
                     .into(imge);

@@ -51,160 +51,156 @@
 
     <com.example.com.wisdomcommunity.view.MultipleRefreshLayout
         android:id="@+id/multiple_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:emptyView="@layout/fragment_multiply_empty"
         app:errorView="@layout/fragment_multiply_error"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:loadingView="@layout/loading_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        app:loadingView="@layout/loading_view">
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <include layout="@layout/adapter_home_header" />
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:drawableTop="@drawable/icon_food"
-                        android:text="@string/food"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="28dp"
-                        android:drawablePadding="10dp"
-                        android:drawableTop="@drawable/icon_fruit"
-                        android:gravity="center"
-                        android:text="@string/fruit"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="28dp"
-                        android:drawablePadding="10dp"
-                        android:drawableTop="@drawable/icon_drink"
-                        android:gravity="center"
-                        android:text="@string/drink"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="28dp"
-                        android:drawablePadding="10dp"
-                        android:drawableTop="@drawable/icon_flow"
-                        android:gravity="center"
-                        android:text="@string/flower"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/icon_horizontal_line" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/save_area"
-                    android:textColor="@color/color_333333"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:weightSum="2">
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/buy_right"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:background="@drawable/holder"
-                            android:scaleType="centerCrop" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_second_buy" />
-                    </FrameLayout>
-
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/recommend"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:background="@drawable/holder"
-                            android:scaleType="centerCrop" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_recommend" />
-                    </FrameLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginTop="18dp"
-                    android:text="@string/recommend_to"
-                    android:textColor="@color/color_333333"
-                    android:textSize="18sp" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
-                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp" />
-            </LinearLayout>
+                    android:orientation="vertical">
+
+                    <include layout="@layout/adapter_home_header" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:drawableTop="@drawable/icon_food"
+                            android:text="@string/food"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="28dp"
+                            android:drawablePadding="10dp"
+                            android:drawableTop="@drawable/icon_fruit"
+                            android:gravity="center"
+                            android:text="@string/fruit"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="28dp"
+                            android:drawablePadding="10dp"
+                            android:drawableTop="@drawable/icon_drink"
+                            android:gravity="center"
+                            android:text="@string/drink"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="28dp"
+                            android:drawablePadding="10dp"
+                            android:drawableTop="@drawable/icon_flow"
+                            android:gravity="center"
+                            android:text="@string/flower"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/icon_horizontal_line" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/save_area"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:weightSum="2">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/second_kill"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:scaleType="centerCrop" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/icon_second_buy" />
+                        </FrameLayout>
 
 
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/recommend"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:scaleType="centerCrop" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/icon_recommend" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:text="@string/recommend_to"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="18dp" />
+                </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </com.example.com.wisdomcommunity.view.MultipleRefreshLayout>
 
