@@ -15,12 +15,10 @@ import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseAdapter;
 import com.example.com.wisdomcommunity.base.BaseHolder;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by rhm on 2018/3/6.
@@ -133,7 +131,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             minus.setBackgroundResource(R.drawable.icon_minus_n);
                         }
                         if (callback != null) {
-                            callback.onAddPayBack(item, flPrice, count);
+                            callback.onAddPayBack(v,item, flPrice, count);
                         }
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_SHORT).show();
@@ -169,7 +167,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     interface Callback {
         void onCallback(Goods goods, int count, int position);
 
-        void onAddPayBack(Goods goods, float price, int num);
+        void onAddPayBack(View v, Goods goods, float price, int num);
 
         void onMinusPayBack(Goods goods, float price, int num);
     }

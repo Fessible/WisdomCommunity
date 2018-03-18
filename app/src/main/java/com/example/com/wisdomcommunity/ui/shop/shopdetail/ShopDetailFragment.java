@@ -1,15 +1,24 @@
 package com.example.com.wisdomcommunity.ui.shop.shopdetail;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PointFEvaluator;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +32,8 @@ import com.example.com.wisdomcommunity.mvp.ShopDetailContract;
 import com.example.com.wisdomcommunity.ui.shop.cart.CartFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.view.FakeAddImageView;
+import com.example.com.wisdomcommunity.view.PointFTypeEvaluator;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -64,11 +75,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    @BindView(R.id.shop_layout)
-    LinearLayout shopLayout;
+    @BindView(R.id.detail_layout)
+    RelativeLayout shopLayout;
 
     @BindView(R.id.make_order_layout)
-    LinearLayout makeOrderLayout;
+    RelativeLayout makeOrderLayout;
 
     @BindView(R.id.img_shop)
     ImageView imgShop;
@@ -87,6 +98,15 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @BindView(R.id.total_price)
     TextView txTotalPrice;
+
+    @BindView(R.id.shopping_cart_bottom)
+    ImageView shopCart;
+
+    @BindView(R.id.shop_info_layout)
+    LinearLayout shopInfoLayout;
+
+    @BindView(R.id.shopping_cart_total_num)
+    TextView cartTotalNum;
 
     private String shopId;
     private ShopDetailContract.Presenter presenter;
@@ -110,7 +130,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                 getActivity().finish();
             }
         });
-        makeOrderLayout.setVisibility(View.GONE);
         adapter = new ShopDetailAdapter(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -121,7 +140,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-             shopName = bundle.getString(KEY_SHOP_NAME);
+            shopName = bundle.getString(KEY_SHOP_NAME);
             shopId = bundle.getString(KEY_SHOP_ID);
             title.setText(shopName);
         }
@@ -185,11 +204,68 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
 
         @Override
-        public void onAddPayBack(Goods goods, float price, int num) {
+        public void onAddPayBack(View view, Goods goods, float price, int num) {
             count += 1;
             totalPrice += price;
             changeOrderhashMap(goods, price, num);
-            showOrderlayout();
+
+            int[] addLocation = new int[2];
+            int[] cartLocation = new int[2];
+            int[] recycleLocation = new int[2];
+            int[] infoLocation = new int[2];
+            view.getLocationInWindow(addLocation);
+            shopCart.getLocationInWindow(cartLocation);
+            recyclerView.getLocationInWindow(recycleLocation);
+
+            shopInfoLayout.getLocationInWindow(infoLocation);
+
+            PointF start = new PointF();
+            PointF end = new PointF();
+            PointF control = new PointF();
+
+
+            start.x = addLocation[0];
+            start.y = addLocation[1] - 60;
+            end.x = cartLocation[0] + 40;
+            end.y = cartLocation[1] - 100;
+            control.x = end.x + 40;
+            control.y = start.y - 60;
+//            final ImageView imageView = new ImageView(getActivity());
+            final FakeAddImageView imageView = new FakeAddImageView(getActivity());
+            shopLayout.addView(imageView);
+            imageView.setBackgroundResource(R.drawable.icon_add_n);
+            imageView.getLayoutParams().width = getResources().getDimensionPixelSize(R.dimen.item_dish_circle_size);
+            imageView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.item_dish_circle_size);
+            imageView.setVisibility(View.VISIBLE);
+            ObjectAnimator addAnimator = ObjectAnimator.ofObject(imageView, "mPointF",
+                    new PointFTypeEvaluator(control), start, end);
+
+            addAnimator.setInterpolator(new AccelerateInterpolator());
+
+            addAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    imageView.setVisibility(View.GONE);
+                    shopLayout.removeView(imageView);
+                    showOrderlayout();
+                }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    imageView.setVisibility(View.VISIBLE);
+                }
+            });
+
+            ObjectAnimator scaleAnimatorX = new ObjectAnimator().ofFloat(shopCart, "scaleX", 1.2f, 1.0f);
+            ObjectAnimator scaleAnimatorY = new ObjectAnimator().ofFloat(shopCart, "scaleY", 1.2f, 1.0f);
+            scaleAnimatorX.setInterpolator(new AccelerateInterpolator());
+            scaleAnimatorY.setInterpolator(new AccelerateInterpolator());
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.play(scaleAnimatorX).with(scaleAnimatorY).after(addAnimator);
+            animatorSet.setDuration(800);
+            animatorSet.start();
         }
 
         @Override
@@ -231,15 +307,19 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     }
 
     private void showOrderlayout() {
+        cartTotalNum.setText(String.valueOf(count));
         if (count <= 0) {
-            makeOrderLayout.setVisibility(View.GONE);
+            cartTotalNum.setVisibility(View.GONE);
+            shopCart.setBackgroundResource(R.drawable.icon_cart_un);
         } else {
-            makeOrderLayout.setVisibility(View.VISIBLE);
+            cartTotalNum.setVisibility(View.VISIBLE);
+            shopCart.setBackgroundResource(R.drawable.icon_cart_n);
             DecimalFormat decimalFormat = new DecimalFormat(".00");
             strPrice = decimalFormat.format(totalPrice);
             txTotalPrice.setText(strPrice);
         }
     }
+
 
     @Override
     public void onLoadShopDetailFailure(String msg) {
@@ -258,7 +338,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_SHOP, shopDetail);
         bundle.putString(KEY_SHOP_ID, shopId);
-        bundle.putString(KEY_SHOP_NAME,shopName);
+        bundle.putString(KEY_SHOP_NAME, shopName);
         bundle.putSerializable(KEY_ORDER_LIST, orderHashMap);
         bundle.putInt(KEY_SHIPMENT, fee);
         bundle.putString(KEY_TOTAL_MONEY, strPrice);
