@@ -1,141 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/detail_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/action_bar"
-        style="@style/Widget.Design.Admin.AppBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.example.com.wisdomcommunity.view.CompatStatusBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true">
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/TextAppearance.Widget.Design.Admin.Toolbar.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </android.support.v7.widget.Toolbar>
-
-    </android.support.design.widget.AppBarLayout>
+    android:layout_height="match_parent">
 
     <com.flipboard.bottomsheet.BottomSheetLayout
+        android:layout_above="@id/make_order_layout"
         android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/make_order_layout"
-        android:layout_below="@id/action_bar"
-        android:background="@color/palette_background_color">
+        android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/palette_background_color">
 
-            <LinearLayout
+            <android.support.design.widget.CoordinatorLayout
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-
-                <RelativeLayout
+                <android.support.design.widget.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
-                    android:paddingTop="10dp">
+                    android:layout_height="200dp"
+                    android:fitsSystemWindows="true">
 
-                    <ImageView
-                        android:id="@+id/img_shop"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp"
-                        android:contentDescription="@null" />
+                    <android.support.design.widget.CollapsingToolbarLayout
+                        android:id="@+id/collapsing_toolbar_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+                        app:contentScrim="?attr/colorPrimary"
+                        app:expandedTitleMarginEnd="10dp"
+                        app:expandedTitleMarginStart="10dp"
+                        app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                    <TextView
-                        android:id="@+id/work_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_toEndOf="@+id/img_shop"
-                        android:layout_toLeftOf="@id/phone"
-                        android:layout_toRightOf="@id/img_shop"
-                        android:layout_toStartOf="@id/phone" />
+                        <ImageView
+                            android:contentDescription="@null"
+                            android:id="@+id/img_shop"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginRight="20dp"
+                            android:background="@drawable/holder" />
 
-                    <TextView
-                        android:id="@+id/shipment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/work_time"
-                        android:layout_toEndOf="@id/img_shop"
-                        android:layout_toRightOf="@id/img_shop" />
+                        <TextView
+                            android:id="@+id/work_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="35dp"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginLeft="50dp"
+                            android:textColor="@color/white" />
 
-                    <ImageView
-                        android:id="@+id/phone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/icon_blue_phone"
-                        android:contentDescription="@null" />
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/shipment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/work_time"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="18dp"
+                            android:layout_marginLeft="50dp"
+                            android:textColor="@color/white" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingLeft="18dp"
-                    android:text="@string/shop_info"
-                    android:textColor="@color/color_333333" />
+                        <android.support.v7.widget.Toolbar
+                            android:id="@+id/toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            app:layout_collapseMode="pin">
 
-                <TextView
-                    android:id="@+id/shop_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
-                    android:paddingTop="5dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingBottom="18dp"
-                    android:paddingLeft="18dp"
-                    android:paddingTop="18dp"
-                    android:text="@string/all_goods"
-                    android:textColor="@color/palette_primary_color" />
+                            <ImageView
+                                android:id="@+id/phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginRight="18dp"
+                                android:layout_marginTop="20dp"
+                                android:background="@drawable/ic_phone"
+                                android:contentDescription="@null" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@drawable/line_blue" />
+                        </android.support.v7.widget.Toolbar>       <!--toolbar折叠后固定于顶部 -->
+                    </android.support.design.widget.CollapsingToolbarLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
+                </android.support.design.widget.AppBarLayout>
+
+
+                <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/palette_background_color" />
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+                    android:layout_above="@id/make_order_layout"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">   <!--为滑动控件设置Behavior,这样上面的控件才能做出相应改变 -->
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/palette_background_color" />
+
+                </android.support.v4.widget.NestedScrollView>
+
+            </android.support.design.widget.CoordinatorLayout>
+        </RelativeLayout>
     </com.flipboard.bottomsheet.BottomSheetLayout>
 
     <View
@@ -161,7 +129,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="60dp"
             android:layout_marginStart="60dp"
-            android:text="￥00.00"
+            android:text="@string/init_money"
             android:textColor="@color/color_ffff4444"
             android:textSize="20sp" />
 
@@ -205,11 +173,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/make_order_layout"
         android:layout_alignRight="@id/shopping_cart_bottom"
+        android:layout_alignEnd="@id/shopping_cart_bottom"
         android:background="@drawable/red_tip"
-        android:text="1"
         android:textColor="@color/white"
         android:textSize="12sp"
         android:textStyle="bold"
         android:visibility="gone" />
-
 </RelativeLayout>
+

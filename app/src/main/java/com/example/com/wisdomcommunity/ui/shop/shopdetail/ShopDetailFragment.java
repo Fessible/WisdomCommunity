@@ -6,14 +6,17 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,8 +79,8 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.title)
-    TextView title;
+//    @BindView(R.id.title)
+//    TextView title;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -96,9 +99,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @BindView(R.id.shipment)
     TextView shipment;
-
+/*
     @BindView(R.id.shop_info)
-    TextView shopInfo;
+    TextView shopInfo;*/
 
     @BindView(R.id.sure)
     TextView sure;
@@ -114,6 +117,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @BindView(R.id.bottomSheetLayout)
     BottomSheetLayout bottomSheetLayout;
+
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     private String shopId;
     private ShopDetailContract.Presenter presenter;
@@ -132,6 +138,8 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,8 +158,14 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         if (bundle != null) {
             shopName = bundle.getString(KEY_SHOP_NAME);
             shopId = bundle.getString(KEY_SHOP_ID);
-            title.setText(shopName);
+//            title.setText(shopName);
+            collapsingToolbarLayout.setTitle(shopName);
+//            collapsingToolbarLayout.setCollapsedTitleGravity(Gravity.CENTER);
+            collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+            collapsingToolbarLayout.setExpandedTitleGravity(Gravity.START);
+            collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
         }
+
     }
 
     @Override
@@ -187,7 +201,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                     .into(imgShop);
             workTime.setText(getContext().getString(R.string.work_time, shopDetail.workTime));
             shipment.setText(getContext().getString(R.string.shipment, String.valueOf(fee)));
-            shopInfo.setText(shopDetail.info);
+//            shopInfo.setText(shopDetail.info);
             adapter.setData(shopDetail.goodsList);
             goodsList = shopDetail.goodsList;
             adapter.notifyDataSetChanged();
