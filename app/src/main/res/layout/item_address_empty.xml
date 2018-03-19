@@ -7,9 +7,9 @@
         android:layout_marginTop="100dp"
         android:id="@+id/img_empty"
         android:layout_centerHorizontal="true"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="@drawable/icon_empty" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_data_no" />
     <TextView
         android:layout_centerHorizontal="true"
         android:text="@string/empty_address_hint"

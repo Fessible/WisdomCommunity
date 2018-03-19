@@ -2,9 +2,11 @@ package com.example.com.wisdomcommunity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.example.com.wisdomcommunity.base.BaseActivity;
 import com.example.com.wisdomcommunity.ui.home.HomeFragment;
@@ -21,6 +24,7 @@ import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.order.OrderFragment;
 import com.example.com.wisdomcommunity.ui.person.PersonFragment;
 import com.example.com.wisdomcommunity.ui.shop.ShopFragment;
+import com.example.com.wisdomcommunity.ui.splash.SplashFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 
 import java.util.Timer;
@@ -41,6 +45,12 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @BindView(R.id.icon_cart)
     ImageView iconCart;
 
+    @BindView(R.id.relative_content)
+    RelativeLayout relativeContent;
+
+    @BindView(R.id.icon_cart_layout)
+    RelativeLayout iconCartLayout;
+
     private Fragment[] mFragment;
     private int mIndex;
     private int mDistance;
@@ -55,6 +65,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     //test
     public int author = 1;
     public final static int REQUEST_CODE = 1;
+    private SplashFragment splashFragment;
+
 
     @Override
     public int getResLayout() {
@@ -63,6 +75,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void onViewCreated(Bundle savedInstanceState) {
+        addSplashFragment();
+
         if (author == 0) {
             IntentUtil.startTemplateActivityForResult(MainActivity.this, LoginFragment.class, null, LoginFragment.TAG_Login_FRAGMENT, REQUEST_CODE);
 
@@ -70,16 +84,38 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         radioGroup.setOnCheckedChangeListener(this);
         initFragment();
 
-        //添加监听，来获取cart的移动距离
-        iconCart.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//        //添加监听，来获取cart的移动距离
+//        iconCart.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                mDistance = getDisplayMetrics() - iconCart.getRight() + iconCart.getWidth() / 2;
+//                //使用完后要及时移除
+//                iconCart.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//            }
+//        });
+
+        iconCartLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mDistance = getDisplayMetrics() - iconCart.getRight() + iconCart.getWidth() / 2;
-                //使用完后要及时移除
-                iconCart.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mDistance = getDisplayMetrics() - iconCartLayout.getRight() + iconCartLayout.getWidth() / 2;
+                iconCartLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                removeFragmentsIfExits(splashFragment);
+            }
+        }, 2000);
     }
+
+    public void addSplashFragment() {
+        splashFragment = new SplashFragment();
+        addFragment(R.id.relative_content, splashFragment, SplashFragment.TAG_SPLASH_FRAGMENT);
+    }
+
 
     private int getDisplayMetrics() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -148,7 +184,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
         set.addAnimation(ta);
         set.addAnimation(al);
-        iconCart.startAnimation(set);
+//        iconCart.startAnimation(set);
+        iconCartLayout.startAnimation(set);
     }
 
     //移动到右边并变透明
@@ -171,7 +208,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         set.setFillAfter(true);
         set.addAnimation(ta);
         set.addAnimation(al);
-        iconCart.startAnimation(set);
+//        iconCart.startAnimation(set);
+        iconCartLayout.startAnimation(set);
     }
 
     private void initFragment() {
@@ -191,7 +229,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.rb_home:
-                iconCart.setVisibility(View.VISIBLE);
+//                iconCart.setVisibility(View.VISIBLE);
+                iconCartLayout.setVisibility(View.VISIBLE);
                 setIndexSelected(HOME_INDEX);
                 break;
             case R.id.rb_shop:
@@ -209,9 +248,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }
     }
 
-    private void removeFloatingImage(){
-        iconCart.clearAnimation();
-        iconCart.setVisibility(View.GONE);
+    private void removeFloatingImage() {
+//        iconCart.clearAnimation();
+//        iconCart.setVisibility(View.GONE);
+        iconCartLayout.clearAnimation();
+        iconCartLayout.setVisibility(View.GONE);
     }
 
     private void setIndexSelected(int index) {

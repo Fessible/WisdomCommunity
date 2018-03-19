@@ -7,6 +7,10 @@ import android.view.KeyEvent;
 
 import com.example.com.wisdomcommunity.base.BaseActivity;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.util.ActivityCollector;
+
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT;
+
 
 /**
  * Created by rhm on 2018/1/16.
@@ -35,6 +39,11 @@ public class TemplateActivity extends BaseActivity {
             fragmentClazz = extras.getString(KEY_FRAGMENT_CLAZZ);
             fragmentTag = extras.getString(KEY_FRAGMENT_TAG);
             if (!TextUtils.isEmpty(fragmentClazz) && !TextUtils.isEmpty(fragmentTag)) {
+
+                if (fragmentTag.equals(TAG_SHOP_DETAIL_FRAGMENT)) {
+                    ActivityCollector.addActivity(this);
+                }
+
                 try {
                     //通过反射找到Fragment
                     fragment = (Fragment) Class.forName(fragmentClazz).newInstance();
@@ -77,4 +86,5 @@ public class TemplateActivity extends BaseActivity {
             fragment = findFragment(fragmentTag);
         }
     }
+
 }

@@ -32,23 +32,23 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <com.flipboard.bottomsheet.BottomSheetLayout
+        android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/make_order_layout"
         android:layout_below="@id/action_bar"
         android:background="@color/palette_background_color">
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/shop_info_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -128,16 +128,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:background="@drawable/line_blue" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/palette_background_color" />
             </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/palette_background_color" />
-
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.NestedScrollView>
+    </com.flipboard.bottomsheet.BottomSheetLayout>
 
     <View
         android:layout_width="match_parent"
@@ -162,7 +161,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="60dp"
             android:layout_marginStart="60dp"
-            android:text="￥89"
+            android:text="￥00.00"
             android:textColor="@color/color_ffff4444"
             android:textSize="20sp" />
 
@@ -188,7 +187,7 @@
             android:gravity="center"
             android:text="@string/to_pay"
             android:textColor="@color/white"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <ImageView

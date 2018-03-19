@@ -28,7 +28,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     private Context context;
     private List<Goods> goodsList = new ArrayList<>();
     private Callback callback;
-    private int number;
+    private int number = -1;
 
     ShopDetailAdapter(Context context) {
         this.context = context;
@@ -39,9 +39,14 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         notifyItemChanged(position);
     }
 
+    void setNum(int num) {
+        number = num;
+    }
+
     public void setData(List<Goods> goodsList) {
         this.goodsList = goodsList;
     }
+
 
     public void setCallback(Callback callback) {
         this.callback = callback;
@@ -99,10 +104,16 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         public void bindHolder(final Context context, final Goods item, int num, final int position, final Callback callback) {
             int placeHolder = R.drawable.app_icon;
             final Float flPrice = Float.valueOf(item.price);
-            count = num;
+            if (num != -1) {
+                count = num;
+            } else {
+                count = item.num;
+            }
             number.setText(String.valueOf(count));
             if (count > 0) {
                 changMinus(true);
+            } else {
+                changMinus(false);
             }
             Glide.with(context).load(item.goodsUrl)
                     .apply(new RequestOptions()
@@ -131,7 +142,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             minus.setBackgroundResource(R.drawable.icon_minus_n);
                         }
                         if (callback != null) {
-                            callback.onAddPayBack(v,item, flPrice, count);
+                            callback.onAddPayBack(v, item, flPrice, count);
                         }
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_SHORT).show();

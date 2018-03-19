@@ -4,20 +4,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.PointFEvaluator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,16 +30,22 @@ import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.ShopDetailContract;
-import com.example.com.wisdomcommunity.ui.shop.cart.CartFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
+import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.FakeAddImageView;
 import com.example.com.wisdomcommunity.view.PointFTypeEvaluator;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.OnSheetDismissedListener;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -102,11 +109,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @BindView(R.id.shopping_cart_bottom)
     ImageView shopCart;
 
-    @BindView(R.id.shop_info_layout)
-    LinearLayout shopInfoLayout;
-
     @BindView(R.id.shopping_cart_total_num)
     TextView cartTotalNum;
+
+    @BindView(R.id.bottomSheetLayout)
+    BottomSheetLayout bottomSheetLayout;
 
     private String shopId;
     private ShopDetailContract.Presenter presenter;
@@ -116,6 +123,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private int fee;//配送费
     private String strPrice;
     private String shopName;
+    private DialogCartAdapter cartAdapter;
 
     @Override
     public int getResLayout() {
@@ -181,15 +189,16 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             shipment.setText(getContext().getString(R.string.shipment, String.valueOf(fee)));
             shopInfo.setText(shopDetail.info);
             adapter.setData(shopDetail.goodsList);
+            goodsList = shopDetail.goodsList;
             adapter.notifyDataSetChanged();
             adapter.setCallback(callback);
         }
     }
 
+    private List<Goods> goodsList = new ArrayList<>();
     private int count;
     private float totalPrice;
     private HashMap<String, OrderDetail.Order> orderHashMap = new HashMap<>();
-    private OrderDetail.Order order = new OrderDetail.Order();
     private ShopDetailAdapter.Callback callback = new ShopDetailAdapter.Callback() {
         @Override
         public void onCallback(Goods goods, int num, int position) {
@@ -205,19 +214,15 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
         @Override
         public void onAddPayBack(View view, Goods goods, float price, int num) {
-            count += 1;
-            totalPrice += price;
+            add(price);
             changeOrderhashMap(goods, price, num);
 
             int[] addLocation = new int[2];
             int[] cartLocation = new int[2];
             int[] recycleLocation = new int[2];
-            int[] infoLocation = new int[2];
             view.getLocationInWindow(addLocation);
             shopCart.getLocationInWindow(cartLocation);
             recyclerView.getLocationInWindow(recycleLocation);
-
-            shopInfoLayout.getLocationInWindow(infoLocation);
 
             PointF start = new PointF();
             PointF end = new PointF();
@@ -270,13 +275,24 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
         @Override
         public void onMinusPayBack(Goods goods, float price, int num) {
-            count -= 1;
-            totalPrice -= price;
+            minus(price);
             changeOrderhashMap(goods, price, num);
             showOrderlayout();
         }
     };
 
+    //减少商品数量
+    private void minus(float price) {
+        count -= 1;
+        totalPrice -= price;
+    }
+
+    private void add(float price) {
+        count += 1;
+        totalPrice += price;
+    }
+
+    //使用Hashmap 来存储内容
     private void changeOrderhashMap(Goods goods, float price, int num) {
         if (orderHashMap.isEmpty()) {
             addOrderHashMap(goods, price, num);
@@ -285,6 +301,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                 if (num == 0) {
                     orderHashMap.remove(goods.goodsId);
                 } else {
+                    OrderDetail.Order order = orderHashMap.get(goods.goodsId);
                     order.number = num;
                     orderHashMap.put(goods.goodsId, order);
                 }
@@ -294,6 +311,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
     }
 
+    private void changeOrderhashMap(OrderDetail.Order order) {
+        orderHashMap.put(order.goodsId, order);
+    }
+
+
     private void addOrderHashMap(Goods goods, float price, int num) {
         OrderDetail.Order order = new OrderDetail.Order();
         order.goodsUrl = goods.goodsUrl;
@@ -302,21 +324,23 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         order.remain = goods.remain;
         order.number = num;
         order.price = String.valueOf(price);
-        this.order = order;
         orderHashMap.put(goods.goodsId, order);
     }
 
     private void showOrderlayout() {
         cartTotalNum.setText(String.valueOf(count));
         if (count <= 0) {
+            txTotalPrice.setText(getString(R.string.sign_price, "00.00"));
+            sure.setVisibility(View.GONE);
             cartTotalNum.setVisibility(View.GONE);
             shopCart.setBackgroundResource(R.drawable.icon_cart_un);
         } else {
+            sure.setVisibility(View.VISIBLE);
             cartTotalNum.setVisibility(View.VISIBLE);
             shopCart.setBackgroundResource(R.drawable.icon_cart_n);
             DecimalFormat decimalFormat = new DecimalFormat(".00");
             strPrice = decimalFormat.format(totalPrice);
-            txTotalPrice.setText(strPrice);
+            txTotalPrice.setText(getString(R.string.sign_price, strPrice));
         }
     }
 
@@ -335,14 +359,19 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @OnClick(R.id.sure)
     public void makeOrder() {
+        List<OrderDetail.Order> orderList = new ArrayList<>();
+        for (Map.Entry<String, OrderDetail.Order> entry : orderHashMap.entrySet()) {
+            orderList.add(entry.getValue());
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_SHOP, shopDetail);
         bundle.putString(KEY_SHOP_ID, shopId);
         bundle.putString(KEY_SHOP_NAME, shopName);
-        bundle.putSerializable(KEY_ORDER_LIST, orderHashMap);
-        bundle.putInt(KEY_SHIPMENT, fee);
         bundle.putString(KEY_TOTAL_MONEY, strPrice);
-        IntentUtil.startTemplateActivityForResult(ShopDetailFragment.this, CartFragment.class, bundle, CartFragment.TAG_CART_FRAGMENT, REQUEST_CART);
+        bundle.putInt(KEY_SHIPMENT, fee);
+
+        bundle.putSerializable(KEY_ORDER_LIST, (Serializable) orderList);
+        IntentUtil.startTemplateActivity(ShopDetailFragment.this, PayFragment.class, bundle, PayFragment.TAG_PAY_FRAGMENT);
     }
 
     @Override
@@ -381,5 +410,164 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @Override
     public void onUnauthorized() {
 
+    }
+
+    //点击购物车
+    @OnClick(R.id.shopping_cart_bottom)
+    public void onshopCart() {
+        if (count > 0) {
+            shoBottomShopCart();
+        }
+    }
+
+    //显示购物车
+    public void shoBottomShopCart() {
+        View view = createBootomShopCart();
+        if (bottomSheetLayout.isSheetShowing()) {
+            bottomSheetLayout.dismissSheet();
+        } else {
+            if (orderHashMap.size() != 0) {
+                bottomSheetLayout.showWithSheetView(view);
+            }
+        }
+        bottomSheetLayout.addOnSheetDismissedListener(new OnSheetDismissedListener() {
+            @Override
+            public void onDismissed(BottomSheetLayout bottomSheetLayout) {
+                changeShopGoods();
+            }
+        });
+    }
+
+    //创建购物车布局
+    private View createBootomShopCart() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_shop_cart_bottom, (ViewGroup) getActivity().getWindow().getDecorView(), false);
+        final TextView clear = view.findViewById(R.id.txt_clear);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearCart();
+            }
+        });
+
+        RecyclerView rvProduct = view.findViewById(R.id.rv_product);
+        rvProduct.setLayoutManager(new LinearLayoutManager(getContext()));
+        cartAdapter = new DialogCartAdapter(getContext());
+        rvProduct.setAdapter(cartAdapter);
+        cartAdapter.setCallback(carCallback);
+        parseHashMap(orderHashMap);
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.wheather_clear_cart)
+                        .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                clearCart();
+                                bottomSheetLayout.dismissSheet();
+                            }
+                        })
+                        .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        return view;
+    }
+
+    private DialogCartAdapter.Callback carCallback = new DialogCartAdapter.Callback() {
+        @Override
+        public void onDelete(final int position, final OrderDetail.Order order, final Float price) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage("是否删除该商品？")
+                    .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            if (cartAdapter != null) {
+                                cartAdapter.remove(position);
+                                checkIsEmpty();
+                                minus(price);
+                                orderHashMap.remove(order.goodsId);
+                                showOrderlayout();
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+
+        @Override
+        public void onAddItem(OrderDetail.Order order, float price, int num) {
+            add(price);
+            changeOrderhashMap(order);
+            showOrderlayout();
+        }
+
+        @Override
+        public void onMinusItem(OrderDetail.Order order, float price, int num) {
+            minus(price);
+            changeOrderhashMap(order);
+            showOrderlayout();
+        }
+
+
+        private void checkIsEmpty() {
+            if (cartAdapter != null && adapter != null) {
+                if (cartAdapter.getItemCount() == 0) {
+                    bottomSheetLayout.dismissSheet();
+                    orderHashMap.clear();
+                    adapter.setNum(0);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+        }
+    };
+
+    private void changeShopGoods() {
+        if (goodsList != null && !goodsList.isEmpty() && adapter != null) {
+            for (Goods goods : goodsList) {
+                if (orderHashMap.containsKey(goods.goodsId)) {
+                    goods.num = orderHashMap.get(goods.goodsId).number;
+                } else {
+                    goods.num = 0;
+                }
+            }
+            adapter.setData(goodsList);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void parseHashMap(HashMap<String, OrderDetail.Order> orderHashMap) {
+        List<OrderDetail.Order> orderList = new ArrayList<>();
+        for (Map.Entry<String, OrderDetail.Order> entry : orderHashMap.entrySet()) {
+            orderList.add(entry.getValue());
+        }
+        if (cartAdapter != null) {
+            cartAdapter.setOrderData(orderList);
+            cartAdapter.notifyDataSetChanged();
+        }
+    }
+
+    //清空购物车
+    public void clearCart() {
+        if (cartAdapter != null) {
+            cartAdapter.destroy();
+            cartAdapter.notifyDataSetChanged();
+        }
     }
 }

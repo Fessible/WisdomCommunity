@@ -42,4 +42,9 @@ public class Goods implements Serializable {
      */
     public int remain;
 
+    /**
+     * 已选择的数量
+     */
+    public int num;
+
 }

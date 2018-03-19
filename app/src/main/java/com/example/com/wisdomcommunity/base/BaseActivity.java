@@ -81,6 +81,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     ft.remove(fragment);
                 }
             }
+            ft.commitNowAllowingStateLoss();
+            fm.executePendingTransactions();
         }
     }
 }

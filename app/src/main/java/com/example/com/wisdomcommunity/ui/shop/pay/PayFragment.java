@@ -1,5 +1,6 @@
 package com.example.com.wisdomcommunity.ui.shop.pay;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.ui.order.OrderDetailFragment;
 import com.example.com.wisdomcommunity.ui.person.address.AddressFragment;
+import com.example.com.wisdomcommunity.util.ActivityCollector;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 
 import java.util.Date;
@@ -182,6 +184,7 @@ public class PayFragment extends BaseFragment {
 
         IntentUtil.startTemplateActivity(PayFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT);
         getActivity().finish();
+        ActivityCollector.finishAll();
     }
 
     @Override

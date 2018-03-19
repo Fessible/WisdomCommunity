@@ -137,5 +137,6 @@
     <string name="tag_refresh">下拉即可刷新</string>
     <string name="tag_release">释放即可刷新</string>
     <string name="tag_loading">努力加载中...</string>
+    <string name="clear">清空</string>
 
 </resources>
