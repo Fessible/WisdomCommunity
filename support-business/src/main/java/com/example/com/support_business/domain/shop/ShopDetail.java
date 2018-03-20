@@ -9,6 +9,15 @@ import java.util.List;
  */
 
 public class ShopDetail implements Serializable {
+    /**
+     * 折扣
+     */
+    public String discount;
+
+    /**
+     * 满减
+     */
+    public String minus;
 
     /**
      * 配送费

@@ -44,6 +44,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     }
 
     public void setData(List<Goods> goodsList) {
+        number = -1;
         this.goodsList = goodsList;
     }
 
@@ -109,12 +110,13 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             } else {
                 count = item.num;
             }
-            number.setText(String.valueOf(count));
+
             if (count > 0) {
                 changMinus(true);
             } else {
                 changMinus(false);
             }
+            number.setText(String.valueOf(count));
             Glide.with(context).load(item.goodsUrl)
                     .apply(new RequestOptions()
                             .fallback(placeHolder)
@@ -139,7 +141,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                     if (count < item.remain) {
                         number.setText(String.valueOf(++count));
                         if (count > 0) {
-                            minus.setBackgroundResource(R.drawable.icon_minus_n);
+                            changMinus(true);
                         }
                         if (callback != null) {
                             callback.onAddPayBack(v, item, flPrice, count);
@@ -170,7 +172,9 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         }
 
         private void changMinus(boolean isEnable) {
-            minus.setBackgroundResource(isEnable ? R.drawable.icon_minus_n : R.drawable.icon_minus_un);
+//            minus.setBackgroundResource(isEnable ? R.drawable.icon_minus_n : R.drawable.icon_minus_un);
+            minus.setVisibility(isEnable ? View.VISIBLE : View.GONE);
+            number.setVisibility(isEnable ? View.VISIBLE : View.GONE);
         }
     }
 

@@ -12,6 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,12 +82,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-//    @BindView(R.id.title)
-//    TextView title;
-
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-
     @BindView(R.id.detail_layout)
     RelativeLayout shopLayout;
 
@@ -93,15 +90,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @BindView(R.id.img_shop)
     ImageView imgShop;
-
-    @BindView(R.id.work_time)
-    TextView workTime;
-
-    @BindView(R.id.shipment)
-    TextView shipment;
-/*
-    @BindView(R.id.shop_info)
-    TextView shopInfo;*/
 
     @BindView(R.id.sure)
     TextView sure;
@@ -121,15 +109,27 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @BindView(R.id.collapsing_toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
 
+    @BindView(R.id.table_layout)
+    TabLayout tabLayout;
+
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+
+    private ShopGoodsFragment shopGoodsFragment;
+    private ShopInfoFragment shopInfoFragment;
     private String shopId;
     private ShopDetailContract.Presenter presenter;
-    private ShopDetailAdapter adapter;
     private String phoneNumber;
-    private int clickCount;
+    private boolean isClick;//判断是否操作了购物车的数值
     private int fee;//配送费
     private String strPrice;
     private String shopName;
     private DialogCartAdapter cartAdapter;
+    private ShopDetail shopDetail;
+    private List<Goods> goodsList = new ArrayList<>();
+    private int count;
+    private float totalPrice;
+    private HashMap<String, OrderDetail.Order> orderHashMap = new HashMap<>();
 
     @Override
     public int getResLayout() {
@@ -138,34 +138,40 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().finish();
             }
         });
-        adapter = new ShopDetailAdapter(getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
-                .defaultDecor(new DividerDecor.Builder(getContext())
-                        .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
-                        .build()).build());
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             shopName = bundle.getString(KEY_SHOP_NAME);
             shopId = bundle.getString(KEY_SHOP_ID);
-//            title.setText(shopName);
             collapsingToolbarLayout.setTitle(shopName);
-//            collapsingToolbarLayout.setCollapsedTitleGravity(Gravity.CENTER);
             collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
-            collapsingToolbarLayout.setExpandedTitleGravity(Gravity.START);
+            collapsingToolbarLayout.setExpandedTitleGravity(Gravity.BOTTOM);
+            collapsingToolbarLayout.setExpandedTitleMargin(70, 0, 0, 100);
             collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+
+            initViewPager();
         }
 
+    }
+
+    private void initViewPager() {
+
+        shopInfoFragment = new ShopInfoFragment();
+        shopGoodsFragment = new ShopGoodsFragment();
+
+        Fragment[] fragments = {shopGoodsFragment, shopInfoFragment};
+        String[] subTitles = {getString(R.string.goods_detail), getString(R.string.shop_info)};//标题
+
+        tabLayout.addTab(tabLayout.newTab().setText(subTitles[0]));
+        tabLayout.addTab(tabLayout.newTab().setText(subTitles[1]));
+        ShopDetailPagerAdapter adapter = new ShopDetailPagerAdapter(getChildFragmentManager(), fragments, subTitles);
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -177,15 +183,10 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     @Override
     protected void destroyView() {
-        if (adapter != null) {
-            adapter.destroy();
-        }
         if (orderHashMap != null) {
             orderHashMap.clear();
         }
     }
-
-    private ShopDetail shopDetail;
 
     @Override
     public void onLoadShopDetailSuccess(ShopDetail shopDetail) {
@@ -199,101 +200,50 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                             .fallback(placeHolder)
                             .placeholder(placeHolder).centerCrop())
                     .into(imgShop);
-            workTime.setText(getContext().getString(R.string.work_time, shopDetail.workTime));
-            shipment.setText(getContext().getString(R.string.shipment, String.valueOf(fee)));
-//            shopInfo.setText(shopDetail.info);
-            adapter.setData(shopDetail.goodsList);
             goodsList = shopDetail.goodsList;
-            adapter.notifyDataSetChanged();
-            adapter.setCallback(callback);
+
+            initShopInfoFragment(shopDetail);
+            initShopGoodsFragment(shopDetail);
         }
     }
 
-    private List<Goods> goodsList = new ArrayList<>();
-    private int count;
-    private float totalPrice;
-    private HashMap<String, OrderDetail.Order> orderHashMap = new HashMap<>();
-    private ShopDetailAdapter.Callback callback = new ShopDetailAdapter.Callback() {
+    private void initShopGoodsFragment(ShopDetail shopDetail) {
+        if (shopGoodsFragment != null) {
+            shopGoodsFragment.setShopDetail(shopDetail);
+            shopGoodsFragment.setGoodsCallback(goodsCallback);
+        }
+    }
+
+    private ShopGoodsFragment.GoodsCallback goodsCallback = new ShopGoodsFragment.GoodsCallback() {
         @Override
-        public void onCallback(Goods goods, int num, int position) {
-            clickCount = num;
-            Bundle goodsArgs = new Bundle();
-            goodsArgs.putString(KEY_GOODS_ID, goods.goodsId);
-            goodsArgs.putString(KEY_GOODS_NAME, goods.goodsName);
-            goodsArgs.putString(KEY_GOODS_URL, goods.goodsUrl);
-            goodsArgs.putInt(KEY_GOODS_NUM, num);
-            goodsArgs.putInt(KEY_POSITION, position);
-            IntentUtil.startTemplateActivityForResult(ShopDetailFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT, REQUEST_GOODS);
+        public void onClickItem(Goods goods, float price, int number, int num) {
+            count += num;
+            totalPrice += price * num;
+            showOrderlayout();
+            changeOrderhashMap(goods, price, number);
         }
 
         @Override
-        public void onAddPayBack(View view, Goods goods, float price, int num) {
+        public void onAdd(View view, Goods goods, float price, int num) { //点击加号时的动态效果
             add(price);
             changeOrderhashMap(goods, price, num);
-
-            int[] addLocation = new int[2];
-            int[] cartLocation = new int[2];
-            int[] recycleLocation = new int[2];
-            view.getLocationInWindow(addLocation);
-            shopCart.getLocationInWindow(cartLocation);
-            recyclerView.getLocationInWindow(recycleLocation);
-
-            PointF start = new PointF();
-            PointF end = new PointF();
-            PointF control = new PointF();
-
-
-            start.x = addLocation[0];
-            start.y = addLocation[1] - 60;
-            end.x = cartLocation[0] + 40;
-            end.y = cartLocation[1] - 100;
-            control.x = end.x + 40;
-            control.y = start.y - 60;
-//            final ImageView imageView = new ImageView(getActivity());
-            final FakeAddImageView imageView = new FakeAddImageView(getActivity());
-            shopLayout.addView(imageView);
-            imageView.setBackgroundResource(R.drawable.icon_add_n);
-            imageView.getLayoutParams().width = getResources().getDimensionPixelSize(R.dimen.item_dish_circle_size);
-            imageView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.item_dish_circle_size);
-            imageView.setVisibility(View.VISIBLE);
-            ObjectAnimator addAnimator = ObjectAnimator.ofObject(imageView, "mPointF",
-                    new PointFTypeEvaluator(control), start, end);
-
-            addAnimator.setInterpolator(new AccelerateInterpolator());
-
-            addAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    imageView.setVisibility(View.GONE);
-                    shopLayout.removeView(imageView);
-                    showOrderlayout();
-                }
-
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    imageView.setVisibility(View.VISIBLE);
-                }
-            });
-
-            ObjectAnimator scaleAnimatorX = new ObjectAnimator().ofFloat(shopCart, "scaleX", 1.2f, 1.0f);
-            ObjectAnimator scaleAnimatorY = new ObjectAnimator().ofFloat(shopCart, "scaleY", 1.2f, 1.0f);
-            scaleAnimatorX.setInterpolator(new AccelerateInterpolator());
-            scaleAnimatorY.setInterpolator(new AccelerateInterpolator());
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.play(scaleAnimatorX).with(scaleAnimatorY).after(addAnimator);
-            animatorSet.setDuration(800);
-            animatorSet.start();
+            addAnimation(view);
         }
 
         @Override
-        public void onMinusPayBack(Goods goods, float price, int num) {
+        public void onMinus(Goods goods, float price, int num) {//点击减号时的效果
             minus(price);
             changeOrderhashMap(goods, price, num);
             showOrderlayout();
         }
     };
+
+    private void initShopInfoFragment(ShopDetail shopDetail) {
+        if (shopInfoFragment != null) {
+            shopInfoFragment.setShopDetial(shopDetail);
+        }
+    }
+
 
     //减少商品数量
     private void minus(float price) {
@@ -344,10 +294,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private void showOrderlayout() {
         cartTotalNum.setText(String.valueOf(count));
         if (count <= 0) {
-            txTotalPrice.setText(getString(R.string.sign_price, "00.00"));
-            sure.setVisibility(View.GONE);
-            cartTotalNum.setVisibility(View.GONE);
-            shopCart.setBackgroundResource(R.drawable.icon_cart_un);
+            showEmptyCart();
         } else {
             sure.setVisibility(View.VISIBLE);
             cartTotalNum.setVisibility(View.VISIBLE);
@@ -358,6 +305,73 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
     }
 
+    private void showEmptyCart() {
+        txTotalPrice.setText(getString(R.string.sign_price, "00.00"));
+        sure.setVisibility(View.GONE);
+        cartTotalNum.setVisibility(View.GONE);
+        shopCart.setBackgroundResource(R.drawable.icon_cart_un);
+        count = 0;
+    }
+
+
+    //加号贝塞尔动图
+    private void addAnimation(View view) {
+
+        int[] addLocation = new int[2];
+        int[] cartLocation = new int[2];
+        int[] recycleLocation = new int[2];
+        view.getLocationInWindow(addLocation);
+        shopCart.getLocationInWindow(cartLocation);
+//            recyclerView.getLocationInWindow(recycleLocation);
+
+        PointF start = new PointF();
+        PointF end = new PointF();
+        PointF control = new PointF();
+
+
+        start.x = addLocation[0];
+        start.y = addLocation[1] - 60;
+        end.x = cartLocation[0] + 40;
+        end.y = cartLocation[1] - 100;
+        control.x = end.x + 40;
+        control.y = start.y - 60;
+//            final ImageView imageView = new ImageView(getActivity());
+        final FakeAddImageView imageView = new FakeAddImageView(getActivity());
+        shopLayout.addView(imageView);
+        imageView.setBackgroundResource(R.drawable.icon_add_n);
+        imageView.getLayoutParams().width = getResources().getDimensionPixelSize(R.dimen.item_dish_circle_size);
+        imageView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.item_dish_circle_size);
+        imageView.setVisibility(View.VISIBLE);
+        ObjectAnimator addAnimator = ObjectAnimator.ofObject(imageView, "mPointF",
+                new PointFTypeEvaluator(control), start, end);
+
+        addAnimator.setInterpolator(new AccelerateInterpolator());
+
+        addAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                imageView.setVisibility(View.GONE);
+                shopLayout.removeView(imageView);
+                showOrderlayout();
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                imageView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ObjectAnimator scaleAnimatorX = new ObjectAnimator().ofFloat(shopCart, "scaleX", 1.2f, 1.0f);
+        ObjectAnimator scaleAnimatorY = new ObjectAnimator().ofFloat(shopCart, "scaleY", 1.2f, 1.0f);
+        scaleAnimatorX.setInterpolator(new AccelerateInterpolator());
+        scaleAnimatorY.setInterpolator(new AccelerateInterpolator());
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(scaleAnimatorX).with(scaleAnimatorY).after(addAnimator);
+        animatorSet.setDuration(800);
+        animatorSet.start();
+    }
 
     @Override
     public void onLoadShopDetailFailure(String msg) {
@@ -389,29 +403,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_GOODS) {
-                OrderDetail.Order order = (OrderDetail.Order) data.getSerializableExtra(KEY_GOOD_ORDER);
-                int position = data.getIntExtra(KEY_POSITION, 0);
-                if (clickCount != order.number) {
-                    adapter.setNum(order.number, position);
-                    totalPrice += (order.number - clickCount) * Float.valueOf(order.price);
-                    count += order.number - clickCount;
-                    showOrderlayout();
-                    Goods goods = new Goods();
-                    goods.goodsUrl = order.goodsUrl;
-                    goods.goodsId = order.goodsId;
-                    goods.remain = order.remain;
-                    goods.goodsName = order.goodsName;
-                    changeOrderhashMap(goods, Float.valueOf(order.price), order.number);
-                }
-            }
-        }
-    }
-
-    @Override
     public void showProgress() {
 
     }
@@ -430,12 +421,12 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     @OnClick(R.id.shopping_cart_bottom)
     public void onshopCart() {
         if (count > 0) {
-            shoBottomShopCart();
+            showBottomShopCart();
         }
     }
 
     //显示购物车
-    public void shoBottomShopCart() {
+    public void showBottomShopCart() {
         View view = createBootomShopCart();
         if (bottomSheetLayout.isSheetShowing()) {
             bottomSheetLayout.dismissSheet();
@@ -456,12 +447,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private View createBootomShopCart() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_shop_cart_bottom, (ViewGroup) getActivity().getWindow().getDecorView(), false);
         final TextView clear = view.findViewById(R.id.txt_clear);
-        clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearCart();
-            }
-        });
 
         RecyclerView rvProduct = view.findViewById(R.id.rv_product);
         rvProduct.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -526,6 +511,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
         @Override
         public void onAddItem(OrderDetail.Order order, float price, int num) {
+            isClick = true;
             add(price);
             changeOrderhashMap(order);
             showOrderlayout();
@@ -533,19 +519,20 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
         @Override
         public void onMinusItem(OrderDetail.Order order, float price, int num) {
+            isClick = true;
             minus(price);
             changeOrderhashMap(order);
             showOrderlayout();
         }
 
 
+        //检测购物车是否被清空了
         private void checkIsEmpty() {
-            if (cartAdapter != null && adapter != null) {
+            if (cartAdapter != null) {
+
                 if (cartAdapter.getItemCount() == 0) {
                     bottomSheetLayout.dismissSheet();
-                    orderHashMap.clear();
-                    adapter.setNum(0);
-                    adapter.notifyDataSetChanged();
+                    clearCart();
                 }
             }
 
@@ -553,17 +540,20 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     };
 
     private void changeShopGoods() {
-        if (goodsList != null && !goodsList.isEmpty() && adapter != null) {
-            for (Goods goods : goodsList) {
-                if (orderHashMap.containsKey(goods.goodsId)) {
-                    goods.num = orderHashMap.get(goods.goodsId).number;
-                } else {
-                    goods.num = 0;
+        if (isClick) {
+            if (goodsList != null && !goodsList.isEmpty() && shopGoodsFragment != null) {
+
+                for (Goods goods : goodsList) {
+                    if (orderHashMap.containsKey(goods.goodsId)) {
+                        goods.num = orderHashMap.get(goods.goodsId).number;
+                    } else {
+                        goods.num = 0;
+                    }
                 }
+                shopGoodsFragment.changeGoods(goodsList);//更改商品信息
             }
-            adapter.setData(goodsList);
-            adapter.notifyDataSetChanged();
         }
+        isClick = false;
     }
 
     private void parseHashMap(HashMap<String, OrderDetail.Order> orderHashMap) {
@@ -579,9 +569,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     //清空购物车
     public void clearCart() {
-        if (cartAdapter != null) {
+        orderHashMap.clear();
+        if (cartAdapter != null && shopGoodsFragment != null) {
+            shopGoodsFragment.clear();
             cartAdapter.destroy();
-            cartAdapter.notifyDataSetChanged();
         }
+        showEmptyCart();
     }
 }

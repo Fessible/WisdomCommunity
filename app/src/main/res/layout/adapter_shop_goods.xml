@@ -45,32 +45,32 @@
         android:layout_centerVertical="true">
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/minus"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="55dp"
             android:layout_marginStart="55dp"
-            android:background="@drawable/icon_minus_un"
+            android:background="@drawable/icon_minus_n"
             android:contentDescription="@string/sign_number" />
 
         <TextView
-            android:text="0"
             android:id="@+id/number"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginStart="18dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_toEndOf="@id/minus"
             android:layout_toRightOf="@id/minus"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/add"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginStart="18dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/number"
             android:layout_toRightOf="@id/number"
             android:background="@drawable/icon_add_n"

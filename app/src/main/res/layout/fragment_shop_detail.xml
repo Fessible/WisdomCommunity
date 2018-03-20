@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
 
     <com.flipboard.bottomsheet.BottomSheetLayout
-        android:layout_above="@id/make_order_layout"
         android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/make_order_layout">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:background="@color/palette_background_color">
 
             <android.support.design.widget.CoordinatorLayout
-
+                android:id="@+id/coordinator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -36,13 +36,11 @@
                         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                         <ImageView
-                            android:contentDescription="@null"
                             android:id="@+id/img_shop"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="bottom|right"
-                            android:layout_marginRight="20dp"
-                            android:background="@drawable/holder" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/holder"
+                            android:contentDescription="@null" />
 
                         <TextView
                             android:id="@+id/work_time"
@@ -50,8 +48,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:layout_marginBottom="35dp"
-                            android:layout_marginStart="50dp"
                             android:layout_marginLeft="50dp"
+                            android:layout_marginStart="50dp"
                             android:textColor="@color/white" />
 
                         <TextView
@@ -91,14 +89,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@id/make_order_layout"
+                    android:fillViewport="true"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">   <!--为滑动控件设置Behavior,这样上面的控件才能做出相应改变 -->
-
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_view"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/palette_background_color" />
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/table_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/colorPrimary"
+                            app:tabIndicatorColor="@color/color_fed952"
+                            app:tabSelectedTextColor="@color/white"
+                            app:tabTextColor="@color/color_dbdbdb" />
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/viewpager"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@id/table_layout" />
+
+                    </RelativeLayout>
+
 
                 </android.support.v4.widget.NestedScrollView>
 
@@ -172,8 +185,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/make_order_layout"
-        android:layout_alignRight="@id/shopping_cart_bottom"
         android:layout_alignEnd="@id/shopping_cart_bottom"
+        android:layout_alignRight="@id/shopping_cart_bottom"
         android:background="@drawable/red_tip"
         android:textColor="@color/white"
         android:textSize="12sp"

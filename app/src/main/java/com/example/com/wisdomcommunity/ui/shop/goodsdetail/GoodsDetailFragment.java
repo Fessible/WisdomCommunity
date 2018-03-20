@@ -167,6 +167,8 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
     public void buy() {
         buy.setVisibility(View.GONE);
         buyLayout.setVisibility(View.VISIBLE);
+        count = 1;
+        number.setText(String.valueOf(count));
     }
 
     @OnClick(R.id.minus)
