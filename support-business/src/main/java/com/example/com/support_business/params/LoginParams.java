@@ -14,4 +14,9 @@ public class LoginParams {
      * 手机号
      */
     public String phone;
+
+    public LoginParams(String phone, String password) {
+        this.password = password;
+        this.phone = phone;
+    }
 }

@@ -5,9 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,8 +21,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Home;
 import com.example.com.wisdomcommunity.R;
+import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.HomeContract;
+import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
@@ -44,6 +46,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
@@ -56,6 +59,7 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
     public static final String TAG_HOME_FRAGMENT = "HOME_FRAGMENT";
+    public static final int REQUEST_LOGIN = 1;
 
     @BindView(R.id.multiple_refresh_layout)
     MultipleRefreshLayout multipleRefreshLayout;
@@ -91,6 +95,16 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        CharSequence phone = AccountSetUp.getPhone(getContext());
+        CharSequence password = AccountSetUp.getPassword(getContext());
+        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(password)) {
+            IntentUtil.startTemplateActivityForResult(HomeFragment.this, LoginFragment.class, LoginFragment.TAG_Login_FRAGMENT, REQUEST_LOGIN);
+        }
+    }
+
+    @Override
     protected void initView(View view, Bundle savedInstanceState) {
 
         //声明LocationClient类
@@ -117,7 +131,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         recyclerView.setLayoutManager(layoutManager);
         adapter.setCallback(callback);
 
-        recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext()).typeSelf(0,new EmptyDecor()).build());
+        recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext()).typeSelf(0, new EmptyDecor()).build());
     }
 
     private HomeAdapter.Callback callback = new HomeAdapter.Callback() {
@@ -296,5 +310,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            getActivity().finish();
+        }
     }
 }

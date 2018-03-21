@@ -120,7 +120,7 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                         namePosition = position;
                         Bundle bundle = new Bundle();
                         bundle.putString(KEY_NAME, content);
-                        IntentUtil.startSecondActivityForResult(EditInfoFragment.this, UserNameFragment.class, bundle, UserNameFragment.TAG_USER_NAME_FRAGMENT, REQUEST_NAME);
+                        IntentUtil.startTemplateActivityForResult(EditInfoFragment.this, UserNameFragment.class, bundle, UserNameFragment.TAG_USER_NAME_FRAGMENT, REQUEST_NAME);
                         break;
                     case TYPE_SEX:
                         if (sexBottomDialog == null) {
@@ -161,7 +161,7 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                         signaturePosition = position;
                         Bundle signature = new Bundle();
                         signature.putString(KEY_SIGNATURE, content);
-                        IntentUtil.startSecondActivityForResult(EditInfoFragment.this, SignatureFragment.class, signature, SignatureFragment.TAG_SIGNATURE_FRAGMENT, REQUEST_SIGNATURE);
+                        IntentUtil.startTemplateActivityForResult(EditInfoFragment.this, SignatureFragment.class, signature, SignatureFragment.TAG_SIGNATURE_FRAGMENT, REQUEST_SIGNATURE);
                         break;
                     case TYPE_BACK:
                         if (presenter != null) {

@@ -3,7 +3,6 @@ package com.example.com.wisdomcommunity.ui.person;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.personal.Info;
+import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.mvp.InfoContract;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
@@ -31,6 +31,8 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_USER_CHANGED;
+import static com.example.com.wisdomcommunity.ui.home.HomeFragment.REQUEST_LOGIN;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_ADDRESS;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_EXIT;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_FEEDBACK;
@@ -75,8 +77,8 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         infoPresenter = new PersonPresenter(getContext(), PersonFragment.this);
-        //todo userId
-        infoPresenter.loadInfo("122");
+
+        infoPresenter.loadInfo(AccountSetUp.getUserId(getContext()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new PersonAdapter(getContext());
@@ -128,8 +130,8 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
 
 
     private void signOut() {
-        getActivity().finish();
-        IntentUtil.startTemplateActivity(PersonFragment.this, LoginFragment.class, LoginFragment.TAG_Login_FRAGMENT);
+        IntentUtil.startTemplateActivityForResult(PersonFragment.this, LoginFragment.class, LoginFragment.TAG_Login_FRAGMENT, REQUEST_LOGIN);
+        AccountSetUp.clear(getContext());
 //        if (logoutPresenter != null) {
 //            logoutPresenter.logout();
 //        }
@@ -156,7 +158,16 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
                             .apply(new RequestOptions().placeholder(placeholderResId).centerCrop().fallback(placeholderResId))
                             .into(headImage);
                     break;
+                case REQUEST_LOGIN:
+                    Intent intent = new Intent();
+//对应BroadcastReceiver中intentFilter的action
+                    intent.setAction(ACTION_USER_CHANGED);
+//发送广播
+                    getContext().sendBroadcast(intent);
+                    break;
             }
+        } else {
+            getActivity().finish();
         }
     }
 

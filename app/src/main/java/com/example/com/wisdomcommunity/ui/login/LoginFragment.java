@@ -1,9 +1,10 @@
 package com.example.com.wisdomcommunity.ui.login;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CheckableImageButton;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.com.wisdomcommunity.R;
+import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.LoginContract;
 import com.example.com.wisdomcommunity.ui.forget.ForgetFragment;
@@ -29,17 +31,18 @@ import butterknife.OnClick;
 
 import static android.accounts.AccountManager.KEY_PASSWORD;
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_USER_CHANGED;
+import static com.example.com.wisdomcommunity.ui.register.RegisterFragment.KEY_PHONE;
 
 /**
  * Created by rhm on 2018/1/16.
  */
 
-public class LoginFragment extends BaseFragment implements LoginContract.View{
+public class LoginFragment extends BaseFragment implements LoginContract.View {
 
     public static final String TAG_Login_FRAGMENT = "LOGIN_FRAGMENT";
     public static final int REQUEST_CODE = 1;
     public static final int PHONE_NUMBER_LENGHT = 11;
-
 
     @BindView(R.id.logo)
     ImageView logo;
@@ -62,6 +65,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View{
     @BindView(R.id.forgot_password)
     TextView forgotPassword;
 
+    private LoginContract.Presenter loginPresenter;
+
     @Override
     public int getResLayout() {
         return R.layout.fragment_login_layout;
@@ -78,8 +83,16 @@ public class LoginFragment extends BaseFragment implements LoginContract.View{
     }
 
     @Override
-    protected void destroyView() {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loginPresenter = new LoginPresenter(getContext(), LoginFragment.this);
+    }
 
+    @Override
+    protected void destroyView() {
+        if (loginPresenter != null) {
+            loginPresenter.destroy();
+        }
     }
 
     @OnClick(R.id.text_clear)
@@ -92,31 +105,9 @@ public class LoginFragment extends BaseFragment implements LoginContract.View{
 
     @OnClick(R.id.login)
     public void login() {
-        if (editPhone != null && editPassword != null) {
-            String phone = editPhone.getText().toString();
-            String password = editPassword.getText().toString();
-            //test
-            getActivity().setResult(RESULT_OK);
-            getActivity().finish();
-            showShortToast("登录成功");
-
-//            HttpRequest.loginRequest(phone, password, new DisposeListener() {
-//                @Override
-//                public void onSuccess(Object responseObj) {
-//                    LoginModel loginModel = (LoginModel) responseObj;
-//                    showShortToast(loginModel.emsg);
-//
-//                    getActivity().setResult(RESULT_OK);
-//                    getActivity().finish();
-//                }
-//
-//                @Override
-//                public void onFailure(String msg) {
-//                    showShortToast(msg);
-//                }
-//            });
+        if (loginPresenter != null && editPhone != null && editPassword != null) {
+            loginPresenter.login(editPhone.getText(), editPassword.getText());
         }
-
     }
 
     @SuppressLint("RestrictedApi")
@@ -169,10 +160,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View{
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE:
-//                    String phone = data.getStringExtra(KEY_PHONE);
                     String password = data.getStringExtra(KEY_PASSWORD);
-//                    editPhone.setText(phone);
+                    String phone = data.getStringExtra(KEY_PHONE);
                     editPassword.setText(password);
+                    editPhone.setText(phone);
                     login();
                     break;
             }
@@ -226,12 +217,20 @@ public class LoginFragment extends BaseFragment implements LoginContract.View{
 
     @Override
     public void onLoginSuccess(CharSequence phone, CharSequence password, String userId) {
+        //将登录信息进行保存
+        AccountSetUp.setPassword(getContext(), password);
+        AccountSetUp.setPhone(getContext(), phone);
+        AccountSetUp.setUserId(getContext(), userId);
+//        Intent data = new Intent();
+//        data.putExtra(KEY_USERDATA, userId);
 
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override
     public void onLoginFailure(String msg) {
-
+        showShortToast(msg);
     }
 
     @Override

@@ -35,7 +35,6 @@ public class LoginPresenter extends LoginContract.Presenter {
         CommunityServer.with(context).login(compositeTag, phone.toString(), password.toString(), new RestyServer.SSOCallback<ResultEntity<User>>() {
             @Override
             public void onUnauthorized() {
-
             }
 
             @Override

@@ -29,6 +29,11 @@ public class ShopDetail implements Serializable {
     public List<Goods> goodsList;
 
     /**
+     * 打折商品
+     */
+    public List<Goods> discountList;
+
+    /**
      * 店铺简介
      */
     public String info;

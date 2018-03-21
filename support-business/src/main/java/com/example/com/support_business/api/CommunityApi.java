@@ -2,8 +2,7 @@ package com.example.com.support_business.api;
 
 import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Home;
-import com.example.com.support_business.domain.home.Recommend;
-import com.example.com.support_business.domain.login.Register;
+import com.example.com.support_business.domain.login.User;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
@@ -17,8 +16,10 @@ import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
 import com.example.com.support_business.module.ResultEntity;
+import com.example.com.support_business.params.ForgetParams;
 import com.example.com.support_business.params.LoginParams;
 import com.example.com.support_business.params.PersonParams;
+import com.example.com.support_business.params.RegisterParams;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -114,15 +115,19 @@ interface CommunityApi {
      *************/
     //修改密码
     @POST("login/forgetPassword")
-    public Observable<Response<Entity>> forgetPassword(@Body String newPassword, @Body LoginParams params);
+    public Observable<Response<Entity>> forgetPassword(@Body ForgetParams params);
 
     //注册
     @POST("login/register")
-    public Observable<Response<ResultEntity<Register>>> register(@Body LoginParams params);
+    public Observable<Response<Entity>> register(@Body RegisterParams params);
 
     //登录
     @POST("login/login")
-    public Observable<Response<Entity>> login(@Body LoginParams params);
+    public Observable<Response<ResultEntity<User>>> login(@Body LoginParams params);
+
+    //获取验证码
+    @POST("login/sms")
+    public Observable<Response<Entity>> sms(@Body String phone);
 
     /*************
      * 订单

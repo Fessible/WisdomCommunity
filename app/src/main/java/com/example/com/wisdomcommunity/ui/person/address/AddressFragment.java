@@ -92,7 +92,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
                 bundle.putInt(TYPE, TYPE_EDIT);
                 bundle.putInt(KEY_POSITION, position);
                 bundle.putSerializable(KEY_ADDRESS, address);
-                IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_EDIT);
+                IntentUtil.startTemplateActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_EDIT);
             }
         });
 
@@ -109,7 +109,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         Bundle bundle = new Bundle();
         bundle.putString(TITLE, getContext().getString(R.string.title_add_address));
         bundle.putInt(TYPE, TYPE_ADD);
-        IntentUtil.startSecondActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_ADD);
+        IntentUtil.startTemplateActivityForResult(AddressFragment.this, AddAddressFragment.class, bundle, AddAddressFragment.TAG_ADD_ADDRESS_FRAGMENT, REQUEST_ADD);
     }
 
     @Override

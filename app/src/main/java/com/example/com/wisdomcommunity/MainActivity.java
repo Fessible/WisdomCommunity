@@ -1,6 +1,7 @@
 package com.example.com.wisdomcommunity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -15,10 +16,13 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.example.com.wisdomcommunity.base.BaseActivity;
+import com.example.com.wisdomcommunity.receiver.CartReceiver;
+import com.example.com.wisdomcommunity.receiver.UserReceiver;
 import com.example.com.wisdomcommunity.ui.home.HomeFragment;
 import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.order.OrderFragment;
@@ -38,6 +42,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private final static int ORDER_INDEX = 2;
     private final static int PERSON_INDEX = 3;
     private final static int mTouchSclop = 10;
+    public final static String ACTION_USER_CHANGED = "action_user_changed";
 
     @BindView(R.id.radioGroup)
     RadioGroup radioGroup;
@@ -51,6 +56,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @BindView(R.id.icon_cart_layout)
     RelativeLayout iconCartLayout;
 
+    @BindView(R.id.rb_home)
+    RadioButton rbHome;
+
     private Fragment[] mFragment;
     private int mIndex;
     private int mDistance;
@@ -62,10 +70,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
      */
     private long upTime;
 
-    //test
-    public int author = 0;
     public final static int REQUEST_CODE = 1;
     private SplashFragment splashFragment;
+    private CartReceiver cartReceiver;
+    private UserReceiver userReceiver;
 
 
     @Override
@@ -77,22 +85,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     protected void onViewCreated(Bundle savedInstanceState) {
         addSplashFragment();
 
-        if (author == 0) {
-            IntentUtil.startTemplateActivityForResult(MainActivity.this, LoginFragment.class, null, LoginFragment.TAG_Login_FRAGMENT, REQUEST_CODE);
-
-        }
         radioGroup.setOnCheckedChangeListener(this);
         initFragment();
 
-//        //添加监听，来获取cart的移动距离
-//        iconCart.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                mDistance = getDisplayMetrics() - iconCart.getRight() + iconCart.getWidth() / 2;
-//                //使用完后要及时移除
-//                iconCart.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//            }
-//        });
 
         iconCartLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -109,6 +104,21 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 removeFragmentsIfExits(splashFragment);
             }
         }, 2000);
+
+
+        cartReceiver = new CartReceiver();
+        userReceiver = new UserReceiver() {
+            @Override
+            protected void onUserChanged() {
+                setIndexSelected(HOME_INDEX);
+                radioGroup.clearCheck();
+                rbHome.setChecked(true);
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_USER_CHANGED);
+        registerReceiver(cartReceiver, intentFilter);
+        registerReceiver(userReceiver, intentFilter);
     }
 
     public void addSplashFragment() {
@@ -285,5 +295,23 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 }
             });
         }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(cartReceiver);
+        unregisterReceiver(userReceiver);
     }
 }

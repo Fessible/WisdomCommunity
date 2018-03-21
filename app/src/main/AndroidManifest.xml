@@ -35,6 +35,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|fontScale|locale"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/DefaultCityPickerTheme">
             <intent-filter>
@@ -58,9 +60,7 @@
 
         <activity
             android:name=".TemplateActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".SecondActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|fontScale|locale"
             android:screenOrientation="portrait" />
 
         <!--百度 定位-->
