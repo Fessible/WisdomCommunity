@@ -19,6 +19,10 @@ import android.widget.TextView;
 
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.mvp.LoginContract;
+import com.example.com.wisdomcommunity.ui.forget.ForgetFragment;
+import com.example.com.wisdomcommunity.ui.register.RegisterFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -30,7 +34,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by rhm on 2018/1/16.
  */
 
-public class LoginFragment extends BaseFragment {
+public class LoginFragment extends BaseFragment implements LoginContract.View{
 
     public static final String TAG_Login_FRAGMENT = "LOGIN_FRAGMENT";
     public static final int REQUEST_CODE = 1;
@@ -135,7 +139,13 @@ public class LoginFragment extends BaseFragment {
 
     @OnClick(R.id.forgot_password)
     public void forgetPassword() {
-//        IntentUtil.startActivityForResult(LoginFragment.this, Forget.class, ForgetPasswordActivity.TAG_FORGET_PASSWORD_ACTIVITY, REQUEST_CODE);
+        IntentUtil.startTemplateActivityForResult(LoginFragment.this, ForgetFragment.class, ForgetFragment.TAG_FORGET_FRAGMENT, REQUEST_CODE);
+    }
+
+    @OnClick(R.id.sign_up)
+    public void register() {
+        IntentUtil.startTemplateActivityForResult(LoginFragment.this, RegisterFragment.class, RegisterFragment.TAG_REGISTER_FRAGMENT, REQUEST_CODE);
+
     }
 
     private TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
@@ -213,4 +223,24 @@ public class LoginFragment extends BaseFragment {
             updateLoginStatus();
         }
     };
+
+    @Override
+    public void onLoginSuccess(CharSequence phone, CharSequence password, String userId) {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void onUnauthorized() {
+
+    }
 }

@@ -7,7 +7,7 @@ import com.example.com.support_business.api.CommunityServer;
 import com.example.com.support_business.api.RestyServer;
 import com.example.com.support_business.domain.personal.Info;
 import com.example.com.support_business.module.ResultEntity;
-import com.example.com.wisdomcommunity.InfoContract;
+import com.example.com.wisdomcommunity.mvp.InfoContract;
 
 import java.util.Date;
 

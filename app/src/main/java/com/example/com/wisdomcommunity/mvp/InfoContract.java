@@ -1,4 +1,4 @@
-package com.example.com.wisdomcommunity;
+package com.example.com.wisdomcommunity.mvp;
 
 import android.content.Context;
 

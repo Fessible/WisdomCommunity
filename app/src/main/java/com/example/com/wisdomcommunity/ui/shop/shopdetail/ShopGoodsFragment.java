@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.shop.Goods;
@@ -16,6 +18,7 @@ import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,6 +27,8 @@ import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment.KEY_GOOD_ORDER;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.CategoryBean.TYPE_ALL;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.CategoryBean.TYPE_DISCOUNT;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_GOODS_NUM;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_GOODS_URL;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
@@ -34,20 +39,26 @@ import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragm
  */
 
 public class ShopGoodsFragment extends BaseFragment {
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
+    @BindView(R.id.lv_product_category)
+    ListView lvProductCategory;
+
     private View view;
     private Bundle savedInstanceState;
     private ShopDetail shopDetail;
     private ShopDetailAdapter adapter;
     private GoodsCallback goodsCallback;
     private int clickCount;
+    private CategoryAdapter categoryAdapter;
+    private int allCount;
+    private int discountCount;
 
     public void setShopDetail(ShopDetail shopDetail) {
         this.shopDetail = shopDetail;
         initView(view, savedInstanceState);
     }
-
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
 
     @Override
     public int getResLayout() {
@@ -64,8 +75,39 @@ public class ShopGoodsFragment extends BaseFragment {
     private void init() {
         if (shopDetail != null) {
             initRecyclerView(shopDetail);
+            initCategory(shopDetail);
         }
     }
+
+    //初始化分类栏
+    private void initCategory(ShopDetail shopDetail) {
+        List<CategoryBean> list = new ArrayList<>();
+        list.add(new CategoryBean("全部商品", TYPE_ALL));
+        list.add(new CategoryBean("折扣商品", TYPE_DISCOUNT));
+        categoryAdapter = new CategoryAdapter(getContext(), list);
+        lvProductCategory.setAdapter(categoryAdapter);
+        lvProductCategory.setOnItemClickListener(itemClick);
+    }
+
+    private AdapterView.OnItemClickListener itemClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            categoryAdapter.setSelection(i);
+            categoryAdapter.notifyDataSetChanged();
+            if (adapter != null) {
+                switch (i) {
+                    case TYPE_ALL:
+                        adapter.setData(shopDetail.goodsList, TYPE_ALL);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case TYPE_DISCOUNT:
+                        adapter.setData(shopDetail.discountList, TYPE_DISCOUNT);
+                        adapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+        }
+    };
 
     //初始化recyclerview
     private void initRecyclerView(ShopDetail shopDetail) {
@@ -77,7 +119,7 @@ public class ShopGoodsFragment extends BaseFragment {
                         .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         recyclerView.setAdapter(adapter);
-        adapter.setData(shopDetail.goodsList);
+        adapter.setData(shopDetail.goodsList, TYPE_ALL);
         adapter.notifyDataSetChanged();
         adapter.setCallback(callback);
     }
@@ -96,14 +138,14 @@ public class ShopGoodsFragment extends BaseFragment {
         }
 
         @Override
-        public void onAddPayBack(View v, Goods goods, float price, int num) {
+        public void onAddPayBack(View v, Goods goods, float price, int num, int type) {
             if (goodsCallback != null) {
                 goodsCallback.onAdd(v, goods, price, num);
             }
         }
 
         @Override
-        public void onMinusPayBack(Goods goods, float price, int num) {
+        public void onMinusPayBack(Goods goods, float price, int num, int type) {
             if (goodsCallback != null) {
                 goodsCallback.onMinus(goods, price, num);
             }
@@ -141,7 +183,7 @@ public class ShopGoodsFragment extends BaseFragment {
 
     public void changeGoods(List<Goods> goodsList) {
         if (adapter != null) {
-            adapter.setData(goodsList);
+            adapter.setData(goodsList, TYPE_ALL);
             adapter.notifyDataSetChanged();
         }
     }

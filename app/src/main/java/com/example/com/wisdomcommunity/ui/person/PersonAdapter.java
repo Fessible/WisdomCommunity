@@ -26,6 +26,7 @@ public class PersonAdapter extends BaseAdapter<PersonAdapter.PersonHolder> {
     public final static int TYPE_FEEDBACK = 1;
     public final static int TYPE_SET = 2;
     public final static int TYPE_SERVICE = 3;
+    public final static int TYPE_EXIT = 4;
     private List<Item> itemList = new ArrayList<>();
 
     private Context mContext;
@@ -48,6 +49,7 @@ public class PersonAdapter extends BaseAdapter<PersonAdapter.PersonHolder> {
             itemList.add(new Item(R.drawable.ic_feedback, mContext.getString(R.string.feedback), TYPE_FEEDBACK));
             itemList.add(new Item(R.drawable.ic_setting, mContext.getString(R.string.setting), TYPE_SET));
             itemList.add(new Item(R.drawable.btn_online_customer_service, mContext.getString(R.string.service), TYPE_SERVICE));
+            itemList.add(new Item(R.drawable.icon_exit, mContext.getString(R.string.exit), TYPE_EXIT));
         }
     };
 

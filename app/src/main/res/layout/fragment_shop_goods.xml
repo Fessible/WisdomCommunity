@@ -6,24 +6,24 @@
     android:background="@color/white">
 
     <ListView
-    android:id="@+id/lv_product_category"
-    android:layout_width="100dp"
-    android:layout_height="wrap_content"
-    android:choiceMode="singleChoice"
-    android:divider="@null"
-    android:fadingEdge="none"
-    android:scrollbars="none"
-    tools:listitem="@layout/item_product_category" />
+        android:id="@+id/lv_product_category"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
+        android:divider="@drawable/icon_horizontal_line"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        tools:listitem="@layout/item_product_category" />
 
     <View
-    android:layout_width="0.1dp"
-    android:layout_height="match_parent"
-    android:background="#DCDCDC" />
+        android:layout_width="0.1dp"
+        android:layout_height="match_parent"
+        android:background="#DCDCDC" />
 
     <android.support.v7.widget.RecyclerView
-    android:id="@+id/recycler_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

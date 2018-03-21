@@ -5,19 +5,18 @@ import android.content.Context;
 import com.example.com.wisdomcommunity.mvp.base.BasicContract;
 
 /**
- * Created by rhm on 2018/1/16.
+ * Created by rhm on 2018/3/21.
  */
 
-public interface LoginContract extends BasicContract {
+public interface ForgetContract  {
     public interface Model extends BasicContract.Model {
 
     }
 
     public interface View extends BasicContract.View {
-        public void onLoginSuccess(CharSequence phone, CharSequence password, String userId);
+        void editForgetPasswordSuccess(String phone, String password, String msg);
 
-        public void onLoginFailure(String msg);
-
+        void editForgetPassFailure(String msg);
     }
 
     public abstract class Presenter extends BasicContract.Presenter<View> {
@@ -25,7 +24,7 @@ public interface LoginContract extends BasicContract {
             super(context, view);
         }
 
-        public abstract void login(CharSequence phone, CharSequence password);
+        public abstract void forgetPassword(String sms, String phone, String password);
     }
 
 }

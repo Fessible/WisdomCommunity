@@ -1,7 +1,10 @@
 package com.example.com.wisdomcommunity.ui.person;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,21 +13,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.personal.Info;
-import com.example.com.wisdomcommunity.InfoContract;
+import com.example.com.wisdomcommunity.mvp.InfoContract;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
-import com.example.com.wisdomcommunity.mvp.EditInfoContract;
+import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.person.address.AddressFragment;
 import com.example.com.wisdomcommunity.ui.person.feedback.FeedbackFragment;
 import com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment;
-import com.example.com.wisdomcommunity.ui.person.info.EditInfoPresenter;
 import com.example.com.wisdomcommunity.ui.person.service.ServiceFragment;
 import com.example.com.wisdomcommunity.ui.person.set.SetFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
-
-import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -32,6 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_ADDRESS;
+import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_EXIT;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_FEEDBACK;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_SERVICE;
 import static com.example.com.wisdomcommunity.ui.person.PersonAdapter.TYPE_SET;
@@ -101,9 +102,37 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
                     case TYPE_SET:
                         IntentUtil.startTemplateActivity(PersonFragment.this, SetFragment.class, SetFragment.TAG_SET_FRAGMENT);
                         break;
+                    case TYPE_EXIT:
+                        new AlertDialog.Builder(getContext())
+                                .setTitle(R.string.title_tips)
+                                .setMessage(R.string.exit_messgae)
+                                .setPositiveButton(R.string.opt_confirm, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        signOut();
+                                    }
+                                })
+                                .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .show()
+                                .setCanceledOnTouchOutside(false);
+                        break;
                 }
             }
         });
+    }
+
+
+    private void signOut() {
+        getActivity().finish();
+        IntentUtil.startTemplateActivity(PersonFragment.this, LoginFragment.class, LoginFragment.TAG_Login_FRAGMENT);
+//        if (logoutPresenter != null) {
+//            logoutPresenter.logout();
+//        }
     }
 
     @OnClick(R.id.person_layout)

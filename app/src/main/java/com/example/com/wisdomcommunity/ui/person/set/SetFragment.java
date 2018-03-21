@@ -16,7 +16,6 @@ import butterknife.BindView;
 
 import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_ABOUT;
 import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_CACHE;
-import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_EXIT;
 import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_SHARE;
 import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_UPDATE;
 
@@ -62,8 +61,6 @@ public class SetFragment extends BaseFragment {
                     case TYPE_ABOUT:
                         break;
                     case TYPE_CACHE:
-                        break;
-                    case TYPE_EXIT:
                         break;
                     case TYPE_UPDATE:
                         break;

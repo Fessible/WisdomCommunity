@@ -6,9 +6,11 @@
     <string name="hint_input_password">请输入密码</string>
     <string name="count_down_timer_reset_code_format">%1$d 秒</string>
     <string name="login">登录</string>
+    <string name="sign_up">注册</string>
 
     <string name="reset_password">重置密码</string>
     <string name="hint_input_code">请输入手机验证码</string>
+    <string name="hint_input_name">请输入用户名</string>
     <string name="reset_code">发送验证码</string>
     <string name="hint_input_new_password">请输入新密码</string>
     <string name="hint_input_confirm_new_password">请再次输入新密码</string>
@@ -64,6 +66,7 @@
     <string name="set_cache">清空缓存</string>
     <string name="set_about">关于智慧社区</string>
     <string name="set_update">版本更新</string>
+    <string name="exit">退出</string>
     <string name="set_exit">退出当前账号</string>
     <string name="title_edit">修改个人资料</string>
     <string name="user_name">用户名</string>
@@ -140,5 +143,11 @@
     <string name="clear">清空</string>
     <string name="init_money">￥00.00</string>
     <string name="message">公告</string>
+    <string name="title_tips">提示</string>
+    <string name="exit_messgae">您是否确定退出登录？</string>
+    <string name="password_length_error">密码长度小于6位或大于12位</string>
+    <string name="password_error_format">密码格式有误</string>
+    <string name="please_enter_new_pass">请输入新密码</string>
+    <string name="enter_error_password">两次输入的密码不一致</string>
 
 </resources>

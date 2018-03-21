@@ -15,7 +15,7 @@
 
             <com.example.com.wisdomcommunity.view.CompatStatusBar
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
 
         </android.support.design.widget.AppBarLayout>
@@ -36,6 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="43dp"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/community" />
 
                 <FrameLayout
@@ -63,9 +64,11 @@
                         android:id="@+id/text_clear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
                         android:background="@color/transparent"
+                        android:contentDescription="@string/app_name"
                         android:minHeight="40dp"
                         android:minWidth="40dp"
                         android:scaleType="center"
@@ -96,7 +99,8 @@
                         android:id="@+id/password_toggle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
                         android:background="@color/palette_transparent"
                         android:minHeight="40dp"
@@ -116,13 +120,31 @@
                     android:enabled="false"
                     android:text="@string/login" />
 
-                <TextView
-                    android:id="@+id/forgot_password"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/login_forget_pass"
-                    android:textColor="@color/palette_primary_color" />
+                    android:paddingLeft="40dp"
+                    android:paddingRight="40dp">
+
+                    <TextView
+                        android:id="@+id/forgot_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/login_forget_pass"
+                        android:textColor="@color/palette_primary_color" />
+
+                    <TextView
+                        android:id="@+id/sign_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/sign_up"
+                        android:textColor="@color/palette_primary_color" />
+                </RelativeLayout>
+
 
             </LinearLayout>
 

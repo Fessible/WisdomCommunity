@@ -40,7 +40,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/holder"
-                            android:contentDescription="@null" />
+                            android:contentDescription="@null"
+                            app:layout_collapseMode="parallax"
+                            app:layout_collapseParallaxMultiplier="0.5" />
 
                         <TextView
                             android:id="@+id/work_time"
@@ -66,7 +68,7 @@
                             android:id="@+id/toolbar"
                             android:layout_width="match_parent"
                             android:layout_height="?attr/actionBarSize"
-                            app:layout_collapseMode="pin">
+                            app:layout_collapseMode="pin"><!--折叠在顶部-->
 
 
                             <ImageView

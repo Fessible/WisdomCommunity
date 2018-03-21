@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private long upTime;
 
     //test
-    public int author = 1;
+    public int author = 0;
     public final static int REQUEST_CODE = 1;
     private SplashFragment splashFragment;
 

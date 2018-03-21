@@ -24,7 +24,6 @@ public class SetAdapter extends BaseAdapter<SetAdapter.SetHolder> {
     public static final int TYPE_ABOUT = 1;//关于
     public static final int TYPE_CACHE = 2;//缓存
     public static final int TYPE_UPDATE = 3;//更新
-    public static final int TYPE_EXIT = 4;//退出
 
     private OnItemClickListener clickListener;
     private final List<SetItem> setItemList = new ArrayList<>();
@@ -43,7 +42,6 @@ public class SetAdapter extends BaseAdapter<SetAdapter.SetHolder> {
             setItemList.add(new SetItem(mContext.getString(R.string.set_cache), TYPE_CACHE));
             setItemList.add(new SetItem(mContext.getString(R.string.set_about), TYPE_ABOUT));
             setItemList.add(new SetItem(mContext.getString(R.string.set_update), TYPE_UPDATE));
-            setItemList.add(new SetItem(mContext.getString(R.string.set_exit), TYPE_EXIT));
         }
     };
 
@@ -103,10 +101,6 @@ public class SetAdapter extends BaseAdapter<SetAdapter.SetHolder> {
                     cacheNumber.setVisibility(View.GONE);
                     break;
                 case TYPE_UPDATE:
-                case TYPE_EXIT:
-                    rightArrow.setVisibility(View.GONE);
-                    cacheNumber.setVisibility(View.GONE);
-                    break;
                 case TYPE_CACHE:
                     rightArrow.setVisibility(View.GONE);
                     cacheNumber.setVisibility(View.VISIBLE);

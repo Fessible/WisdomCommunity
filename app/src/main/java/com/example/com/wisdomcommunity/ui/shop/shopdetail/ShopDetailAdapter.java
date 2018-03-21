@@ -29,6 +29,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     private List<Goods> goodsList = new ArrayList<>();
     private Callback callback;
     private int number = -1;
+    private int type;
 
     ShopDetailAdapter(Context context) {
         this.context = context;
@@ -43,9 +44,10 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         number = num;
     }
 
-    public void setData(List<Goods> goodsList) {
+    public void setData(List<Goods> goodsList, int type) {
         number = -1;
         this.goodsList = goodsList;
+        this.type = type;
     }
 
 
@@ -65,9 +67,8 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
 
     @Override
     public void onBindViewHolder(ShopDetailHolder holder, int position) {
-        holder.bindHolder(context, goodsList.get(position), number, position, callback);
+        holder.bindHolder(context, goodsList.get(position), number, position,type, callback);
     }
-
 
     @Override
     public int getItemCount() {
@@ -102,7 +103,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             super(context, parent, R.layout.adapter_shop_goods);
         }
 
-        public void bindHolder(final Context context, final Goods item, int num, final int position, final Callback callback) {
+        public void bindHolder(final Context context, final Goods item, int num, final int position, final int type, final Callback callback) {
             int placeHolder = R.drawable.app_icon;
             final Float flPrice = Float.valueOf(item.price);
             if (num != -1) {
@@ -144,7 +145,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             changMinus(true);
                         }
                         if (callback != null) {
-                            callback.onAddPayBack(v, item, flPrice, count);
+                            callback.onAddPayBack(v, item, flPrice, count,type);
                         }
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_enough_remain), Toast.LENGTH_SHORT).show();
@@ -162,7 +163,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                             changMinus(false);
                         }
                         if (callback != null) {
-                            callback.onMinusPayBack(item, flPrice, count);
+                            callback.onMinusPayBack(item, flPrice, count,type);
                         }
                     } else {
                         changMinus(false);
@@ -182,9 +183,9 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     interface Callback {
         void onCallback(Goods goods, int count, int position);
 
-        void onAddPayBack(View v, Goods goods, float price, int num);
+        void onAddPayBack(View v, Goods goods, float price, int num, int type);
 
-        void onMinusPayBack(Goods goods, float price, int num);
+        void onMinusPayBack(Goods goods, float price, int num, int type);
     }
 
 }
