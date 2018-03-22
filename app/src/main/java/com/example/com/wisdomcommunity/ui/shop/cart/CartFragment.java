@@ -34,6 +34,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CLEAR;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_ORDER_LIST;
@@ -208,6 +209,10 @@ public class CartFragment extends BaseFragment {
                             adapter.destroy();
                             adapter.notifyDataSetChanged();
                             showEmpty(true);
+
+                            Intent intent = new Intent();
+                            intent.setAction(ACTION_SHOP_CART_CLEAR);
+                            getActivity().sendBroadcast(intent);
                         }
 
                     }

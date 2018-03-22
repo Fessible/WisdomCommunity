@@ -37,13 +37,10 @@ import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.localsave.ShopCart;
 import com.example.com.wisdomcommunity.mvp.ShopDetailContract;
-import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.FakeAddImageView;
 import com.example.com.wisdomcommunity.view.PointFTypeEvaluator;
-import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
-import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.OnSheetDismissedListener;
 
@@ -57,13 +54,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static android.app.Activity.RESULT_OK;
 import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CHANGED;
-import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
-import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
-import static com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment.KEY_GOOD_ORDER;
 
 /**
  * Created by rhm on 2018/2/24.
@@ -123,7 +116,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private ShopDetailContract.Presenter presenter;
     private String phoneNumber;
     private boolean isClick;//判断是否操作了购物车的数值
-    private int fee;//配送费
     private String strPrice;
     private String shopName;
     private DialogCartAdapter cartAdapter;
@@ -150,8 +142,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         if (bundle != null) {
             shopName = bundle.getString(KEY_SHOP_NAME);
             shopId = bundle.getString(KEY_SHOP_ID);
-            shopDetail.shopId = shopId;
-            shopDetail.shopName = shopName;
 
             collapsingToolbarLayout.setTitle(shopName);
             collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
@@ -184,22 +174,13 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         super.onActivityCreated(savedInstanceState);
         presenter = new ShopDetailPresenter(getContext(), ShopDetailFragment.this);
         presenter.loadShopDetail(shopId);
-
-        //获取本地购物车信息
-        int count = ShopCart.getCount(getContext());
-        if (count > 0) {
-            this.count = count;
-            this.orderHashMap = ShopCart.getShopCart(getContext());
-            this.strPrice = ShopCart.getTotalPrice(getContext());
-            showOrderlayout();
-        }
     }
 
     @Override
     protected void destroyView() {
         ShopCart.setShopCart(getContext(), orderHashMap);
         ShopCart.setCount(getContext(), count);
-        ShopCart.setTotalPrice(getContext(), strPrice);
+        ShopCart.setTotalPrice(getContext(), new DecimalFormat(".00").format(totalPrice));
         ShopCart.setShop(getContext(), shopDetail);
 
         Intent intent = new Intent();
@@ -215,8 +196,10 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     public void onLoadShopDetailSuccess(ShopDetail shopDetail) {
         if (shopDetail != null) {
             this.shopDetail = shopDetail;
+            this.shopDetail.shopId = shopId;
+            this.shopDetail.shopName = shopName;
+            this.shopDetail.shipment = shopDetail.shipment;
             phoneNumber = shopDetail.shopPhone;
-            fee = shopDetail.shipment;
             int placeHolder = R.drawable.app_icon;
             Glide.with(getContext()).load(shopDetail.shopUrl)
                     .apply(new RequestOptions()
@@ -227,6 +210,18 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
             initShopInfoFragment(shopDetail);
             initShopGoodsFragment(shopDetail);
+
+
+            //获取本地购物车信息
+            int count = ShopCart.getCount(getContext());
+            if (count > 0) {
+                this.count = count;
+                this.orderHashMap = ShopCart.getShopCart(getContext());
+                totalPrice = Float.parseFloat(ShopCart.getTotalPrice(getContext()));
+                showOrderlayout();
+                isClick=true;
+                changeShopGoods();
+            }
         }
     }
 
