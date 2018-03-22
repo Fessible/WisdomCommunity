@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,15 +18,17 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.com.wisdomcommunity.base.BaseActivity;
+import com.example.com.wisdomcommunity.localsave.ShopCart;
 import com.example.com.wisdomcommunity.receiver.CartReceiver;
 import com.example.com.wisdomcommunity.receiver.UserReceiver;
 import com.example.com.wisdomcommunity.ui.home.HomeFragment;
-import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.order.OrderFragment;
 import com.example.com.wisdomcommunity.ui.person.PersonFragment;
 import com.example.com.wisdomcommunity.ui.shop.ShopFragment;
+import com.example.com.wisdomcommunity.ui.shop.cart.CartFragment;
 import com.example.com.wisdomcommunity.ui.splash.SplashFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 
@@ -35,6 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     private final static int HOME_INDEX = 0;
@@ -43,6 +45,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private final static int PERSON_INDEX = 3;
     private final static int mTouchSclop = 10;
     public final static String ACTION_USER_CHANGED = "action_user_changed";
+    public final static String ACTION_SHOP_CART_CHANGED = "action_shop_cart_changed";
+    public final static String ACTION_SHOP_CART_CLEAR = "action_shop_cart_clear";
+
 
     @BindView(R.id.radioGroup)
     RadioGroup radioGroup;
@@ -58,6 +63,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @BindView(R.id.rb_home)
     RadioButton rbHome;
+
+    @BindView(R.id.shopping_cart_total_num)
+    TextView cartTotalNum;
 
     private Fragment[] mFragment;
     private int mIndex;
@@ -83,6 +91,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void onViewCreated(Bundle savedInstanceState) {
+
         addSplashFragment();
 
         radioGroup.setOnCheckedChangeListener(this);
@@ -106,7 +115,28 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }, 2000);
 
 
-        cartReceiver = new CartReceiver();
+        cartReceiver = new CartReceiver() {
+            @Override
+            protected void onShopCartClear() {
+                ShopCart.clear(MainActivity.this);
+                cartTotalNum.setVisibility(View.GONE);
+                iconCartLayout.setEnabled(false);
+            }
+
+            @Override
+            protected void onShopCartChanged() {
+                int count = ShopCart.getCount(MainActivity.this);
+                if (count > 0) {
+                    cartTotalNum.setVisibility(View.VISIBLE);
+                    cartTotalNum.setText(String.valueOf(count));
+                    iconCartLayout.setEnabled(true);
+                } else {
+                    cartTotalNum.setVisibility(View.GONE);
+                    iconCartLayout.setEnabled(false);
+                }
+
+            }
+        };
         userReceiver = new UserReceiver() {
             @Override
             protected void onUserChanged() {
@@ -115,10 +145,15 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 rbHome.setChecked(true);
             }
         };
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_USER_CHANGED);
-        registerReceiver(cartReceiver, intentFilter);
-        registerReceiver(userReceiver, intentFilter);
+        IntentFilter userFilter = new IntentFilter();
+        userFilter.addAction(ACTION_USER_CHANGED);
+
+        IntentFilter cartFilter = new IntentFilter();
+        cartFilter.addAction(ACTION_SHOP_CART_CHANGED);
+        cartFilter.addAction(ACTION_SHOP_CART_CLEAR);
+
+        registerReceiver(cartReceiver, cartFilter);
+        registerReceiver(userReceiver, userFilter);
     }
 
     public void addSplashFragment() {
@@ -313,5 +348,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         super.onDestroy();
         unregisterReceiver(cartReceiver);
         unregisterReceiver(userReceiver);
+    }
+
+    @OnClick(R.id.icon_cart_layout)
+    public void onCart() {
+        IntentUtil.startTemplateActivity(MainActivity.this, CartFragment.class, CartFragment.TAG_CART_FRAGMENT);
     }
 }

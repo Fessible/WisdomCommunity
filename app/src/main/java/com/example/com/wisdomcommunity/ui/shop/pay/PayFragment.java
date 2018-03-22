@@ -16,6 +16,7 @@ import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.localsave.ShopCart;
 import com.example.com.wisdomcommunity.ui.order.OrderDetailFragment;
 import com.example.com.wisdomcommunity.ui.person.address.AddressFragment;
 import com.example.com.wisdomcommunity.util.ActivityCollector;
@@ -29,6 +30,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CHANGED;
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CLEAR;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailFragment.KEY_ORDER_DETAIL;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailFragment.KEY_SHOP_ID;
 import static com.example.com.wisdomcommunity.ui.person.address.AddressFragment.KEY_ADDRESS;
@@ -183,8 +186,10 @@ public class PayFragment extends BaseFragment {
         bundle.putSerializable(KEY_ORDER_DETAIL, orderDetail);
 
         IntentUtil.startTemplateActivity(PayFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT);
-        getActivity().finish();
+
         ActivityCollector.finishAll();
+        getActivity().finish();
+
     }
 
     @Override

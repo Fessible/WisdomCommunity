@@ -20,6 +20,7 @@ import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoratio
 
 import butterknife.BindView;
 
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CLEAR;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_HEADER_SHOP;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_ORDER_LIST;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_PHONE;
@@ -54,6 +55,9 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_SHOP_CART_CLEAR);
+        getActivity().sendBroadcast(intent);
 
         title.setText(getContext().getString(R.string.order_detail));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -40,12 +40,20 @@ public class IntentUtil {
     }
 
 
-    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz,String tag) {
+    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, String tag) {
         IntentUtil.startActivity(TemplateActivity.class, fragment, fragmentClazz, null, tag);
     }
 
-    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz,Bundle args,String tag) {
+    public static void startTemplateActivity(Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag) {
         IntentUtil.startActivity(TemplateActivity.class, fragment, fragmentClazz, args, tag);
+    }
+
+
+    public static void startTemplateActivity(Activity activity, Class<? extends Fragment> fragmentClazz, String tag) {
+        Intent intent = new Intent(activity, TemplateActivity.class);
+        intent.putExtra(TemplateActivity.KEY_FRAGMENT_CLAZZ, fragmentClazz.getName());
+        intent.putExtra(TemplateActivity.KEY_FRAGMENT_TAG, tag);
+        activity.startActivity(intent);
     }
 
     public static void startActivity(Class clazz, Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag) {
@@ -62,7 +70,7 @@ public class IntentUtil {
         IntentUtil.startActivityForResult(TemplateActivity.class, fragment, fragmentClazz, null, tag, requstCode);
     }
 
-    public static void startTemplateActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz,Bundle args, String tag, int requstCode) {
+    public static void startTemplateActivityForResult(Fragment fragment, Class<? extends Fragment> fragmentClazz, Bundle args, String tag, int requstCode) {
         IntentUtil.startActivityForResult(TemplateActivity.class, fragment, fragmentClazz, args, tag, requstCode);
     }
 

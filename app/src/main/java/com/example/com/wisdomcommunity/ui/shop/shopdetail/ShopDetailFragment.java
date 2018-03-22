@@ -35,6 +35,7 @@ import com.example.com.support_business.domain.shop.Goods;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.localsave.ShopCart;
 import com.example.com.wisdomcommunity.mvp.ShopDetailContract;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
@@ -57,6 +58,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CHANGED;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
@@ -179,10 +181,26 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         super.onActivityCreated(savedInstanceState);
         presenter = new ShopDetailPresenter(getContext(), ShopDetailFragment.this);
         presenter.loadShopDetail(shopId);
+
+        //获取本地购物车信息
+        int count = ShopCart.getCount(getContext());
+        if (count > 0) {
+            this.count = count;
+            this.orderHashMap = ShopCart.getShopCart(getContext());
+            this.strPrice = ShopCart.getTotalPrice(getContext());
+            showOrderlayout();
+        }
     }
 
     @Override
     protected void destroyView() {
+        ShopCart.setShopCart(getContext(), orderHashMap);
+        ShopCart.setCount(getContext(), count);
+        ShopCart.setTotalPrice(getContext(), strPrice);
+
+        Intent intent = new Intent();
+        intent.setAction(ACTION_SHOP_CART_CHANGED);
+        getActivity().sendBroadcast(intent);
         if (orderHashMap != null) {
             orderHashMap.clear();
         }
@@ -576,4 +594,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
         showEmptyCart();
     }
+
+
 }
