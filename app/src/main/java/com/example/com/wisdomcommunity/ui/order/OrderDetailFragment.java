@@ -89,7 +89,6 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
             adapter.setData(orderDetail);
             adapter.notifyDataSetChanged();
         }
-
     }
 
     private OrderDetailAdapter.Callback callback = new OrderDetailAdapter.Callback() {

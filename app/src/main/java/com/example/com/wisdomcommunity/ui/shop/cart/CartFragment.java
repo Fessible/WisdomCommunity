@@ -3,6 +3,7 @@ package com.example.com.wisdomcommunity.ui.shop.cart;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,9 @@ import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.localsave.ShopCart;
 import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
+import com.example.com.wisdomcommunity.util.ActivityCollector;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
@@ -66,8 +69,6 @@ public class CartFragment extends BaseFragment {
     private int shipment;
 
     private ShopDetail shopDetail;
-    private String shopId;
-    private String shopName;
 
     @Override
     public int getResLayout() {
@@ -78,7 +79,7 @@ public class CartFragment extends BaseFragment {
     protected void initView(View view, Bundle savedInstanceState) {
         title.setText(R.string.title_shop_cart);
 
-        Bundle bundle = getArguments();
+//        Bundle bundle = getArguments();
 
         toolbar.setNavigationOnClickListener(navigationListener);
 
@@ -91,23 +92,35 @@ public class CartFragment extends BaseFragment {
                         .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
 
-        if (bundle != null) {
-            shopDetail = (ShopDetail) bundle.getSerializable(KEY_SHOP);
-            shopId = bundle.getString(KEY_SHOP_ID);
-            shopName = bundle.getString(KEY_SHOP_NAME);
+//        if (bundle != null) {
+//            shopDetail = (ShopDetail) bundle.getSerializable(KEY_SHOP);
+//            shopId = bundle.getString(KEY_SHOP_ID);
+//            shopName = bundle.getString(KEY_SHOP_NAME);
+//
+//            HashMap<String, OrderDetail.Order> orderHashMap = (HashMap<String, OrderDetail.Order>) bundle.getSerializable(KEY_ORDER_LIST);
+//            shipment = bundle.getInt(KEY_SHIPMENT);
+//            String total = bundle.getString(KEY_TOTAL_MONEY);
 
-            HashMap<String, OrderDetail.Order> orderHashMap = (HashMap<String, OrderDetail.Order>) bundle.getSerializable(KEY_ORDER_LIST);
-            shipment = bundle.getInt(KEY_SHIPMENT);
-            String total = bundle.getString(KEY_TOTAL_MONEY);
-            totalPay = Float.valueOf(total) + shipment;
-            parseHashMap(orderHashMap);
+        shopDetail = ShopCart.getShop(getContext());
+        HashMap<String, OrderDetail.Order> orderHashMap = ShopCart.getShopCart(getContext());
+        String total = ShopCart.getTotalPrice(getContext());
+        shipment = shopDetail.shipment;
 
-            totalPrice.setText(String.valueOf(totalPay));
-            txShipment.setText(getContext().getString(R.string.shipment_fee, String.valueOf(shipment)));
-        }
+        totalPay = Float.valueOf(total) + shipment;
+        parseHashMap(orderHashMap);
+
+        totalPrice.setText(String.valueOf(totalPay));
+        txShipment.setText(getContext().getString(R.string.shipment_fee, String.valueOf(shipment)));
+//        }
 
         adapter.setCallback(callback);
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ActivityCollector.addActivity(getActivity());
     }
 
     private CartAdapter.Callback callback = new CartAdapter.Callback() {
@@ -151,7 +164,7 @@ public class CartFragment extends BaseFragment {
 
     private void showTotalPrice(Float totalPay) {
         DecimalFormat decimalFormat = new DecimalFormat(".00");
-        String strPrice = decimalFormat.format(this.totalPay);
+        String strPrice = decimalFormat.format(totalPay);
         totalPrice.setText(strPrice);
     }
 
@@ -164,20 +177,21 @@ public class CartFragment extends BaseFragment {
     }
 
     private void parseHashMap(HashMap<String, OrderDetail.Order> orderHashMap) {
-        List<OrderDetail.Order> orderList = new ArrayList<>();
-        for (Map.Entry<String, OrderDetail.Order> entry : orderHashMap.entrySet()) {
-            orderList.add(entry.getValue());
-        }
-        if (adapter != null) {
-            adapter.setOrderData(orderList);
-            adapter.notifyDataSetChanged();
+        if (orderHashMap != null) {
+            List<OrderDetail.Order> orderList = new ArrayList<>();
+            for (Map.Entry<String, OrderDetail.Order> entry : orderHashMap.entrySet()) {
+                orderList.add(entry.getValue());
+            }
+            if (adapter != null) {
+                adapter.setOrderData(orderList);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
     private View.OnClickListener navigationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent data = new Intent();
             getActivity().finish();
         }
     };
@@ -211,10 +225,7 @@ public class CartFragment extends BaseFragment {
     public void buy() {
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_SHOP, shopDetail);
-        bundle.putString(KEY_SHOP_ID, shopId);
-        bundle.putString(KEY_SHOP_NAME, shopName);
         bundle.putString(KEY_TOTAL_MONEY, totalPrice.getText().toString());
-        bundle.putInt(KEY_SHIPMENT, shipment);
         if (adapter != null) {
             bundle.putSerializable(KEY_ORDER_LIST, (Serializable) adapter.getOrderList());
         }

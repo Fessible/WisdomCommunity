@@ -96,12 +96,14 @@ public class PayFragment extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             shopDetail = (ShopDetail) bundle.getSerializable(KEY_SHOP);
-            shopId = bundle.getString(KEY_SHOP_ID);
-            shopName = bundle.getString(KEY_SHOP_NAME);
+            if (shopDetail != null) {
+                shopId = shopDetail.shopId;
+                shopName = shopDetail.shopName;
+                ishipment = shopDetail.shipment;
+            }
 
             strPrice = bundle.getString(KEY_TOTAL_MONEY);
             totalPrice.setText(strPrice);
-            ishipment = bundle.getInt(KEY_SHIPMENT);
             total = String.valueOf(Float.valueOf(strPrice) - ishipment);
             orderList = (List<OrderDetail.Order>) bundle.getSerializable(KEY_ORDER_LIST);
             adapter.setData(orderList, ishipment, total);

@@ -150,6 +150,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         if (bundle != null) {
             shopName = bundle.getString(KEY_SHOP_NAME);
             shopId = bundle.getString(KEY_SHOP_ID);
+            shopDetail.shopId = shopId;
+            shopDetail.shopName = shopName;
+
             collapsingToolbarLayout.setTitle(shopName);
             collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
             collapsingToolbarLayout.setExpandedTitleGravity(Gravity.BOTTOM);
@@ -197,10 +200,12 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         ShopCart.setShopCart(getContext(), orderHashMap);
         ShopCart.setCount(getContext(), count);
         ShopCart.setTotalPrice(getContext(), strPrice);
+        ShopCart.setShop(getContext(), shopDetail);
 
         Intent intent = new Intent();
         intent.setAction(ACTION_SHOP_CART_CHANGED);
         getActivity().sendBroadcast(intent);
+
         if (orderHashMap != null) {
             orderHashMap.clear();
         }
@@ -411,12 +416,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_SHOP, shopDetail);
-        bundle.putString(KEY_SHOP_ID, shopId);
-        bundle.putString(KEY_SHOP_NAME, shopName);
         bundle.putString(KEY_TOTAL_MONEY, strPrice);
-        bundle.putInt(KEY_SHIPMENT, fee);
-
         bundle.putSerializable(KEY_ORDER_LIST, (Serializable) orderList);
+
         IntentUtil.startTemplateActivity(ShopDetailFragment.this, PayFragment.class, bundle, PayFragment.TAG_PAY_FRAGMENT);
     }
 

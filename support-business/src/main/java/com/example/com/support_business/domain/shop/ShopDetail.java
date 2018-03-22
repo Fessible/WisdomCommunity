@@ -10,6 +10,16 @@ import java.util.List;
 
 public class ShopDetail implements Serializable {
     /**
+     * 店铺名称
+     */
+    public String shopName;
+
+    /**
+     * 店铺Id
+     */
+    public String shopId;
+
+    /**
      * 折扣
      */
     public String discount;
