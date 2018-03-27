@@ -2,6 +2,7 @@ package com.example.com.support_business.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.example.com.support_business.SeverHelper;
@@ -13,6 +14,7 @@ import com.example.com.support_business.domain.order.OrderRecord;
 import com.example.com.support_business.domain.personal.Address;
 import com.example.com.support_business.domain.personal.HeadImage;
 import com.example.com.support_business.domain.personal.Info;
+import com.example.com.support_business.domain.personal.Version;
 import com.example.com.support_business.domain.search.Search;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.support_business.domain.shop.ShopDetail;
@@ -27,13 +29,17 @@ import com.example.com.support_business.params.RegisterParams;
 import com.example.com.support_business.util.FilenameUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
@@ -205,9 +211,9 @@ public class CommunityServer extends RestyServer {
 
     //店铺详情
     public void shopDetail(String composite, boolean refesh, String shopId, final SSOCallback<ResultEntity<ShopDetail>> callback) {
-        Disposable disposable = communityApi.shopDetail(shopId)
+//        Disposable disposable = communityApi.shopDetail(shopId)
                 //todo 测试
-//        Disposable disposable = communityApi.shopDetail()
+        Disposable disposable = communityApi.shopDetail()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ResultEntity<ShopDetail>>>() {
@@ -664,5 +670,34 @@ public class CommunityServer extends RestyServer {
                     }
                 });
         add(composite, disposable);
+    }
+
+    //版本更新
+    public void version(String compositeTag, int currentVersion, final SSOCallback<ResultEntity<Version>> callback) {
+        Disposable disposable = communityApi.version(currentVersion)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResultEntity<Version>>>() {
+                    @Override
+                    public void accept(Response<ResultEntity<Version>> resultEntityResponse) throws Exception {
+                        if (resultEntityResponse != null) {
+                            if (resultEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, resultEntityResponse);
+                            } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(compositeTag, disposable);
     }
 }

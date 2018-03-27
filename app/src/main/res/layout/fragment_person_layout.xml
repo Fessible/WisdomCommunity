@@ -1,72 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.com.wisdomcommunity.view.MultipleRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/multiple_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/palette_background_color"
-    android:orientation="vertical">
+    app:emptyView="@layout/fragment_multiply_empty"
+    app:errorView="@layout/fragment_multiply_error"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:loadingView="@layout/loading_view">
 
-    <RelativeLayout
-        android:id="@+id/person_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@drawable/header_bg"
-        android:paddingLeft="20dp"
-        android:paddingTop="40dp">
+        android:layout_height="match_parent"
+        android:background="@color/palette_background_color"
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/head_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/icon_head_address" />
+        <RelativeLayout
+            android:id="@+id/person_layout"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/header_bg"
+            android:paddingLeft="20dp"
+            android:paddingTop="40dp">
 
-        <TextView
-            android:id="@+id/nick_name"
-            android:layout_width="wrap_content"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/head_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/icon_head_address" />
+
+            <TextView
+                android:id="@+id/nick_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/head_image"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/nick_name"
+                android:background="@drawable/icon_fab_pen" />
+
+
+            <TextView
+                android:id="@+id/signature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="35dp"
+                android:layout_marginTop="50dp"
+                android:layout_toRightOf="@id/head_image"
+                android:maxLength="50"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/ic_arrow" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/head_image"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:background="@color/white" />
+    </LinearLayout>
+</com.example.com.wisdomcommunity.view.MultipleRefreshLayout>
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/nick_name"
-            android:background="@drawable/icon_fab_pen" />
-
-
-        <TextView
-            android:id="@+id/signature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="35dp"
-            android:layout_marginTop="50dp"
-            android:layout_toRightOf="@id/head_image"
-            android:maxLength="50"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/ic_arrow" />
-    </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:background="@color/white"
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
-
-
-</LinearLayout>

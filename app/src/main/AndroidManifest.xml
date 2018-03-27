@@ -43,11 +43,15 @@
                 <action
                     android:name="android.intent.action.MAIN"
                     android:screenOrientation="portrait" />
-
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".TemplateActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|fontScale|locale"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -57,11 +61,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <activity
-            android:name=".TemplateActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|fontScale|locale"
-            android:screenOrientation="portrait" />
 
         <!--百度 定位-->
         <meta-data

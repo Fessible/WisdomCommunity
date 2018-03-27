@@ -15,6 +15,9 @@ import com.example.com.wisdomcommunity.ui.search.SearchFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.view.MultipleRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshWizard;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.EmptyDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
@@ -45,6 +48,9 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
     @BindView(R.id.search_view)
     EditText searchView;
 
+    @BindView(R.id.multiple_refresh_layout)
+    MultipleRefreshLayout multipleRefreshLayout;
+
     private ShopPresenter presenter;
     private ShopAdapter shopAdapter;
 
@@ -53,9 +59,12 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
         return R.layout.fragment_shop_layout;
     }
 
-
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+
+        multipleRefreshLayout.setRefreshWizard(new SwipeRefreshWizard(getContext(), multipleRefreshLayout));
+        multipleRefreshLayout.setOnRefreshListener(onRefreshListener);
+
 
         presenter = new ShopPresenter(getContext(), ShopFragment.this);
         presenter.loadShopList(false);
@@ -75,6 +84,13 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
                 .build());
         shopAdapter.setCallback(callback);
     }
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            presenter.loadShopList(false);
+        }
+    };
 
     private ShopAdapter.Callback callback = new ShopAdapter.Callback() {
         @Override
@@ -103,15 +119,48 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
         }
     }
 
+    private void showMultipleEmptyLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showEmpty();
+        }
+    }
+
+    private void showMultipleErrorLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showError();
+        }
+    }
+
+    private void showMultipleContentLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            multipleRefreshLayout.showContentOnly();
+        }
+    }
+
     @Override
     public void showProgress() {
-
+        if (multipleRefreshLayout != null) {
+            if (!multipleRefreshLayout.isLoading() && !multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.setEnabled(false);
+                multipleRefreshLayout.showLoading(false);
+            }
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            if (multipleRefreshLayout.isLoading()) {
+                multipleRefreshLayout.hideLoading();
+            }
+            if (multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.tryRefreshFinished();
+            }
+        }
     }
+
 
     @Override
     public void onUnauthorized() {
@@ -121,10 +170,10 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
     @Override
     public void onLoadShopListSuccess(List<ShopList> shopList) {
         if (shopList != null) {
+            showMultipleContentLayout();
             shopAdapter.setData(shopList);
             shopAdapter.notifyDataSetChanged();
         }
-
     }
 
     @OnClick(R.id.search_view)
@@ -135,5 +184,6 @@ public class ShopFragment extends BaseFragment implements ShopContract.View {
     @Override
     public void onLoadShopListFailure(String msg) {
         showShortToast(msg);
+        showMultipleErrorLayout();
     }
 }

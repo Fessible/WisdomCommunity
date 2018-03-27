@@ -23,6 +23,9 @@ import com.example.com.wisdomcommunity.ui.person.info.EditInfoFragment;
 import com.example.com.wisdomcommunity.ui.person.service.ServiceFragment;
 import com.example.com.wisdomcommunity.ui.person.set.SetFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.view.MultipleRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshWizard;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -54,6 +57,9 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
     public static final int REQUEST_CODE = 2;
     private Info info;
 
+    @BindView(R.id.multiple_refresh_layout)
+    MultipleRefreshLayout multipleRefreshLayout;
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -76,6 +82,9 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        multipleRefreshLayout.setRefreshWizard(new SwipeRefreshWizard(getContext(), multipleRefreshLayout));
+        multipleRefreshLayout.setOnRefreshListener(onRefreshListener);
+
         infoPresenter = new PersonPresenter(getContext(), PersonFragment.this);
 
         infoPresenter.loadInfo(AccountSetUp.getUserId(getContext()));
@@ -128,6 +137,12 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
         });
     }
 
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            infoPresenter.loadInfo(AccountSetUp.getUserId(getContext()));
+        }
+    };
 
     private void signOut() {
         IntentUtil.startTemplateActivityForResult(PersonFragment.this, LoginFragment.class, LoginFragment.TAG_Login_FRAGMENT, REQUEST_LOGIN);
@@ -176,14 +191,46 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
         adapter.destroy();
     }
 
+    private void showMultipleEmptyLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showEmpty();
+        }
+    }
+
+    private void showMultipleErrorLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showError();
+        }
+    }
+
+    private void showMultipleContentLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            multipleRefreshLayout.showContentOnly();
+        }
+    }
+
     @Override
     public void showProgress() {
-
+        if (multipleRefreshLayout != null) {
+            if (!multipleRefreshLayout.isLoading() && !multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.setEnabled(false);
+                multipleRefreshLayout.showLoading(false);
+            }
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            if (multipleRefreshLayout.isLoading()) {
+                multipleRefreshLayout.hideLoading();
+            }
+            if (multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.tryRefreshFinished();
+            }
+        }
     }
 
     @Override
@@ -208,6 +255,5 @@ public class PersonFragment extends BaseFragment implements InfoContract.View {
 
     @Override
     public void loadInfoFailure(String msg) {
-
     }
 }

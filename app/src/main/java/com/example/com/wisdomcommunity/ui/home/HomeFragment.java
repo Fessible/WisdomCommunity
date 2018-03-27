@@ -147,6 +147,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
+            presenter.loadRecomends(false);
+            presenter.loadBanners(false);
+            mLocationClient.restart();
         }
     };
 
@@ -190,16 +193,40 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             IntentUtil.startTemplateActivity(HomeFragment.this, ShopDetailFragment.class, shopArgs, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
         }
     };
+    private void showMultipleEmptyLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showEmpty();
+        }
+    }
 
+    private void showMultipleContentLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            multipleRefreshLayout.showContentOnly();
+        }
+    }
 
     @Override
     public void showProgress() {
-
+        if (multipleRefreshLayout != null) {
+            if (!multipleRefreshLayout.isLoading() && !multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.setEnabled(false);
+                multipleRefreshLayout.showLoading(false);
+            }
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            if (multipleRefreshLayout.isLoading()) {
+                multipleRefreshLayout.hideLoading();
+            }
+            if (multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.tryRefreshFinished();
+            }
+        }
     }
 
     @Override
@@ -210,6 +237,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onLoadRecommendSuccess(Home home) {
         if (home != null) {
+            showMultipleContentLayout();
             Glide.with(getContext())
                     .load(home.secondKillUrl)
                     .into(secondKill);
@@ -239,11 +267,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onLoadRecommendFailure(String msg) {
 
         showShortToast(msg);
+        showMultipleErrorLayout();
+    }
+
+    private void showMultipleErrorLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showError();
+        }
     }
 
     @Override
     public void onLoadBannerSuccess(List<Banner> bannerList) {
+
         if (bannerList != null) {
+            showMultipleContentLayout();
             imgUrlList.clear();
             imgTipList.clear();
             imgIDList.clear();
@@ -262,6 +299,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onLoadBannerFailure(String msg) {
         showShortToast(msg);
+        showMultipleEmptyLayout();
     }
 
     public class MyLocationListener extends BDAbstractLocationListener {

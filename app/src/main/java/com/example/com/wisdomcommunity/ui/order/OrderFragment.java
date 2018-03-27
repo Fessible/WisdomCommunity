@@ -10,6 +10,9 @@ import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.OrderContract;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.view.MultipleRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshWizard;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -29,6 +32,9 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.multiple_refresh_layout)
+    MultipleRefreshLayout multipleRefreshLayout;
+
     private OrderAdapter adapter;
     private OrderPresenter presenter;
 
@@ -40,6 +46,9 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        multipleRefreshLayout.setRefreshWizard(new SwipeRefreshWizard(getContext(), multipleRefreshLayout));
+        multipleRefreshLayout.setOnRefreshListener(onRefreshListener);
+
         presenter = new OrderPresenter(getContext(), OrderFragment.this);
         presenter.loadOrderRecord();
         adapter = new OrderAdapter(getContext());
@@ -59,19 +68,58 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
         });
     }
 
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            presenter.loadOrderRecord();
+        }
+    };
+
     @Override
     protected void destroyView() {
         adapter.destroy();
     }
 
+    private void showMultipleEmptyLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showEmpty();
+        }
+    }
+
+    private void showMultipleErrorLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showError();
+        }
+    }
+
+    private void showMultipleContentLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            multipleRefreshLayout.showContentOnly();
+        }
+    }
+
     @Override
     public void showProgress() {
-
+        if (multipleRefreshLayout != null) {
+            if (!multipleRefreshLayout.isLoading() && !multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.setEnabled(false);
+                multipleRefreshLayout.showLoading(false);
+            }
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            if (multipleRefreshLayout.isLoading()) {
+                multipleRefreshLayout.hideLoading();
+            }
+            if (multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.tryRefreshFinished();
+            }
+        }
     }
 
     @Override
@@ -81,6 +129,7 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
 
     @Override
     public void loadOrderRecordSuccess(List<OrderRecord> recordList) {
+        showMultipleContentLayout();
         adapter.setData(recordList);
         adapter.notifyDataSetChanged();
 
@@ -89,5 +138,6 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
     @Override
     public void loadorderRecordFailure(String msg) {
         showShortToast(msg);
+        showMultipleErrorLayout();
     }
 }

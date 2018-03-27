@@ -1,14 +1,22 @@
 package com.example.com.wisdomcommunity.ui.person.set;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.com.support_business.domain.personal.Version;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.mvp.SetContract;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -23,7 +31,7 @@ import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_UPDA
  * Created by rhm on 2018/2/28.
  */
 
-public class SetFragment extends BaseFragment {
+public class SetFragment extends BaseFragment implements SetContract.View {
     public static final String TAG_SET_FRAGMENT = "SET_FRAGMENT";
     private SetAdapter adapter;
 
@@ -36,6 +44,8 @@ public class SetFragment extends BaseFragment {
     @BindView(R.id.title)
     TextView title;
 
+    private SetContract.Presenter presenter;
+
     @Override
     public int getResLayout() {
         return R.layout.fragment_template_layout;
@@ -43,6 +53,8 @@ public class SetFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        presenter = new SetPresenter(getContext(), SetFragment.this);
+
         title.setText(getContext().getString(R.string.setting));
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
@@ -62,7 +74,10 @@ public class SetFragment extends BaseFragment {
                         break;
                     case TYPE_CACHE:
                         break;
-                    case TYPE_UPDATE:
+                    case TYPE_UPDATE://版本更新
+                        if (presenter != null) {
+                            presenter.version(getVersionCode(getContext()));
+                        }
                         break;
                 }
 
@@ -76,9 +91,70 @@ public class SetFragment extends BaseFragment {
         });
     }
 
+    /**
+     * 获取版本
+     */
+    public static int getVersionCode(Context context) {
+        int versionCode = 1;
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
+    }
+
     @Override
     protected void destroyView() {
 
     }
 
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void onUnauthorized() {
+
+    }
+
+    @Override
+    public void versionSuccess(final Version version, String msg) {
+        if (version != null) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("版本更新")
+                    .setMessage(version.directions)
+                    .setPositiveButton(R.string.opt_confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getActivity(), UpdateService.class);
+                            intent.putExtra("apkUrl", version.latestVerUrl);
+                            getActivity().startService(intent);
+                        }
+                    })
+                    .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            //版本已经是最新
+            showShortToast(msg);
+        }
+    }
+
+    @Override
+    public void versionFailure(String msg) {
+        showShortToast(msg);
+    }
 }

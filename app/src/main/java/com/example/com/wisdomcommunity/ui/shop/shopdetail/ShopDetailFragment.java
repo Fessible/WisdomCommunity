@@ -124,6 +124,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private int count;
     private float totalPrice;
     private HashMap<String, OrderDetail.Order> orderHashMap = new HashMap<>();
+    private List<Goods> discountList = new ArrayList<>();
 
     @Override
     public int getResLayout() {
@@ -207,7 +208,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                             .placeholder(placeHolder).centerCrop())
                     .into(imgShop);
             goodsList = shopDetail.goodsList;
-
+            discountList = shopDetail.discountList;
             initShopInfoFragment(shopDetail);
             initShopGoodsFragment(shopDetail);
 
@@ -219,7 +220,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                 this.orderHashMap = ShopCart.getShopCart(getContext());
                 totalPrice = Float.parseFloat(ShopCart.getTotalPrice(getContext()));
                 showOrderlayout();
-                isClick=true;
+                isClick = true;
                 changeShopGoods();
             }
         }
@@ -238,20 +239,21 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             count += num;
             totalPrice += price * num;
             showOrderlayout();
-            changeOrderhashMap(goods, price, number);
+            int type = 0;
+            changeOrderhashMap(goods, price, number, type);
         }
 
         @Override
-        public void onAdd(View view, Goods goods, float price, int num) { //点击加号时的动态效果
+        public void onAdd(View view, Goods goods, float price, int num, int type) { //点击加号时的动态效果
             add(price);
-            changeOrderhashMap(goods, price, num);
+            changeOrderhashMap(goods, price, num, type);
             addAnimation(view);
         }
 
         @Override
-        public void onMinus(Goods goods, float price, int num) {//点击减号时的效果
+        public void onMinus(Goods goods, float price, int num, int type) {//点击减号时的效果
             minus(price);
-            changeOrderhashMap(goods, price, num);
+            changeOrderhashMap(goods, price, num, type);
             showOrderlayout();
         }
     };
@@ -275,9 +277,9 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     }
 
     //使用Hashmap 来存储内容
-    private void changeOrderhashMap(Goods goods, float price, int num) {
+    private void changeOrderhashMap(Goods goods, float price, int num, int type) {
         if (orderHashMap.isEmpty()) {
-            addOrderHashMap(goods, price, num);
+            addOrderHashMap(goods, price, num, type);
         } else {
             if (orderHashMap.containsKey(goods.goodsId)) {
                 if (num == 0) {
@@ -288,7 +290,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                     orderHashMap.put(goods.goodsId, order);
                 }
             } else {
-                addOrderHashMap(goods, price, num);
+                addOrderHashMap(goods, price, num, type);
             }
         }
     }
@@ -298,7 +300,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     }
 
 
-    private void addOrderHashMap(Goods goods, float price, int num) {
+    private void addOrderHashMap(Goods goods, float price, int num, int type) {
         OrderDetail.Order order = new OrderDetail.Order();
         order.goodsUrl = goods.goodsUrl;
         order.goodsName = goods.goodsName;
@@ -334,18 +336,14 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     //加号贝塞尔动图
     private void addAnimation(View view) {
-
         int[] addLocation = new int[2];
         int[] cartLocation = new int[2];
-        int[] recycleLocation = new int[2];
         view.getLocationInWindow(addLocation);
         shopCart.getLocationInWindow(cartLocation);
-//            recyclerView.getLocationInWindow(recycleLocation);
 
         PointF start = new PointF();
         PointF end = new PointF();
         PointF control = new PointF();
-
 
         start.x = addLocation[0];
         start.y = addLocation[1] - 60;
@@ -353,7 +351,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         end.y = cartLocation[1] - 100;
         control.x = end.x + 40;
         control.y = start.y - 60;
-//            final ImageView imageView = new ImageView(getActivity());
         final FakeAddImageView imageView = new FakeAddImageView(getActivity());
         shopLayout.addView(imageView);
         imageView.setBackgroundResource(R.drawable.icon_add_n);
@@ -381,8 +378,10 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             }
         });
 
-        ObjectAnimator scaleAnimatorX = new ObjectAnimator().ofFloat(shopCart, "scaleX", 1.2f, 1.0f);
-        ObjectAnimator scaleAnimatorY = new ObjectAnimator().ofFloat(shopCart, "scaleY", 1.2f, 1.0f);
+        ObjectAnimator scaleAnimatorX = new ObjectAnimator()
+                .ofFloat(shopCart, "scaleX", 1.2f, 1.0f);
+        ObjectAnimator scaleAnimatorY = new ObjectAnimator()
+                .ofFloat(shopCart, "scaleY", 1.2f, 1.0f);
         scaleAnimatorX.setInterpolator(new AccelerateInterpolator());
         scaleAnimatorY.setInterpolator(new AccelerateInterpolator());
         AnimatorSet animatorSet = new AnimatorSet();
@@ -556,7 +555,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     private void changeShopGoods() {
         if (isClick) {
-            if (goodsList != null && !goodsList.isEmpty() && shopGoodsFragment != null) {
+            if (goodsList != null && !goodsList.isEmpty() && discountList != null && !discountList.isEmpty() && shopGoodsFragment != null) {
 
                 for (Goods goods : goodsList) {
                     if (orderHashMap.containsKey(goods.goodsId)) {
@@ -566,6 +565,15 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                     }
                 }
                 shopGoodsFragment.changeGoods(goodsList);//更改商品信息
+
+                for (Goods goods : discountList) {
+                    if (orderHashMap.containsKey(goods.goodsId)) {
+                        goods.num = orderHashMap.get(goods.goodsId).number;
+                    } else {
+                        goods.num = 0;
+                    }
+                }
+                shopGoodsFragment.changeDiscount(discountList);
             }
         }
         isClick = false;

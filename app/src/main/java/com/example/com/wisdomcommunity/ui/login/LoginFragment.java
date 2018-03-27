@@ -221,8 +221,6 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         AccountSetUp.setPassword(getContext(), password);
         AccountSetUp.setPhone(getContext(), phone);
         AccountSetUp.setUserId(getContext(), userId);
-//        Intent data = new Intent();
-//        data.putExtra(KEY_USERDATA, userId);
 
         getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();

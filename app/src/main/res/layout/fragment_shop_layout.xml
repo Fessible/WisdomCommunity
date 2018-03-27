@@ -44,9 +44,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <com.example.com.wisdomcommunity.view.MultipleRefreshLayout
+        android:id="@+id/multiple_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:emptyView="@layout/fragment_multiply_empty"
+        app:errorView="@layout/fragment_multiply_error"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:loadingView="@layout/loading_view">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.example.com.wisdomcommunity.view.MultipleRefreshLayout>
 
 </LinearLayout>

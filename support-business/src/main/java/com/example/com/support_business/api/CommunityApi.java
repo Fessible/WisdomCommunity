@@ -60,7 +60,7 @@ interface CommunityApi {
 
     //版本更新
     @GET("personal/appVersion/{currentVersion}")
-    public Observable<Response<ResultEntity<Version>>> version(@Path("currentVersion") String currentVersion);
+    public Observable<Response<ResultEntity<Version>>> version(@Path("currentVersion") int currentVersion);
 
     //编辑个人信息
     @POST("personal/postUserInfo")
@@ -103,12 +103,12 @@ interface CommunityApi {
     public Observable<Response<ListEntity<ShopList>>> shopList();
 
     //    //店铺详情
-    @GET("shop/details/{shopId}")
-    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail(@Path("shopId") String shopId);
+//    @GET("shop/details/{shopId}")
+//    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail(@Path("shopId") String shopId);
 
     //todo 店铺详情
-//    @GET("shop/details")
-//    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail();
+    @GET("shop/details")
+    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail();
 
     /*************
      * 登录

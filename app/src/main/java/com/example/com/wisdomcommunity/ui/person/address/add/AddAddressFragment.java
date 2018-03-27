@@ -123,10 +123,6 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
                 showShortToast(getString(R.string.please_input_phone));
                 return;
             }
-//            if (TextUtils.isEmpty(addAddressAdapter.getDistrict())) {
-//                showShortToast(getString(R.string.please_input_district));
-//                return;
-//            }
             if (TextUtils.isEmpty(addAddressAdapter.getDetailAddress())) {
                 showShortToast(getString(R.string.please_input_address));
                 return;

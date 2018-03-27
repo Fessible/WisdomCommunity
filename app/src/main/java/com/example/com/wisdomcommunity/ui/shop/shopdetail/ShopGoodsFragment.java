@@ -54,6 +54,8 @@ public class ShopGoodsFragment extends BaseFragment {
     private CategoryAdapter categoryAdapter;
     private int allCount;
     private int discountCount;
+    private List<Goods> goodsList = new ArrayList<>();
+    private List<Goods> discountList = new ArrayList<>();
 
     public void setShopDetail(ShopDetail shopDetail) {
         this.shopDetail = shopDetail;
@@ -74,13 +76,15 @@ public class ShopGoodsFragment extends BaseFragment {
 
     private void init() {
         if (shopDetail != null) {
+            discountList = shopDetail.discountList;
+            goodsList = shopDetail.goodsList;
             initRecyclerView(shopDetail);
-            initCategory(shopDetail);
+            initCategory();
         }
     }
 
     //初始化分类栏
-    private void initCategory(ShopDetail shopDetail) {
+    private void initCategory() {
         List<CategoryBean> list = new ArrayList<>();
         list.add(new CategoryBean("全部商品", TYPE_ALL));
         list.add(new CategoryBean("折扣商品", TYPE_DISCOUNT));
@@ -97,11 +101,11 @@ public class ShopGoodsFragment extends BaseFragment {
             if (adapter != null) {
                 switch (i) {
                     case TYPE_ALL:
-                        adapter.setData(shopDetail.goodsList, TYPE_ALL);
+                        adapter.setData(goodsList, TYPE_ALL);
                         adapter.notifyDataSetChanged();
                         break;
                     case TYPE_DISCOUNT:
-                        adapter.setData(shopDetail.discountList, TYPE_DISCOUNT);
+                        adapter.setData(discountList, TYPE_DISCOUNT);
                         adapter.notifyDataSetChanged();
                         break;
                 }
@@ -126,7 +130,7 @@ public class ShopGoodsFragment extends BaseFragment {
 
     private ShopDetailAdapter.Callback callback = new ShopDetailAdapter.Callback() {
         @Override
-        public void onCallback(Goods goods, int num, int position) {
+        public void onCallback(Goods goods, int num, int position, int type) {
             clickCount = num;
             Bundle goodsArgs = new Bundle();
             goodsArgs.putString(KEY_GOODS_ID, goods.goodsId);
@@ -140,14 +144,14 @@ public class ShopGoodsFragment extends BaseFragment {
         @Override
         public void onAddPayBack(View v, Goods goods, float price, int num, int type) {
             if (goodsCallback != null) {
-                goodsCallback.onAdd(v, goods, price, num);
+                goodsCallback.onAdd(v, goods, price, num, type);
             }
         }
 
         @Override
         public void onMinusPayBack(Goods goods, float price, int num, int type) {
             if (goodsCallback != null) {
-                goodsCallback.onMinus(goods, price, num);
+                goodsCallback.onMinus(goods, price, num, type);
             }
         }
     };
@@ -183,7 +187,16 @@ public class ShopGoodsFragment extends BaseFragment {
 
     public void changeGoods(List<Goods> goodsList) {
         if (adapter != null) {
+            this.goodsList = goodsList;
             adapter.setData(goodsList, TYPE_ALL);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void changeDiscount(List<Goods> discountList) {
+        if (adapter != null) {
+            this.discountList = discountList;
+            adapter.setData(discountList, TYPE_DISCOUNT);
             adapter.notifyDataSetChanged();
         }
     }
@@ -202,8 +215,8 @@ public class ShopGoodsFragment extends BaseFragment {
     public interface GoodsCallback {
         void onClickItem(Goods goods, float price, int number, int count);
 
-        void onAdd(View view, Goods goods, float price, int num);
+        void onAdd(View view, Goods goods, float price, int num, int type);
 
-        void onMinus(Goods goods, float price, int num);
+        void onMinus(Goods goods, float price, int num, int type);
     }
 }

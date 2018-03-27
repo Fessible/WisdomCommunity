@@ -9,6 +9,10 @@ import java.io.Serializable;
 
 public class Goods implements Serializable {
     /**
+     * 商品类型
+     */
+    public int type;
+    /**
      * 商品ID
      */
     public String goodsId;
