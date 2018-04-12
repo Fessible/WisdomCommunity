@@ -10,9 +10,13 @@ import android.view.View;
 import com.example.com.support_business.domain.personal.Address;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.mvp.AddressContract;
 import com.example.com.wisdomcommunity.ui.person.address.add.AddAddressFragment;
 import com.example.com.wisdomcommunity.util.IntentUtil;
+import com.example.com.wisdomcommunity.view.MultipleRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshLayout;
+import com.example.com.wisdomcommunity.view.SwipeRefreshWizard;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -42,6 +46,9 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     public static final int TYPE_DELETE = 2;//添加地址
     public static final String KEY_ADDRESS = "address";
 
+    @BindView(R.id.multiple_refresh_layout)
+    MultipleRefreshLayout multipleRefreshLayout;
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -64,6 +71,9 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         if (bundle != null) {
             type = bundle.getInt(KEY_TYPE);
         }
+
+        multipleRefreshLayout.setRefreshWizard(new SwipeRefreshWizard(getContext(), multipleRefreshLayout));
+        multipleRefreshLayout.setOnRefreshListener(onRefreshListener);
 
         recyclerView.addItemDecoration(new FlexibleItemDecoration.Builder(getContext())
                 .defaultDecor(new DividerDecor.Builder(getContext())
@@ -103,6 +113,13 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
             }
         });
     }
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            presenter.loadAddress(AccountSetUp.getUserId(getContext()));
+        }
+    };
 
     @OnClick(R.id.add_layout)
     public void add() {
@@ -157,14 +174,40 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         addressAdapter.destroy();
     }
 
+    private void showMultipleEmptyLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.showEmpty();
+        }
+    }
+
+    private void showMultipleContentLayout() {
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            multipleRefreshLayout.showContentOnly();
+        }
+    }
+
     @Override
     public void showProgress() {
-
+        if (multipleRefreshLayout != null) {
+            if (!multipleRefreshLayout.isLoading() && !multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.setEnabled(false);
+                multipleRefreshLayout.showLoading(false);
+            }
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        if (multipleRefreshLayout != null) {
+            multipleRefreshLayout.setEnabled(true);
+            if (multipleRefreshLayout.isLoading()) {
+                multipleRefreshLayout.hideLoading();
+            }
+            if (multipleRefreshLayout.isRefreshing()) {
+                multipleRefreshLayout.tryRefreshFinished();
+            }
+        }
     }
 
     @Override
@@ -181,5 +224,8 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
     @Override
     public void onLoadAddressFailure(String msg) {
         showShortToast(msg);
+        if (addressAdapter != null) {
+            addressAdapter.notifyDataSetChanged();
+        }
     }
 }

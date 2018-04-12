@@ -36,6 +36,7 @@ public interface HomeContract {
         public abstract void loadRecomends(boolean refresh);
 
         public abstract void loadBanners(boolean refresh);
+
     }
 
 }

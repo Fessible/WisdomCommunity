@@ -1,6 +1,7 @@
 package com.example.com.support_business.api;
 
 import com.example.com.support_business.domain.home.Banner;
+import com.example.com.support_business.domain.home.Category;
 import com.example.com.support_business.domain.home.Home;
 import com.example.com.support_business.domain.login.User;
 import com.example.com.support_business.domain.order.OrderDetail;
@@ -16,6 +17,7 @@ import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
 import com.example.com.support_business.module.ResultEntity;
+import com.example.com.support_business.params.CategoryParams;
 import com.example.com.support_business.params.ForgetParams;
 import com.example.com.support_business.params.LoginParams;
 import com.example.com.support_business.params.PersonParams;
@@ -87,6 +89,10 @@ interface CommunityApi {
     @GET("home/banner")
     public Observable<Response<ListEntity<Banner>>> banner();
 
+
+    @POST("home/category")
+    public Observable<Response<ListEntity<Category>>> category(@Body CategoryParams type);
+
     /*************
      * 店铺
      ************/
@@ -103,12 +109,12 @@ interface CommunityApi {
     public Observable<Response<ListEntity<ShopList>>> shopList();
 
     //    //店铺详情
-//    @GET("shop/details/{shopId}")
-//    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail(@Path("shopId") String shopId);
+    @GET("shop/details/{shopId}")
+    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail(@Path("shopId") String shopId);
 
-    //todo 店铺详情
-    @GET("shop/details")
-    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail();
+//    //todo 店铺详情
+//    @GET("shop/details")
+//    public Observable<Response<ResultEntity<ShopDetail>>> shopDetail();
 
     /*************
      * 登录

@@ -18,12 +18,14 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.com.support_business.Constants;
 import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Home;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.HomeContract;
+import com.example.com.wisdomcommunity.ui.category.CategoryFragment;
 import com.example.com.wisdomcommunity.ui.login.LoginFragment;
 import com.example.com.wisdomcommunity.ui.shop.goodsdetail.GoodsDetailFragment;
 import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
@@ -47,6 +49,10 @@ import butterknife.OnClick;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.com.support_business.Constants.CATEGORY_DRINK;
+import static com.example.com.support_business.Constants.CATEGORY_FLOWER;
+import static com.example.com.support_business.Constants.CATEGORY_FOOD;
+import static com.example.com.support_business.Constants.CATEGORY_FRUIT;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
@@ -60,6 +66,8 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME
 public class HomeFragment extends BaseFragment implements HomeContract.View {
     public static final String TAG_HOME_FRAGMENT = "HOME_FRAGMENT";
     public static final int REQUEST_LOGIN = 1;
+    public static final String CATEGORY = "category";
+    public static final String HOME_TAG = "home_tag";
 
     @BindView(R.id.multiple_refresh_layout)
     MultipleRefreshLayout multipleRefreshLayout;
@@ -87,6 +95,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private HomeAdapter adapter;
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
+    private String shopKillId;
+    private String shopRecomendId;
 
 
     @Override
@@ -153,6 +163,32 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     };
 
+    private void setData(int type) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(CATEGORY, type);
+        IntentUtil.startTemplateActivity(HomeFragment.this, CategoryFragment.class, bundle, CategoryFragment.TAG_CATEGORY_FRAGMENT);
+    }
+
+    @OnClick(R.id.food)
+    public void food() {
+        setData(CATEGORY_FOOD);
+    }
+
+    @OnClick(R.id.flower)
+    public void flower() {
+        setData(CATEGORY_FLOWER);
+    }
+
+    @OnClick(R.id.drink)
+    public void drink() {
+        setData(CATEGORY_DRINK);
+    }
+
+    @OnClick(R.id.fruit)
+    public void fruit() {
+        setData(CATEGORY_FRUIT);
+    }
+
     @Override
     protected void destroyView() {
         if (presenter != null) {
@@ -193,6 +229,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             IntentUtil.startTemplateActivity(HomeFragment.this, ShopDetailFragment.class, shopArgs, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
         }
     };
+
     private void showMultipleEmptyLayout() {
         if (multipleRefreshLayout != null) {
             multipleRefreshLayout.showEmpty();
@@ -241,9 +278,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             Glide.with(getContext())
                     .load(home.secondKillUrl)
                     .into(secondKill);
+            shopKillId = home.secondKillId;
+            shopRecomendId = home.recommendId;
 
             Glide.with(getContext())
-                    .load(home.secondKillUrl)
+                    .load(home.recommendUrl)
                     .into(recommend);
 
             adapter.setData(home.list);
@@ -254,13 +293,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     //新品推荐
     @OnClick(R.id.recommend)
     public void recommend() {
-
+        Bundle goodsArgs = new Bundle();
+        goodsArgs.putBoolean(HOME_TAG,true);
+        goodsArgs.putString(KEY_GOODS_ID, shopRecomendId);
+        goodsArgs.putString(KEY_GOODS_NAME, getString(R.string.new_recommend));
+        IntentUtil.startTemplateActivity(HomeFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
     }
 
     //秒杀
     @OnClick(R.id.second_kill)
     public void SecondKill() {
-
+        Bundle goodsArgs = new Bundle();
+        goodsArgs.putInt(HOME_TAG,1);
+        goodsArgs.putString(KEY_GOODS_ID, shopKillId);
+        goodsArgs.putString(KEY_GOODS_NAME, getString(R.string.second_kill));
+        IntentUtil.startTemplateActivity(HomeFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
     }
 
     @Override

@@ -70,4 +70,17 @@ public interface Constants {
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
     }
+
+    //分类
+    public static final int CATEGORY_FOOD = 0;
+    public static final int CATEGORY_FLOWER = 1;
+    public static final int CATEGORY_DRINK = 2;
+    public static final int CATEGORY_FRUIT = 3;
+
+    @IntDef({CATEGORY_FOOD,CATEGORY_FLOWER,CATEGORY_FRUIT,CATEGORY_DRINK})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface  Category{
+
+    }
+
 }

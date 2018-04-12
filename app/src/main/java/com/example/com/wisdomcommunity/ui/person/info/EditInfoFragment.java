@@ -16,6 +16,7 @@ import com.example.com.support_business.domain.personal.Info;
 import com.example.com.support_business.params.PersonParams;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.mvp.EditInfoContract;
 import com.example.com.wisdomcommunity.ui.person.info.signature.SignatureFragment;
 import com.example.com.wisdomcommunity.ui.person.info.username.UserNameFragment;
@@ -49,6 +50,8 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
     public static final String KEY_NAME = "user_name";
     public static final String KEY_SIGNATURE = "signature";
     public static final String KEY_HEADIMAGE = "headImage";
+    public static final String KEY_USERID = "userId";
+
     private BottomSheetDialog photoSheetDialog;
     private BottomSheetDialog sexBottomDialog;
 
@@ -88,8 +91,9 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
             Info info = (Info) bundle.getSerializable(KEY_INFO);
             if (info != null) {
                 headImageUrl = info.headImage;
+                personParams.userId = AccountSetUp.getUserId(getContext());
                 personParams.districtName = info.districtName;
-                personParams.nickName = info.userName;
+                personParams.userName = info.userName;
                 personParams.sex = info.sex;
                 personParams.signature = info.signature;
                 adapter.setData(info);
@@ -168,7 +172,7 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                             presenter.editInfo(personParams);
                         }
                         Intent intent = new Intent();
-                        intent.putExtra(KEY_NAME, personParams.nickName);
+                        intent.putExtra(KEY_NAME, personParams.userName);
                         intent.putExtra(KEY_SIGNATURE, personParams.signature);
                         intent.putExtra(KEY_HEADIMAGE, headImageUrl);
                         getActivity().setResult(Activity.RESULT_OK, intent);
@@ -230,7 +234,6 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                     }
                     break;
             }
-
         }
     };
 
@@ -250,7 +253,7 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
                 case REQUEST_NAME:
                     if (data != null) {
                         String name = data.getStringExtra(KEY_USER_NAME);
-                        personParams.nickName = name;
+                        personParams.userName = name;
                         adapter.setValue(name, namePosition);
                     }
                     break;
@@ -307,7 +310,7 @@ public class EditInfoFragment extends BaseFragment implements EditInfoContract.V
 
     @Override
     public void editInfoSuccess(String msg) {
-        showShortToast(msg);
+//        showShortToast(msg);
     }
 
     @Override

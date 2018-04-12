@@ -8,7 +8,7 @@ public class RegisterParams {
     /**
      * 用户名
      */
-    public String userName;
+//    public String userName;
 
     /**
      * 验证码
@@ -25,8 +25,8 @@ public class RegisterParams {
      */
     public String password;
 
-    public RegisterParams(String name, String phone, String smsCode, String password) {
-        this.userName = name;
+    public RegisterParams(String name, String phone, String password) {
+//        this.userName = name;
 //        this.smsCode = smsCode;
         this.phone = phone;
         this.password = password;

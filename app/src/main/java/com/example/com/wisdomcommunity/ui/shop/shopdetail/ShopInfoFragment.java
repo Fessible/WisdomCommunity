@@ -60,7 +60,7 @@ public class ShopInfoFragment extends BaseFragment {
                 discount.setVisibility(View.VISIBLE);
                 discount.setText(shopDetail.discount);
             } else {
-                discount.setText(View.GONE);
+                discount.setVisibility(View.GONE);
             }
 
             if (shopDetail.minus != null) {

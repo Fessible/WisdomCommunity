@@ -44,6 +44,7 @@ public class LoginPresenter extends LoginContract.Presenter {
                     if (entity.isOk()) {
                         if (view != null) {
                             view.onLoginSuccess(phone, password, entity.result.userId);
+//                            view.onLoginSuccess(phone,password,entity.msg);
                         }
                     } else {
                         if (view != null) {

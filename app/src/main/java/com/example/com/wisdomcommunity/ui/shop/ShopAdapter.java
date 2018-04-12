@@ -58,7 +58,11 @@ public class ShopAdapter extends BaseAdapter<ShopAdapter.ShopHolder> {
                     itemList.add(new HeaderItem(shopList.shopName, shopList.shopId, shopList.shopUrl));
                     List<Goods> goodsList = shopList.goodsList;
                     if (goodsList != null && !goodsList.isEmpty()) {
-                        for (int i = 0; i < goodsList.size(); i++) {
+                        int length = goodsList.size();
+                        if (length > 4) {
+                            length = 4;
+                        }
+                        for (int i = 0; i < length; i++) {
                             itemList.add(new StandardItem(goodsList.get(i)));
                         }
                     }

@@ -51,6 +51,7 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
         @Override
         public void onChanged() {
             super.onChanged();
+            itemList.clear();
             if (orderRecordList != null) {
                 if (!orderRecordList.isEmpty()) {
                     for (int i = 0; i < orderRecordList.size(); i++) {

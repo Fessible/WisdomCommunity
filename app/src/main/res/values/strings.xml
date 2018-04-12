@@ -149,5 +149,10 @@
     <string name="password_error_format">密码格式有误,请输入字母和数字密码</string>
     <string name="please_enter_new_pass">请输入新密码</string>
     <string name="enter_error_password">两次输入的密码不一致</string>
+    <string name="new_recommend">新品推荐</string>
+    <string name="second_kill">秒杀产品</string>
+    <string name="no_goods">暂时没有商品</string>
+    <string name="normal_goods">普通商品</string>
+    <string name="discount_goods">折扣商品</string>
 
 </resources>

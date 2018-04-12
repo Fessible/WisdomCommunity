@@ -1,6 +1,8 @@
 package com.example.com.wisdomcommunity.ui.shop.shopdetail;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,6 +22,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailAdapter.Item.VIEW_EMPTY;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailAdapter.Item.VIEW_STANDARD;
+
 /**
  * Created by rhm on 2018/3/6.
  */
@@ -27,13 +32,32 @@ import butterknife.BindView;
 public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailHolder> {
     private Context context;
     private List<Goods> goodsList = new ArrayList<>();
+    private final List<Item> itemList = new ArrayList<>();
+
     private Callback callback;
     private int number = -1;
     private int type;
 
     ShopDetailAdapter(Context context) {
         this.context = context;
+        registerAdapterDataObserver(observer);
     }
+
+    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            itemList.clear();
+            if (goodsList != null && !goodsList.isEmpty()) {
+                for (Goods goods : goodsList) {
+                    itemList.add(new StandardItem(goods));
+                }
+            } else {
+                itemList.add(new EmptyItem());
+            }
+        }
+    };
+
 
     void setNum(int num, int position) {
         number = num;
@@ -58,24 +82,48 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     @Override
     protected void destroy() {
         goodsList.clear();
+        unregisterAdapterDataObserver(observer);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return itemList.get(position).getViewType();
     }
 
     @Override
     public ShopDetailHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ShopDetailHolder(context, parent);
+
+        ShopDetailHolder holder = null;
+        switch (viewType) {
+            case VIEW_STANDARD:
+                holder = new StandardHolder(context, parent);
+                break;
+            case VIEW_EMPTY:
+                holder = new EmptyHolder(context, parent);
+                break;
+        }
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(ShopDetailHolder holder, int position) {
-        holder.bindHolder(context, goodsList.get(position), number, position, type, callback);
+        holder.bindHolder(context, itemList.get(position), number, position, type, callback);
     }
 
     @Override
     public int getItemCount() {
-        return goodsList.size();
+        return itemList.size();
     }
 
-    static class ShopDetailHolder extends BaseHolder {
+    static class EmptyHolder extends ShopDetailHolder {
+
+        EmptyHolder(Context context, ViewGroup parent) {
+            super(context, parent, R.layout.adapter_shopdetail_goods_empty);
+        }
+    }
+
+    static class StandardHolder extends ShopDetailHolder<StandardItem> {
+
         @BindView(R.id.icon_goods)
         ImageView iconGoods;
 
@@ -99,11 +147,14 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
 
         int count;
 
-        ShopDetailHolder(Context context, ViewGroup parent) {
+        StandardHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.adapter_shop_goods);
         }
 
-        public void bindHolder(final Context context, final Goods item, int num, final int position, final int type, final Callback callback) {
+        @Override
+        public void bindHolder(final Context context, final StandardItem standardItem, int num, final int position, final int type, final Callback callback) {
+            super.bindHolder(context, standardItem, num, position, type, callback);
+            final Goods item = standardItem.goods;
             item.type = type;
 
             int placeHolder = R.drawable.app_icon;
@@ -174,6 +225,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             });
         }
 
+
         private void changMinus(boolean isEnable) {
 //            minus.setBackgroundResource(isEnable ? R.drawable.icon_minus_n : R.drawable.icon_minus_un);
             minus.setVisibility(isEnable ? View.VISIBLE : View.GONE);
@@ -181,6 +233,51 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         }
     }
 
+    abstract static class ShopDetailHolder<II extends Item> extends BaseHolder {
+
+        ShopDetailHolder(Context context, ViewGroup parent, int adapterLayoutResId) {
+            super(context, parent, adapterLayoutResId);
+        }
+
+        public void bindHolder(final Context context, II item, int num, final int position, final int type, final Callback callback) {
+        }
+    }
+
+    static class EmptyItem implements Item {
+
+        @Override
+        public int getViewType() {
+            return VIEW_EMPTY;
+        }
+    }
+
+    static class StandardItem implements Item {
+        private Goods goods;
+
+        public StandardItem(Goods goods) {
+            this.goods = goods;
+        }
+
+        @Override
+        public int getViewType() {
+            return VIEW_STANDARD;
+        }
+    }
+
+    interface Item {
+        final static int VIEW_EMPTY = 0;
+        final static int VIEW_STANDARD = 1;
+
+        @IntDef({
+                VIEW_EMPTY,
+                VIEW_STANDARD
+        })
+        @interface ViewType {
+        }
+
+        @ViewType
+        int getViewType();
+    }
 
     interface Callback {
         void onCallback(Goods goods, int count, int position, int type);

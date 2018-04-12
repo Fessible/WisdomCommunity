@@ -2,11 +2,12 @@ package com.example.com.support_business.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.example.com.support_business.Constants;
 import com.example.com.support_business.SeverHelper;
 import com.example.com.support_business.domain.home.Banner;
+import com.example.com.support_business.domain.home.Category;
 import com.example.com.support_business.domain.home.Home;
 import com.example.com.support_business.domain.login.User;
 import com.example.com.support_business.domain.order.OrderDetail;
@@ -22,6 +23,7 @@ import com.example.com.support_business.domain.shop.ShopList;
 import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ListEntity;
 import com.example.com.support_business.module.ResultEntity;
+import com.example.com.support_business.params.CategoryParams;
 import com.example.com.support_business.params.ForgetParams;
 import com.example.com.support_business.params.LoginParams;
 import com.example.com.support_business.params.PersonParams;
@@ -29,17 +31,13 @@ import com.example.com.support_business.params.RegisterParams;
 import com.example.com.support_business.util.FilenameUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
@@ -113,6 +111,36 @@ public class CommunityServer extends RestyServer {
                     }
                 });
         add(compositeTag, disposable);
+
+    }
+
+    //分类
+    public void category(String composite, boolean refresh, @Constants.Category int category, final SSOCallback<ListEntity<Category>> callback){
+        Disposable disposable = communityApi.category(new CategoryParams(category))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ListEntity<Category>>>() {
+                    @Override
+                    public void accept(Response<ListEntity<Category>> listEntityResponse) throws Exception {
+                        if (listEntityResponse != null) {
+                            if (listEntityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, listEntityResponse);
+                            } else if (listEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
 
     }
 
@@ -211,9 +239,7 @@ public class CommunityServer extends RestyServer {
 
     //店铺详情
     public void shopDetail(String composite, boolean refesh, String shopId, final SSOCallback<ResultEntity<ShopDetail>> callback) {
-//        Disposable disposable = communityApi.shopDetail(shopId)
-                //todo 测试
-        Disposable disposable = communityApi.shopDetail()
+        Disposable disposable = communityApi.shopDetail(shopId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ResultEntity<ShopDetail>>>() {
@@ -549,7 +575,7 @@ public class CommunityServer extends RestyServer {
      * 登录
      */
     public void login(String compositeTag, String phone, String password, final SSOCallback<ResultEntity<User>> callback) {
-        Disposable disposable = communityApi.login(new LoginParams(phone,password))
+        Disposable disposable = communityApi.login(new LoginParams(phone, password))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ResultEntity<User>>>() {
@@ -580,7 +606,26 @@ public class CommunityServer extends RestyServer {
      * 注册
      */
     public void register(String composite, String userName, String phone, String password, String sms, final SSOCallback<Entity> callback) {
-        Disposable disposable = communityApi.register(new RegisterParams(userName, phone, sms, password))
+//        OkHttpClient client = new OkHttpClient();
+//        String url = "http://192.168.191.1:8080/login/register";
+//        FormBody formBody = new FormBody.Builder().add("phone","15977783873").add("passwrod","1234555").build();
+//        Request request = new Request.Builder().url(url).post(formBody).build();
+//        Call call = client.newCall(request);
+//        call.enqueue(new okhttp3.Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("CommunityServer", "onFailure: ");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+//                Log.d("CommunityServer", "onResponse: "+response.body().string());
+//
+//            }
+//        });
+
+
+        Disposable disposable = communityApi.register(new RegisterParams(userName, phone, password))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<Entity>>() {

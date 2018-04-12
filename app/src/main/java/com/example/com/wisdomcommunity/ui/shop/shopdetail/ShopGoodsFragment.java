@@ -86,8 +86,8 @@ public class ShopGoodsFragment extends BaseFragment {
     //初始化分类栏
     private void initCategory() {
         List<CategoryBean> list = new ArrayList<>();
-        list.add(new CategoryBean("全部商品", TYPE_ALL));
-        list.add(new CategoryBean("折扣商品", TYPE_DISCOUNT));
+        list.add(new CategoryBean(getString(R.string.normal_goods), TYPE_ALL));
+        list.add(new CategoryBean(getString(R.string.discount_goods), TYPE_DISCOUNT));
         categoryAdapter = new CategoryAdapter(getContext(), list);
         lvProductCategory.setAdapter(categoryAdapter);
         lvProductCategory.setOnItemClickListener(itemClick);

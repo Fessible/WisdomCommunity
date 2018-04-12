@@ -16,7 +16,12 @@ public class PersonParams {
     /**
      * 昵称
      */
-    public String nickName;
+    public String userName;
+
+    /**
+     * 用户Id
+     */
+    public String userId;
 
     /**
      * 性别

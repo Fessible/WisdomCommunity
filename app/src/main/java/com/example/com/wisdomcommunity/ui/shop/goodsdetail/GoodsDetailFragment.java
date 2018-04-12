@@ -23,6 +23,7 @@ import java.io.Serializable;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.example.com.wisdomcommunity.ui.home.HomeFragment.HOME_TAG;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_GOODS_NUM;
@@ -75,6 +76,7 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
     private int leave;
     private String strPrice;
     private int position;
+    private boolean homeTag = false;
 
     @Override
     public int getResLayout() {
@@ -85,11 +87,14 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
     protected void initView(View view, Bundle savedInstanceState) {
         toolbar.setNavigationOnClickListener(navigationListener);
         Bundle bundle = getArguments();
-        name = bundle.getString(KEY_GOODS_NAME);
-        goodId = bundle.getString(KEY_GOODS_ID);
-        count = bundle.getInt(KEY_GOODS_NUM);
-        position = bundle.getInt(KEY_POSITION);
-        title.setText(name);
+        if (bundle != null) {
+            name = bundle.getString(KEY_GOODS_NAME);
+            goodId = bundle.getString(KEY_GOODS_ID);
+            count = bundle.getInt(KEY_GOODS_NUM);
+            position = bundle.getInt(KEY_POSITION);
+            title.setText(name);
+            homeTag = bundle.getBoolean(HOME_TAG);
+        }
         if (count > 0) {
             buyLayout.setVisibility(View.VISIBLE);
             buy.setVisibility(View.GONE);
@@ -165,10 +170,15 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
 
     @OnClick(R.id.buy)
     public void buy() {
-        buy.setVisibility(View.GONE);
-        buyLayout.setVisibility(View.VISIBLE);
-        count = 1;
-        number.setText(String.valueOf(count));
+        if (homeTag) {
+            buy.setVisibility(View.GONE);
+            buyLayout.setVisibility(View.VISIBLE);
+            count = 1;
+            number.setText(String.valueOf(count));
+        } else {
+            //到店铺中
+        }
+
     }
 
     @OnClick(R.id.minus)
