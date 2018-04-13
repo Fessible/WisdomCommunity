@@ -76,8 +76,8 @@ public class ShopGoodsFragment extends BaseFragment {
 
     private void init() {
         if (shopDetail != null) {
-            discountList = shopDetail.discountList;
-            goodsList = shopDetail.goodsList;
+            discountList = shopDetail.discountList; //折扣商品列表
+            goodsList = shopDetail.goodsList;//普通商品列表
             initRecyclerView(shopDetail);
             initCategory();
         }
@@ -86,13 +86,14 @@ public class ShopGoodsFragment extends BaseFragment {
     //初始化分类栏
     private void initCategory() {
         List<CategoryBean> list = new ArrayList<>();
-        list.add(new CategoryBean(getString(R.string.normal_goods), TYPE_ALL));
-        list.add(new CategoryBean(getString(R.string.discount_goods), TYPE_DISCOUNT));
+        list.add(new CategoryBean(getString(R.string.normal_goods), TYPE_ALL,goodsList));
+        list.add(new CategoryBean(getString(R.string.discount_goods), TYPE_DISCOUNT, discountList));
         categoryAdapter = new CategoryAdapter(getContext(), list);
         lvProductCategory.setAdapter(categoryAdapter);
         lvProductCategory.setOnItemClickListener(itemClick);
     }
 
+    //分类栏变化，更新状态
     private AdapterView.OnItemClickListener itemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

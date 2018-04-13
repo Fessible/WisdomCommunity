@@ -21,6 +21,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.Constants;
 import com.example.com.support_business.domain.home.Banner;
 import com.example.com.support_business.domain.home.Home;
+import com.example.com.support_business.domain.home.Recommend;
+import com.example.com.support_business.domain.home.RecommendGoods;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.base.BaseFragment;
@@ -67,7 +69,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public static final String TAG_HOME_FRAGMENT = "HOME_FRAGMENT";
     public static final int REQUEST_LOGIN = 1;
     public static final String CATEGORY = "category";
-    public static final String HOME_TAG = "home_tag";
+    public static final int HOME_TAG = 1;
+    public static final String KEY_HOME = "home";
+    public static final String KEY_RECOMMEND = "recommend";
+    public static final String KEY_RECOMMEND_GOODS = "recommend_goods";
 
     @BindView(R.id.multiple_refresh_layout)
     MultipleRefreshLayout multipleRefreshLayout;
@@ -95,8 +100,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private HomeAdapter adapter;
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
-    private String shopKillId;
-    private String shopRecomendId;
+    private RecommendGoods goodskill;
+    private RecommendGoods goodsRecommend;
 
 
     @Override
@@ -146,10 +151,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private HomeAdapter.Callback callback = new HomeAdapter.Callback() {
         @Override
-        public void onGoodsItem(String goodsID, String goodsName) {
+        public void onGoodsItem(Recommend recommend) {
             Bundle goodsArgs = new Bundle();
-            goodsArgs.putString(KEY_GOODS_ID, goodsID);
-            goodsArgs.putString(KEY_GOODS_NAME, goodsName);
+            goodsArgs.putInt(KEY_HOME,HOME_TAG);
+            goodsArgs.putSerializable(KEY_RECOMMEND_GOODS,recommend);
+            goodsArgs.putString(KEY_GOODS_ID, recommend.goodsId);
+            goodsArgs.putString(KEY_GOODS_NAME, recommend.name);
             IntentUtil.startTemplateActivity(HomeFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
         }
     };
@@ -274,15 +281,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onLoadRecommendSuccess(Home home) {
         if (home != null) {
+            goodskill = home.secondKill;
+            goodsRecommend = home.recommend;
+
             showMultipleContentLayout();
             Glide.with(getContext())
-                    .load(home.secondKillUrl)
+                    .load(goodskill.goodsUrl)
                     .into(secondKill);
-            shopKillId = home.secondKillId;
-            shopRecomendId = home.recommendId;
+
 
             Glide.with(getContext())
-                    .load(home.recommendUrl)
+                    .load(goodsRecommend.goodsUrl)
                     .into(recommend);
 
             adapter.setData(home.list);
@@ -294,8 +303,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @OnClick(R.id.recommend)
     public void recommend() {
         Bundle goodsArgs = new Bundle();
-        goodsArgs.putBoolean(HOME_TAG,true);
-        goodsArgs.putString(KEY_GOODS_ID, shopRecomendId);
+        goodsArgs.putInt(KEY_HOME, HOME_TAG);
+        goodsArgs.putSerializable(KEY_RECOMMEND, goodsRecommend);
+        goodsArgs.putString(KEY_GOODS_ID, goodsRecommend.goodsId);
         goodsArgs.putString(KEY_GOODS_NAME, getString(R.string.new_recommend));
         IntentUtil.startTemplateActivity(HomeFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
     }
@@ -304,8 +314,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @OnClick(R.id.second_kill)
     public void SecondKill() {
         Bundle goodsArgs = new Bundle();
-        goodsArgs.putInt(HOME_TAG,1);
-        goodsArgs.putString(KEY_GOODS_ID, shopKillId);
+        goodsArgs.putInt(KEY_HOME, HOME_TAG);
+        goodsArgs.putSerializable(KEY_RECOMMEND, goodskill);
+        goodsArgs.putString(KEY_GOODS_ID, goodskill.goodsId);
         goodsArgs.putString(KEY_GOODS_NAME, getString(R.string.second_kill));
         IntentUtil.startTemplateActivity(HomeFragment.this, GoodsDetailFragment.class, goodsArgs, GoodsDetailFragment.TAG_GOODS_DETAIL_FRAGMENT);
     }

@@ -1,6 +1,7 @@
 package com.example.com.wisdomcommunity.ui.shop.shopdetail;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -179,6 +180,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
                     .into(iconGoods);
             goodsName.setText(item.goodsName);
             price.setText(context.getString(R.string.sign_price, item.price));
+//            price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);//添加斜线
 
             contentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

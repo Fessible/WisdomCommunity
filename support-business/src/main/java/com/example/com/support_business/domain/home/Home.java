@@ -12,23 +12,6 @@ public class Home implements Serializable {
      * 推荐列表
      */
     public List<Recommend> list;
-    /**
-     * 新品推荐ID
-     */
-    public String recommendId;
-
-    /**
-     * 新品推荐图片
-     */
-    public String recommendUrl;
-
-    /**
-     * 秒杀ID
-     */
-    public String secondKillId;
-
-    /**
-     * 秒杀图片
-     */
-    public String secondKillUrl;
+    public RecommendGoods recommend;
+    public RecommendGoods secondKill;
 }

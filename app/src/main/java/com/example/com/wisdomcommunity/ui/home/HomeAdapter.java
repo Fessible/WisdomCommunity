@@ -76,7 +76,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onGoodsItem(recommend.goodsId, recommend.name);
+                        callback.onGoodsItem(recommend);
                     }
                 }
             });
@@ -84,7 +84,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Homeholder> {
     }
 
     interface Callback {
-        void onGoodsItem(String goodsID, String goodsName);
+        void onGoodsItem(Recommend recommend);
     }
 }
 

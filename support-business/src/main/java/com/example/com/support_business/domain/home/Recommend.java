@@ -22,4 +22,13 @@ public class Recommend implements Serializable {
      * 商品ID
      */
     public String goodsId;
+
+    /**
+     * 店铺Id
+     */
+    public String shopId;
+    /**
+     * 店铺名
+     */
+    public String shopName;
 }

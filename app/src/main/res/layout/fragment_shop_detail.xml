@@ -102,7 +102,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:background="@color/colorPrimary"
-                            app:tabIndicatorColor="@color/color_fed952"
+                            app:tabIndicatorColor="@color/color_dbdbdb"
                             app:tabSelectedTextColor="@color/white"
                             app:tabTextColor="@color/color_dbdbdb" />
 

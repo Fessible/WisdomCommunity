@@ -12,11 +12,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.com.support_business.domain.home.Recommend;
+import com.example.com.support_business.domain.home.RecommendGoods;
 import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.GoodsDetailContract;
+import com.example.com.wisdomcommunity.ui.home.HomeFragment;
+import com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 
 import java.io.Serializable;
 
@@ -24,8 +29,13 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.example.com.wisdomcommunity.ui.home.HomeFragment.HOME_TAG;
+import static com.example.com.wisdomcommunity.ui.home.HomeFragment.KEY_HOME;
+import static com.example.com.wisdomcommunity.ui.home.HomeFragment.KEY_RECOMMEND;
+import static com.example.com.wisdomcommunity.ui.home.HomeFragment.KEY_RECOMMEND_GOODS;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_GOODS_NAME;
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
+import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_GOODS_NUM;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
 
@@ -76,7 +86,9 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
     private int leave;
     private String strPrice;
     private int position;
-    private boolean homeTag = false;
+    private int homeTag = 0;
+    private RecommendGoods recommendGoods;
+    private Recommend recommend;
 
     @Override
     public int getResLayout() {
@@ -93,7 +105,10 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
             count = bundle.getInt(KEY_GOODS_NUM);
             position = bundle.getInt(KEY_POSITION);
             title.setText(name);
-            homeTag = bundle.getBoolean(HOME_TAG);
+            homeTag = bundle.getInt(KEY_HOME);
+
+            recommendGoods = (RecommendGoods) bundle.getSerializable(KEY_RECOMMEND);
+            recommend = (Recommend) bundle.getSerializable(KEY_RECOMMEND_GOODS);
         }
         if (count > 0) {
             buyLayout.setVisibility(View.VISIBLE);
@@ -170,13 +185,26 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
 
     @OnClick(R.id.buy)
     public void buy() {
-        if (homeTag) {
+        if (homeTag != HOME_TAG) {
             buy.setVisibility(View.GONE);
             buyLayout.setVisibility(View.VISIBLE);
             count = 1;
             number.setText(String.valueOf(count));
         } else {
             //到店铺中
+            if (recommendGoods != null) {
+                Bundle shopArgs = new Bundle();
+                shopArgs.putString(KEY_SHOP_ID, recommendGoods.shopId);
+                shopArgs.putString(KEY_SHOP_NAME, recommendGoods.shopName);
+                IntentUtil.startTemplateActivity(GoodsDetailFragment.this, ShopDetailFragment.class, shopArgs, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
+                getActivity().finish();
+            } else if (recommend != null) {
+                Bundle shopArgs = new Bundle();
+                shopArgs.putString(KEY_SHOP_ID, recommend.shopId);
+                shopArgs.putString(KEY_SHOP_NAME, recommend.shopName);
+                IntentUtil.startTemplateActivity(GoodsDetailFragment.this, ShopDetailFragment.class, shopArgs, ShopDetailFragment.TAG_SHOP_DETAIL_FRAGMENT);
+                getActivity().finish();
+            }
         }
 
     }

@@ -25,7 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -38,6 +40,7 @@ import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.localsave.ShopCart;
 import com.example.com.wisdomcommunity.mvp.ShopDetailContract;
 import com.example.com.wisdomcommunity.ui.shop.pay.PayFragment;
+import com.example.com.wisdomcommunity.util.DensityUtil;
 import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.FakeAddImageView;
 import com.example.com.wisdomcommunity.view.PointFTypeEvaluator;
@@ -45,6 +48,7 @@ import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.OnSheetDismissedListener;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,6 +159,51 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
 
     }
 
+
+    //设置TabLayout下划线的宽度
+    private void reflex(final TabLayout tableLayout) {
+        tableLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout mTabStrip = (LinearLayout) tableLayout.getChildAt(0);
+                int dp10 = DensityUtil.dip2px(tableLayout.getContext(), 50);
+                for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+                    View tabView = mTabStrip.getChildAt(i);
+                    //拿到tabView的mTextView属性
+                    try {
+                        Field mTextViewField = tabView.getClass().getDeclaredField("mTextView");
+                        mTextViewField.setAccessible(true);
+
+                        TextView mTetxtView = (TextView) mTextViewField.get(tabView);
+                        tabView.setPadding(0, 0, 0, 0);
+                        //字多宽线多宽，测量TextView的宽度
+                        int width = 0;
+                        width = mTetxtView.getWidth();
+                        if (width == 0) {
+                            mTetxtView.measure(0,0);
+                            width = mTetxtView.getMeasuredWidth();
+                        }
+
+                        //设tab左右边距为10dp
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+                        params.width = width;
+                        params.leftMargin = dp10;
+                        params.rightMargin = dp10;
+                        tabView.setLayoutParams(params);
+                        tabView.invalidate();
+
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+    }
+
+
     private void initViewPager() {
 
         shopInfoFragment = new ShopInfoFragment();
@@ -168,6 +217,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         ShopDetailPagerAdapter adapter = new ShopDetailPagerAdapter(getChildFragmentManager(), fragments, subTitles);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+        reflex(tabLayout);
     }
 
     @Override
@@ -240,6 +290,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             totalPrice += price * num;
             showOrderlayout();
             int type = 0;
+
             changeOrderhashMap(goods, price, number, type);
         }
 
@@ -538,7 +589,6 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             changeOrderhashMap(order);
             showOrderlayout();
         }
-
 
         //检测购物车是否被清空了
         private void checkIsEmpty() {
