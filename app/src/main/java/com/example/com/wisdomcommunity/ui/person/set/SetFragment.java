@@ -22,6 +22,7 @@ import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
 import butterknife.BindView;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_ABOUT;
 import static com.example.com.wisdomcommunity.ui.person.set.SetAdapter.TYPE_CACHE;
@@ -70,6 +71,7 @@ public class SetFragment extends BaseFragment implements SetContract.View {
             public void onItemClick(int type) {
                 switch (type) {
                     case TYPE_SHARE:
+                        showShare();
                         break;
                     case TYPE_ABOUT:
                         IntentUtil.startTemplateActivity(SetFragment.this, AboutFragment.class, AboutFragment.TAG_ABOUT_FRAGMENT);
@@ -92,6 +94,29 @@ public class SetFragment extends BaseFragment implements SetContract.View {
             }
         });
     }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle(getString(R.string.share));
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(getString(R.string.app_name));
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        oks.setImageUrl("https://ws1.sinaimg.cn/large/83029c1egy1fqeqwas0xrj205c05cjr6.jpg");
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网使用
+//        oks.setComment("我是测试评论文本");
+        // 启动分享GUI
+        oks.show(getContext());
+    }
+
 
     /**
      * 获取版本
