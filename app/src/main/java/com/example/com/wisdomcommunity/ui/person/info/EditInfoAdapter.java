@@ -66,7 +66,7 @@ public class EditInfoAdapter extends BaseAdapter<EditInfoAdapter.EditHolder> {
             itemList.add(new EmptyItem());
             itemList.add(new StandardItem(context.getString(R.string.user_name), info != null ? info.userName : "", TYPE_NAME));
             itemList.add(new StandardItem(context.getString(R.string.signature), info != null ? info.signature : "", TYPE_SIGNATURE));
-            itemList.add(new StandardItem(context.getString(R.string.district), info != null ? info.districtName : "", TYPE_DISTRICT));
+//            itemList.add(new StandardItem(context.getString(R.string.district), info != null ? info.districtName : "", TYPE_DISTRICT));
             itemList.add(new StandardItem(context.getString(R.string.sex), info != null ? (info.sex == 0 ? context.getString(R.string.men) : context.getString(R.string.woman)) : context.getString(R.string.men), TYPE_SEX));
 
         }

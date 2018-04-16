@@ -39,7 +39,7 @@ public class SetAdapter extends BaseAdapter<SetAdapter.SetHolder> {
         public void onChanged() {
             super.onChanged();
             setItemList.add(new SetItem(mContext.getString(R.string.set_share), TYPE_SHARE));
-            setItemList.add(new SetItem(mContext.getString(R.string.set_cache), TYPE_CACHE));
+//            setItemList.add(new SetItem(mContext.getString(R.string.set_cache), TYPE_CACHE));
             setItemList.add(new SetItem(mContext.getString(R.string.set_about), TYPE_ABOUT));
             setItemList.add(new SetItem(mContext.getString(R.string.set_update), TYPE_UPDATE));
         }

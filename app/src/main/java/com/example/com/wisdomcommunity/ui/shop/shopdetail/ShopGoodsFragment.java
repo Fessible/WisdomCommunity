@@ -39,6 +39,9 @@ import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragm
  */
 
 public class ShopGoodsFragment extends BaseFragment {
+    public static final String KEY_TYPE = "type";
+    public static final String KEY_GOODS = "goods";
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -52,8 +55,6 @@ public class ShopGoodsFragment extends BaseFragment {
     private GoodsCallback goodsCallback;
     private int clickCount;
     private CategoryAdapter categoryAdapter;
-    private int allCount;
-    private int discountCount;
     private List<Goods> goodsList = new ArrayList<>();
     private List<Goods> discountList = new ArrayList<>();
 
@@ -74,7 +75,7 @@ public class ShopGoodsFragment extends BaseFragment {
         init();
     }
 
-    private void init() {
+    public void init() {
         if (shopDetail != null) {
             discountList = shopDetail.discountList; //折扣商品列表
             goodsList = shopDetail.goodsList;//普通商品列表
@@ -86,7 +87,7 @@ public class ShopGoodsFragment extends BaseFragment {
     //初始化分类栏
     private void initCategory() {
         List<CategoryBean> list = new ArrayList<>();
-        list.add(new CategoryBean(getString(R.string.normal_goods), TYPE_ALL,goodsList));
+        list.add(new CategoryBean(getString(R.string.normal_goods), TYPE_ALL, goodsList));
         list.add(new CategoryBean(getString(R.string.discount_goods), TYPE_DISCOUNT, discountList));
         categoryAdapter = new CategoryAdapter(getContext(), list);
         lvProductCategory.setAdapter(categoryAdapter);
@@ -124,6 +125,7 @@ public class ShopGoodsFragment extends BaseFragment {
                         .divider(getResources().getDrawable(R.drawable.icon_horizontal_line))
                         .build()).build());
         recyclerView.setAdapter(adapter);
+        adapter.setShopId(shopDetail.shopId);
         adapter.setData(shopDetail.goodsList, TYPE_ALL);
         adapter.notifyDataSetChanged();
         adapter.setCallback(callback);
@@ -134,6 +136,8 @@ public class ShopGoodsFragment extends BaseFragment {
         public void onCallback(Goods goods, int num, int position, int type) {
             clickCount = num;
             Bundle goodsArgs = new Bundle();
+            goodsArgs.putInt(KEY_TYPE, type);
+            goodsArgs.putSerializable(KEY_GOODS, goods);
             goodsArgs.putString(KEY_GOODS_ID, goods.goodsId);
             goodsArgs.putString(KEY_GOODS_NAME, goods.goodsName);
             goodsArgs.putString(KEY_GOODS_URL, goods.goodsUrl);
@@ -144,15 +148,48 @@ public class ShopGoodsFragment extends BaseFragment {
 
         @Override
         public void onAddPayBack(View v, Goods goods, float price, int num, int type) {
+
+
             if (goodsCallback != null) {
                 goodsCallback.onAdd(v, goods, price, num, type);
+            }
+
+            if (type == TYPE_ALL) {
+                int position = goodsList.indexOf(goods);
+                goods.num = num++;
+                goodsList.set(position, goods);
+
+            } else if (type == TYPE_DISCOUNT) {
+                int position = discountList.indexOf(goods);
+                goods.num = num++;
+                discountList.set(position, goods);
             }
         }
 
         @Override
         public void onMinusPayBack(Goods goods, float price, int num, int type) {
+
+
             if (goodsCallback != null) {
                 goodsCallback.onMinus(goods, price, num, type);
+            }
+
+            if (type == TYPE_ALL) {
+                int position = goodsList.indexOf(goods);
+                goods.num = num--;
+                goodsList.set(position, goods);
+            } else if (type == TYPE_DISCOUNT) {
+                int position = discountList.indexOf(goods);
+                goods.num = num--;
+                discountList.set(position, goods);
+            }
+        }
+
+        @Override
+        public void onClearShopCart() {
+            //清空购物车
+            if (goodsCallback != null) {
+                goodsCallback.onClearCart();
             }
         }
     };
@@ -164,15 +201,39 @@ public class ShopGoodsFragment extends BaseFragment {
             if (requestCode == REQUEST_GOODS) {
                 OrderDetail.Order order = (OrderDetail.Order) data.getSerializableExtra(KEY_GOOD_ORDER);
                 int position = data.getIntExtra(KEY_POSITION, 0);
+                int type = data.getIntExtra(KEY_TYPE, 0);
                 if (clickCount != order.number) {
                     if (goodsCallback != null && adapter != null) {
                         adapter.setNum(order.number, position);
+
                         Goods goods = new Goods();
                         goods.goodsUrl = order.goodsUrl;
                         goods.goodsId = order.goodsId;
                         goods.remain = order.remain;
                         goods.goodsName = order.goodsName;
+
                         goodsCallback.onClickItem(goods, Float.valueOf(order.price), order.number, order.number - clickCount);
+                        goods = (Goods) data.getSerializableExtra(KEY_GOODS);
+                        switch (type) {
+                            case TYPE_ALL:
+                                for (int i = 0; i < goodsList.size(); i++) {
+                                    if (goodsList.get(i).goodsId.equals(goods.goodsId)) {
+                                        Goods g = goodsList.get(i);
+                                        g.num = order.number;
+                                        goodsList.set(i, g);
+                                    }
+                                }
+                                break;
+                            case TYPE_DISCOUNT:
+                                for (int i = 0; i < discountList.size(); i++) {
+                                    if (discountList.get(i).goodsId.equals(goods.goodsId)) {
+                                        Goods g = discountList.get(i);
+                                        g.num = order.number;
+                                        discountList.set(i, g);
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
             }
@@ -219,5 +280,7 @@ public class ShopGoodsFragment extends BaseFragment {
         void onAdd(View view, Goods goods, float price, int num, int type);
 
         void onMinus(Goods goods, float price, int num, int type);
+
+        void onClearCart();
     }
 }

@@ -83,7 +83,7 @@ public class AddressFragment extends BaseFragment implements AddressContract.Vie
         recyclerView.setAdapter(addressAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         presenter = new AddressPresenter(getContext(), AddressFragment.this);
-        presenter.loadAddress("123");
+        presenter.loadAddress(AccountSetUp.getUserId(getContext()));
         addressAdapter.setOnItemClickListener(new AddressAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Address address, int position) {

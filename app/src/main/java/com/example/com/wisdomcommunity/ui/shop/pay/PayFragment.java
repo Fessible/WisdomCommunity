@@ -17,6 +17,7 @@ import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.localsave.ShopCart;
+import com.example.com.wisdomcommunity.mvp.PayContract;
 import com.example.com.wisdomcommunity.ui.order.OrderDetailFragment;
 import com.example.com.wisdomcommunity.ui.person.address.AddressFragment;
 import com.example.com.wisdomcommunity.util.ActivityCollector;
@@ -47,7 +48,7 @@ import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragm
  * 确认订单
  */
 
-public class PayFragment extends BaseFragment {
+public class PayFragment extends BaseFragment implements PayContract.View {
     public static final String TAG_PAY_FRAGMENT = "PAY_FRAGMENT";
     public static final int REQUEST_ADDRESS = 1;
     public static final int REQUEST_REMARK = 2;
@@ -78,6 +79,7 @@ public class PayFragment extends BaseFragment {
     private String total;//总价
     private String remark;
     private List<OrderDetail.Order> orderList;
+    private PayContract.Presenter presenter;
 
     @Override
     public int getResLayout() {
@@ -86,6 +88,7 @@ public class PayFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        presenter = new PayPresenter(getContext(), PayFragment.this);
         title.setText(R.string.make_order);
         toolbar.setNavigationOnClickListener(navigationListener);
 
@@ -164,7 +167,6 @@ public class PayFragment extends BaseFragment {
             return;
         }
 
-        Bundle bundle = new Bundle();
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.shopPhone = shopDetail.shopPhone;
         orderDetail.shopId = shopId;
@@ -185,6 +187,20 @@ public class PayFragment extends BaseFragment {
         orderDetail.orderStatus = Constants.STATUS_SUBMIT;
         orderDetail.details = orderList;
 
+        presenter.submitOrder(orderDetail);
+    }
+
+    @Override
+    protected void destroyView() {
+        if (adapter != null) {
+            adapter.destroy();
+        }
+    }
+
+    @Override
+    public void onSubmitOrderSuccess(String msg, OrderDetail orderDetail) {
+        Bundle bundle = new Bundle();
+
         bundle.putSerializable(KEY_ORDER_DETAIL, orderDetail);
 
         IntentUtil.startTemplateActivity(PayFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT);
@@ -195,9 +211,22 @@ public class PayFragment extends BaseFragment {
     }
 
     @Override
-    protected void destroyView() {
-        if (adapter != null) {
-            adapter.destroy();
-        }
+    public void onSubmitOrderFailure(String msg) {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void onUnauthorized() {
+
     }
 }

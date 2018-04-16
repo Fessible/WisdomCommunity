@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.com.support_business.domain.personal.Address;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
+import com.example.com.wisdomcommunity.localsave.AccountSetUp;
 import com.example.com.wisdomcommunity.mvp.EditAddressContract;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
@@ -132,9 +133,8 @@ public class AddAddressFragment extends BaseFragment implements EditAddressContr
             address.sex = addAddressAdapter.getSex();
             if (addressId != null) {
                 address.addressId = addressId;
-            } else {
-                address.addressId = String.valueOf(Math.random() * 1000);
             }
+            address.userId = AccountSetUp.getUserId(getContext());
             address.sex = addAddressAdapter.getSex();
             address.name = addAddressAdapter.getName();
             address.phone = addAddressAdapter.getPhone();

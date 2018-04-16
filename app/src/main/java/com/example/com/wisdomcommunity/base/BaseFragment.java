@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.com.wisdomcommunity.util.ToastUtils;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -40,7 +42,8 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void initView(View view, Bundle savedInstanceState);
 
     protected void showShortToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        ToastUtils.showToast(getActivity(),msg);
+//        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     protected abstract void destroyView();

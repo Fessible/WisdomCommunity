@@ -23,6 +23,9 @@ import java.util.Locale;
 
 import butterknife.BindView;
 
+import static com.example.com.support_business.Constants.STATUS_RETURN;
+import static com.example.com.support_business.Constants.STATUS_SENDING;
+import static com.example.com.support_business.Constants.STATUS_SUBMIT;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_ADDRESS;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_EMPTY;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_HEADER_SHOP;
@@ -30,6 +33,7 @@ import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.V
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_PHONE;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_PRICE;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_STANDARD;
+import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_STATUS;
 
 /**
  * Created by rhm on 2018/3/5.
@@ -41,6 +45,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
     private OrderDetail detail;
     private final SimpleDateFormat simpleDateFormat;
     private Callback callback;
+    private int statusPosition = 0;
 
     public OrderDetailAdapter(Context context) {
         simpleDateFormat = new SimpleDateFormat(context.getString(R.string.date_format), Locale.SIMPLIFIED_CHINESE);
@@ -75,7 +80,9 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 itemList.add(new PhoneItem(detail.shopPhone));
                 itemList.add(new EmptyItem());
                 itemList.add(new StandardItem(context.getString(R.string.title_order_id), detail.orderId));
-                itemList.add(new StandardItem(context.getString(R.string.order_status), getOrderStatus(detail.orderStatus)));
+                itemList.add(new StatusItem(detail.orderStatus));
+                //获取位置
+                statusPosition = itemList.size()-1;
                 itemList.add(new StandardItem(context.getString(R.string.order_time), simpleDateFormat.format(new Date(detail.orderTime))));
                 itemList.add(new StandardItem(context.getString(R.string.order_receive), detail.receiverName));
                 itemList.add(new StandardItem(context.getString(R.string.contact_phone), detail.receiverPhone));
@@ -90,23 +97,10 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
         }
     };
 
-    private String getOrderStatus(@Constants.STATUS int detailStatus) {
-        String status = null;
-        switch (detailStatus) {
-            case Constants.STATUS_FINISHED:
-                status = context.getString(R.string.status_finished);
-                break;
-            case Constants.STATUS_WAIT_PAY:
-                status = context.getString(R.string.status_wait_pay);
-                break;
-            case Constants.STATUS_SENDING:
-                status = context.getString(R.string.status_sending);
-                break;
-            case Constants.STATUS_SUBMIT:
-                status = context.getString(R.string.status_submit);
-                break;
-        }
-        return status;
+    public void changeStatus() {
+        StatusItem statusItem = (StatusItem) itemList.get(statusPosition);
+        statusItem.orderStatus = STATUS_RETURN;
+        notifyItemChanged(statusPosition);
     }
 
     @Override
@@ -143,6 +137,9 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 break;
             case VIEW_PRICE:
                 holder = new PriceHolder(context, parent);
+                break;
+            case VIEW_STATUS:
+                holder = new StatusHolder(context, parent);
                 break;
         }
         return holder;
@@ -281,6 +278,62 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
         }
     }
 
+    static class StatusHolder extends DetailHolder<StatusItem> {
+        private Context context;
+
+        @BindView(R.id.content)
+        TextView content;
+
+        @BindView(R.id.status)
+        TextView status;
+
+
+        public StatusHolder(Context context, ViewGroup parent) {
+            super(context, parent, R.layout.item_order_detail_order_status);
+            this.context = context;
+        }
+
+        @Override
+        public void bindHolder(Context context, StatusItem item, final Callback callback) {
+            super.bindHolder(context, item, callback);
+            status.setVisibility(View.GONE);
+            content.setText(getOrderStatus(item.orderStatus));
+            if (item.orderStatus == STATUS_SENDING) {
+                status.setVisibility(View.VISIBLE);
+                status.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onReturn();
+                    }
+                });
+            } else {
+                status.setVisibility(View.GONE);
+            }
+        }
+
+        private String getOrderStatus(@Constants.STATUS int detailStatus) {
+            String status = null;
+            switch (detailStatus) {
+                case Constants.STATUS_FINISHED:
+                    status = context.getString(R.string.status_finished);
+                    break;
+                case Constants.STATUS_WAIT_PAY:
+                    status = context.getString(R.string.status_wait_pay);
+                    break;
+                case Constants.STATUS_SENDING:
+                    status = context.getString(R.string.status_sending);
+                    break;
+                case Constants.STATUS_SUBMIT:
+                    status = context.getString(R.string.status_submit);
+                    break;
+                case STATUS_RETURN:
+                    status = context.getString(R.string.status_return);
+                    break;
+            }
+            return status;
+        }
+    }
+
     static class EmptyHolder extends DetailHolder<EmptyItem> {
         public EmptyHolder(Context context, ViewGroup parent) {
             super(context, parent, R.layout.adapter_empty);
@@ -316,6 +369,20 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
         @Override
         public int getViewType() {
             return VIEW_STANDARD;
+        }
+    }
+
+    static class StatusItem implements Item {
+
+        private int orderStatus;
+
+        public StatusItem(int orderStatus) {
+            this.orderStatus = orderStatus;
+        }
+
+        @Override
+        public int getViewType() {
+            return VIEW_STATUS;
         }
     }
 
@@ -393,6 +460,7 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
         int VIEW_HEADER_SHOP = 4;//店铺名称
         int VIEW_PRICE = 5;//订单总额
         int VIEW_ORDER_LIST = 6;//清单
+        int VIEW_STATUS = 7;//状态
 
         @IntDef({
                 VIEW_ADDRESS,
@@ -401,7 +469,8 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
                 VIEW_PHONE,
                 VIEW_HEADER_SHOP,
                 VIEW_PRICE,
-                VIEW_ORDER_LIST
+                VIEW_ORDER_LIST,
+                VIEW_STATUS
         })
         @Retention(RetentionPolicy.SOURCE)
         @interface ViewType {
@@ -422,6 +491,8 @@ public class OrderDetailAdapter extends BaseAdapter<OrderDetailAdapter.DetailHol
 
     interface Callback {
         void onCallback(String value, String name, int type);
+
+        void onReturn();
     }
 
 }

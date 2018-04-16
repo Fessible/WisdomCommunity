@@ -1,8 +1,10 @@
 package com.example.com.wisdomcommunity.ui.order;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +22,8 @@ import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoratio
 
 import butterknife.BindView;
 
+import static android.app.Activity.RESULT_OK;
+import static com.example.com.support_business.Constants.STATUS_RETURN;
 import static com.example.com.wisdomcommunity.MainActivity.ACTION_SHOP_CART_CLEAR;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_HEADER_SHOP;
 import static com.example.com.wisdomcommunity.ui.order.OrderDetailAdapter.Item.VIEW_ORDER_LIST;
@@ -48,6 +52,8 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    private String orderId;
+
     @Override
     public int getResLayout() {
         return R.layout.fragment_template_layout;
@@ -63,6 +69,7 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().setResult(RESULT_OK);
                 getActivity().finish();
             }
         });
@@ -79,7 +86,7 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            String orderId = bundle.getString(KEY_ORDER_ID);
+            orderId = bundle.getString(KEY_ORDER_ID);
             if (orderId != null) {
                 presenter = new OrderDetailPresenter(getContext(), OrderDetailFragment.this);
                 presenter.loadDetail(orderId);
@@ -108,6 +115,31 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
                     startActivity(intent);
                     break;
             }
+        }
+
+        //点击退货
+        @Override
+        public void onReturn() {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.wheather_return_goods)
+                    .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (presenter == null) {
+                                presenter = new OrderDetailPresenter(getContext(), OrderDetailFragment.this);
+
+                            }
+                            presenter.changStatus(orderId);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
         }
     };
 
@@ -144,5 +176,18 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
     @Override
     public void onLoadDetailFailure(String msg) {
         showShortToast(msg);
+    }
+
+    @Override
+    public void onChangeStatusSuccess(String msg) {
+        showShortToast(msg);
+        if (adapter != null) {
+            adapter.changeStatus();
+        }
+    }
+
+    @Override
+    public void onChangeStatusFailure(String msg) {
+
     }
 }

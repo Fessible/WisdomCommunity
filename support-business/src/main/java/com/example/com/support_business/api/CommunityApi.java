@@ -27,6 +27,7 @@ import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -49,10 +50,12 @@ interface CommunityApi {
 
     //修改地址
     @POST("personal/address/edit")
+//    @POST("personal/addressedit")
     public Observable<Response<Entity>> editAddress(@Body Address address);
 
     //删除地址
-    @GET("personal/address/delete/{addressId}")
+    @DELETE("personal/address/delete/{addressId}")
+//    @DELETE("personal/addressdelete/{addressId}")
     public Observable<Response<Entity>> deleteAddress(@Path("addressId") String addressId);
 
     //头像编辑
@@ -149,6 +152,11 @@ interface CommunityApi {
     //订单详情
     @GET("order/details/{orderId}")
     public Observable<Response<ResultEntity<OrderDetail>>> detail(@Path("orderId") String orderId);
+
+    //改变订单状态
+    @POST("order/orderStatus/{orderId}")
+    public Observable<Response<Entity>> changeStatus(@Path("orderId") String orderId);
+
 
     @POST("search")
     public Observable<Response<ListEntity<Search>>> search(@Body String search);

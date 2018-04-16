@@ -115,7 +115,7 @@ public class CommunityServer extends RestyServer {
     }
 
     //分类
-    public void category(String composite, boolean refresh, @Constants.Category int category, final SSOCallback<ListEntity<Category>> callback){
+    public void category(String composite, boolean refresh, @Constants.Category int category, final SSOCallback<ListEntity<Category>> callback) {
         Disposable disposable = communityApi.category(new CategoryParams(category))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -307,6 +307,65 @@ public class CommunityServer extends RestyServer {
                             if (resultEntityResponse.isSuccessful()) {
                                 callOnResponseMethod(callback, resultEntityResponse);
                             } else if (resultEntityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+    }
+
+    //订单状态
+    public void orderStatus(String composite, String orderId, final SSOCallback<Entity> callback) {
+        Disposable disposable = communityApi.changeStatus(orderId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<Entity>>() {
+                    @Override
+                    public void accept(Response<Entity> entityResponse) throws Exception {
+                        if (entityResponse != null) {
+                            if (entityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, entityResponse);
+                            } else if (entityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
+                                callOnUnauthorizedMethod(callback);
+                            } else {
+                                throwNullOrFailureResponse();
+                            }
+                        } else {
+                            throwNullOrFailureResponse();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callOnFailureMethod(callback, throwable);
+                    }
+                });
+        add(composite, disposable);
+
+    }
+
+    //订单提交
+    public void submitOrder(String composite, OrderDetail orderDetail, final SSOCallback<Entity> callback) {
+        Disposable disposable = communityApi.add(orderDetail)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<Entity>>() {
+                    @Override
+                    public void accept(Response<Entity> entityResponse) throws Exception {
+                        if (entityResponse != null) {
+                            if (entityResponse.isSuccessful()) {
+                                callOnResponseMethod(callback, entityResponse);
+                            } else if (entityResponse.code() == HttpStatus.UNAUTHORIZED.code()) {
                                 callOnUnauthorizedMethod(callback);
                             } else {
                                 throwNullOrFailureResponse();

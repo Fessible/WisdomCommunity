@@ -27,7 +27,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -130,6 +129,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     private HashMap<String, OrderDetail.Order> orderHashMap = new HashMap<>();
     private List<Goods> discountList = new ArrayList<>();
 
+
     @Override
     public int getResLayout() {
         return R.layout.fragment_shop_detail;
@@ -180,7 +180,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                         int width = 0;
                         width = mTetxtView.getWidth();
                         if (width == 0) {
-                            mTetxtView.measure(0,0);
+                            mTetxtView.measure(0, 0);
                             width = mTetxtView.getMeasuredWidth();
                         }
 
@@ -233,6 +233,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         ShopCart.setCount(getContext(), count);
         ShopCart.setTotalPrice(getContext(), new DecimalFormat(".00").format(totalPrice));
         ShopCart.setShop(getContext(), shopDetail);
+        ShopCart.setShopId(getContext(),shopId);
 
         Intent intent = new Intent();
         intent.setAction(ACTION_SHOP_CART_CHANGED);
@@ -257,8 +258,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
                             .fallback(placeHolder)
                             .placeholder(placeHolder).centerCrop())
                     .into(imgShop);
+            //初始化普通商品列表
             goodsList = shopDetail.goodsList;
+            //初始化打折商品列表
             discountList = shopDetail.discountList;
+
             initShopInfoFragment(shopDetail);
             initShopGoodsFragment(shopDetail);
 
@@ -306,6 +310,30 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
             minus(price);
             changeOrderhashMap(goods, price, num, type);
             showOrderlayout();
+        }
+
+        @Override
+        public void onClearCart() {
+            //清空购物车
+            new AlertDialog.Builder(getContext())
+                    .setMessage("当前购物车有物品，请清空后再购买")
+                    .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            clearCart();
+                            //清空本地shopId
+                            ShopCart.clear(getContext());
+                            bottomSheetLayout.dismissSheet();
+                        }
+                    })
+                    .setNegativeButton(R.string.opt_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
         }
     };
 
@@ -382,6 +410,7 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         cartTotalNum.setVisibility(View.GONE);
         shopCart.setBackgroundResource(R.drawable.icon_cart_un);
         count = 0;
+        totalPrice = 0;
     }
 
 
@@ -463,8 +492,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         bundle.putSerializable(KEY_SHOP, shopDetail);
         bundle.putString(KEY_TOTAL_MONEY, strPrice);
         bundle.putSerializable(KEY_ORDER_LIST, (Serializable) orderList);
-
+        //提交订单并跳转到订单详情界面
         IntentUtil.startTemplateActivity(ShopDetailFragment.this, PayFragment.class, bundle, PayFragment.TAG_PAY_FRAGMENT);
+        if (presenter != null) {
+//            presenter.submitOrder();
+        }
     }
 
     @Override
@@ -643,6 +675,11 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
     //清空购物车
     public void clearCart() {
         orderHashMap.clear();
+        //将商品中的数值全部清空
+        clear(discountList);
+        clear(goodsList);
+        shopGoodsFragment.changeDiscount(discountList);
+        shopGoodsFragment.changeGoods(goodsList);
         if (cartAdapter != null && shopGoodsFragment != null) {
             shopGoodsFragment.clear();
             cartAdapter.destroy();
@@ -650,5 +687,12 @@ public class ShopDetailFragment extends BaseFragment implements ShopDetailContra
         showEmptyCart();
     }
 
-
+    //清空商品列表的值
+    private void clear(List<Goods> list) {
+        for (int i = 0; i < list.size(); i++) {
+            Goods goods = list.get(i);
+            goods.num = 0;
+            list.set(i, goods);
+        }
+    }
 }

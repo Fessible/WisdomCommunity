@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.example.com.support_business.api.CommunityServer;
 import com.example.com.support_business.api.RestyServer;
 import com.example.com.support_business.domain.order.OrderDetail;
+import com.example.com.support_business.module.Entity;
 import com.example.com.support_business.module.ResultEntity;
 import com.example.com.wisdomcommunity.mvp.OrderDetailContract;
 
@@ -55,5 +56,42 @@ public class OrderDetailPresenter extends OrderDetailContract.Presenter {
             }
         });
 
+    }
+
+    //改变状态
+    @Override
+    public void changStatus(String orderId) {
+        CommunityServer.with(context).orderStatus(compositeTag, orderId, new RestyServer.SSOCallback<Entity>() {
+            @Override
+            public void onUnauthorized() {
+
+            }
+
+            @Override
+            public void onResponse(Date receivedDate, Date servedDate, Entity entity) {
+                if (entity != null) {
+                    if (entity.isOk()) {
+                        if (view != null) {
+                            view.onChangeStatusSuccess(entity.msg);
+                        }
+                    } else {
+                        if (view != null) {
+                            view.onChangeStatusFailure(!TextUtils.isEmpty(entity.msg) ? entity.msg : serverResponseError);
+                        }
+                    }
+                } else {
+                    if (view != null) {
+                        view.onChangeStatusFailure(networkError);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                if (view != null) {
+                    view.onChangeStatusFailure(networkError);
+                }
+            }
+        });
     }
 }

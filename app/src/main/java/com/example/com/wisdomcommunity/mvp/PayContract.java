@@ -6,22 +6,16 @@ import com.example.com.support_business.domain.order.OrderDetail;
 import com.example.com.wisdomcommunity.mvp.base.BasicContract;
 
 /**
- * Created by rhm on 2018/3/3.
+ * Created by rhm on 2018/4/15.
  */
-
-public interface OrderDetailContract {
-    interface Model extends BasicContract.Model {
-
+public interface PayContract {
+    public interface Model extends BasicContract.Model {
     }
 
     interface View extends BasicContract.View {
-        void onLoadDetailSuccess(OrderDetail orderDetail);
+        void onSubmitOrderSuccess(String msg,OrderDetail orderDetail);
 
-        void onLoadDetailFailure(String msg);
-
-        void onChangeStatusSuccess(String msg);
-
-        void onChangeStatusFailure(String msg);
+        void onSubmitOrderFailure(String msg);
     }
 
     public abstract class Presenter extends BasicContract.Presenter<View> {
@@ -29,9 +23,8 @@ public interface OrderDetailContract {
             super(context, view);
         }
 
-        public abstract void loadDetail(String orderId);
-
-        public abstract void changStatus(String orderId);
+        public abstract void submitOrder(OrderDetail orderDetail);
     }
+
 
 }

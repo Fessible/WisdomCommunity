@@ -1,4 +1,4 @@
-package com.example.com.wisdomcommunity.ui.shop.shopdetail;
+package com.example.com.wisdomcommunity.ui.shop.pay;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -6,48 +6,45 @@ import android.text.TextUtils;
 import com.example.com.support_business.api.CommunityServer;
 import com.example.com.support_business.api.RestyServer;
 import com.example.com.support_business.domain.order.OrderDetail;
-import com.example.com.support_business.domain.shop.ShopDetail;
 import com.example.com.support_business.module.Entity;
-import com.example.com.support_business.module.ResultEntity;
-import com.example.com.wisdomcommunity.mvp.ShopDetailContract;
+import com.example.com.wisdomcommunity.mvp.PayContract;
 
 import java.util.Date;
 
 /**
- * Created by rhm on 2018/3/6.
+ * Created by rhm on 2018/4/15.
  */
-
-public class ShopDetailPresenter extends ShopDetailContract.Presenter {
-    public ShopDetailPresenter(Context context, ShopDetailContract.View view) {
+public class PayPresenter extends PayContract.Presenter {
+    public PayPresenter(Context context, PayContract.View view) {
         super(context, view);
     }
 
     @Override
-    public void loadShopDetail(String shopId) {
+    public void submitOrder(final OrderDetail orderDetail) {
         if (destroyFlag.get()) {
             return;
         }
-        CommunityServer.with(context).shopDetail(compositeTag, false, shopId, new RestyServer.SSOCallback<ResultEntity<ShopDetail>>() {
+        CommunityServer.with(context).submitOrder(compositeTag, orderDetail, new RestyServer.SSOCallback<Entity>() {
             @Override
             public void onUnauthorized() {
 
             }
 
             @Override
-            public void onResponse(Date receivedDate, Date servedDate, ResultEntity<ShopDetail> entity) {
+            public void onResponse(Date receivedDate, Date servedDate, Entity entity) {
                 if (entity != null) {
                     if (entity.isOk()) {
                         if (view != null) {
-                            view.onLoadShopDetailSuccess(entity.result);
+                            view.onSubmitOrderSuccess(entity.msg,orderDetail);
                         }
                     } else {
                         if (view != null) {
-                            view.onLoadShopDetailFailure(!TextUtils.isEmpty(entity.msg) ? entity.msg : serverResponseError);
+                            view.onSubmitOrderFailure(!TextUtils.isEmpty(entity.msg) ? entity.msg : serverResponseError);
                         }
                     }
                 } else {
                     if (view != null) {
-                        view.onLoadShopDetailFailure(networkError);
+                        view.onSubmitOrderFailure(networkError);
                     }
                 }
             }
@@ -55,11 +52,9 @@ public class ShopDetailPresenter extends ShopDetailContract.Presenter {
             @Override
             public void onFailure(Throwable throwable) {
                 if (view != null) {
-                    view.onLoadShopDetailFailure(networkError);
+                    view.onSubmitOrderFailure(networkError);
                 }
             }
         });
     }
-
-
 }

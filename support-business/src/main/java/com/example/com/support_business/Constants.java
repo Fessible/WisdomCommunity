@@ -51,11 +51,17 @@ public interface Constants {
      */
     public static final int STATUS_SUBMIT = 3;
 
+    /**
+     * 退款
+     */
+    public static final int STATUS_RETURN = 4;
+
     @IntDef({
             STATUS_FINISHED,
             STATUS_SENDING,
             STATUS_WAIT_PAY,
-            STATUS_SUBMIT
+            STATUS_SUBMIT,
+            STATUS_RETURN
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface STATUS {
@@ -77,9 +83,9 @@ public interface Constants {
     public static final int CATEGORY_DRINK = 2;
     public static final int CATEGORY_FRUIT = 3;
 
-    @IntDef({CATEGORY_FOOD,CATEGORY_FLOWER,CATEGORY_FRUIT,CATEGORY_DRINK})
+    @IntDef({CATEGORY_FOOD, CATEGORY_FLOWER, CATEGORY_FRUIT, CATEGORY_DRINK})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface  Category{
+    public @interface Category {
 
     }
 

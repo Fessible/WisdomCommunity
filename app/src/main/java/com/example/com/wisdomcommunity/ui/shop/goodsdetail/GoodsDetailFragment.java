@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.com.support_business.domain.home.Recommend;
 import com.example.com.support_business.domain.home.RecommendGoods;
 import com.example.com.support_business.domain.order.OrderDetail;
+import com.example.com.support_business.domain.shop.Goods;
 import com.example.com.support_business.domain.shop.GoodsDetail;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
@@ -38,6 +39,8 @@ import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_ID;
 import static com.example.com.wisdomcommunity.ui.shop.ShopFragment.KEY_SHOP_NAME;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_GOODS_NUM;
 import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopDetailFragment.KEY_POSITION;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopGoodsFragment.KEY_GOODS;
+import static com.example.com.wisdomcommunity.ui.shop.shopdetail.ShopGoodsFragment.KEY_TYPE;
 
 /**
  * Created by rhm on 2018/2/24.
@@ -87,6 +90,8 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
     private String strPrice;
     private int position;
     private int homeTag = 0;
+    private int type = 0;
+    private Goods goods;
     private RecommendGoods recommendGoods;
     private Recommend recommend;
 
@@ -100,7 +105,9 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
         toolbar.setNavigationOnClickListener(navigationListener);
         Bundle bundle = getArguments();
         if (bundle != null) {
+            goods = (Goods) bundle.getSerializable(KEY_GOODS);
             name = bundle.getString(KEY_GOODS_NAME);
+            type = bundle.getInt(KEY_TYPE);
             goodId = bundle.getString(KEY_GOODS_ID);
             count = bundle.getInt(KEY_GOODS_NUM);
             position = bundle.getInt(KEY_POSITION);
@@ -126,6 +133,8 @@ public class GoodsDetailFragment extends BaseFragment implements GoodsDetailCont
         public void onClick(View view) {
             Intent data = new Intent();
             OrderDetail.Order order = new OrderDetail.Order(goodId, name, count, strPrice, leave);
+            data.putExtra(KEY_TYPE, type);
+            data.putExtra(KEY_GOODS, goods);
             data.putExtra(KEY_GOOD_ORDER, order);
             data.putExtra(KEY_POSITION, position);
             getActivity().setResult(Activity.RESULT_OK, data);

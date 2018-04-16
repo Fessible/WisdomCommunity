@@ -17,6 +17,7 @@ import com.example.com.support_business.domain.personal.Version;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseFragment;
 import com.example.com.wisdomcommunity.mvp.SetContract;
+import com.example.com.wisdomcommunity.util.IntentUtil;
 import com.example.com.wisdomcommunity.view.itemdecoration.DividerDecor;
 import com.example.com.wisdomcommunity.view.itemdecoration.FlexibleItemDecoration;
 
@@ -71,6 +72,7 @@ public class SetFragment extends BaseFragment implements SetContract.View {
                     case TYPE_SHARE:
                         break;
                     case TYPE_ABOUT:
+                        IntentUtil.startTemplateActivity(SetFragment.this, AboutFragment.class, AboutFragment.TAG_ABOUT_FRAGMENT);
                         break;
                     case TYPE_CACHE:
                         break;

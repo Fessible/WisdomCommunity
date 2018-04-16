@@ -22,7 +22,9 @@ import java.util.List;
 import butterknife.BindView;
 
 import static com.example.com.support_business.Constants.STATUS_FINISHED;
+import static com.example.com.support_business.Constants.STATUS_RETURN;
 import static com.example.com.support_business.Constants.STATUS_SENDING;
+import static com.example.com.support_business.Constants.STATUS_SUBMIT;
 import static com.example.com.support_business.Constants.STATUS_WAIT_PAY;
 import static com.example.com.wisdomcommunity.ui.order.OrderAdapter.Item.VIEW_EMPTY;
 import static com.example.com.wisdomcommunity.ui.order.OrderAdapter.Item.VIEW_STANDARD;
@@ -171,6 +173,12 @@ public class OrderAdapter extends BaseAdapter<OrderAdapter.OrderHolder> {
                     break;
                 case STATUS_WAIT_PAY:
                     status = context.getString(R.string.status_wait_pay);
+                    break;
+                case STATUS_RETURN:
+                    status = context.getString(R.string.status_return);
+                    break;
+                case STATUS_SUBMIT:
+                    status = context.getString(R.string.status_submit);
                     break;
             }
             return status;

@@ -17,6 +17,7 @@ import com.example.com.support_business.domain.shop.Goods;
 import com.example.com.wisdomcommunity.R;
 import com.example.com.wisdomcommunity.base.BaseAdapter;
 import com.example.com.wisdomcommunity.base.BaseHolder;
+import com.example.com.wisdomcommunity.localsave.ShopCart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,17 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     private Callback callback;
     private int number = -1;
     private int type;
+    private String shopId;
+    private String localShopId;
 
     ShopDetailAdapter(Context context) {
         this.context = context;
+        localShopId = ShopCart.getShopId(context);
         registerAdapterDataObserver(observer);
+    }
+
+    void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
@@ -51,7 +59,7 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             itemList.clear();
             if (goodsList != null && !goodsList.isEmpty()) {
                 for (Goods goods : goodsList) {
-                    itemList.add(new StandardItem(goods));
+                    itemList.add(new StandardItem(goods, shopId));
                 }
             } else {
                 itemList.add(new EmptyItem());
@@ -157,6 +165,8 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             super.bindHolder(context, standardItem, num, position, type, callback);
             final Goods item = standardItem.goods;
             item.type = type;
+            final String shopId = standardItem.shopId;
+            final String localShopId = ShopCart.getShopId(context);
 
             int placeHolder = R.drawable.app_icon;
             final Float flPrice = Float.valueOf(item.price);
@@ -193,6 +203,13 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (shopId != null && ShopCart.getShopId(context) != null &&!ShopCart.getShopId(context).isEmpty()&& !shopId.equals(localShopId)) {
+                        //提示是否清空购物车
+                        if (callback != null) {
+                            callback.onClearShopCart();
+                            return;
+                        }
+                    }
 
                     if (count < item.remain) {
                         number.setText(String.valueOf(++count));
@@ -255,9 +272,11 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
 
     static class StandardItem implements Item {
         private Goods goods;
+        private String shopId;
 
-        public StandardItem(Goods goods) {
+        public StandardItem(Goods goods, String shopId) {
             this.goods = goods;
+            this.shopId = shopId;
         }
 
         @Override
@@ -287,6 +306,8 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
         void onAddPayBack(View v, Goods goods, float price, int num, int type);
 
         void onMinusPayBack(Goods goods, float price, int num, int type);
+
+        void onClearShopCart();
     }
 
 }

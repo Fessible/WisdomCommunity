@@ -38,4 +38,9 @@ public class Address implements Serializable {
      * 地址ID
      */
     public String addressId;
+
+    /**
+     * 用户ID
+     */
+    public String userId;
 }

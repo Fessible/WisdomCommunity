@@ -1,5 +1,6 @@
 package com.example.com.wisdomcommunity.ui.order;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * 订单
  * Created by rhm on 2018/1/16.
@@ -28,6 +31,7 @@ import butterknife.BindView;
 public class OrderFragment extends BaseFragment implements OrderContract.View {
     public static final String TAG_ORDER_FRAGMENT = "ORDER_FRAGMENT";
     public static final String KEY_ORDER_ID = "order_id";
+    public static final int REQUEST_CODE = 1;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -63,9 +67,19 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
             public void onCallback(String value) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_ORDER_ID, value);
-                IntentUtil.startTemplateActivity(OrderFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT);
+                IntentUtil.startTemplateActivityForResult(OrderFragment.this, OrderDetailFragment.class, bundle, OrderDetailFragment.TAG_DETAIL_FRAGMENT,REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                presenter.loadOrderRecord();
+            }
+        }
     }
 
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {

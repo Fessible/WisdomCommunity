@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 
 public class Goods implements Serializable {
+
     /**
      * 商品类型
      */
