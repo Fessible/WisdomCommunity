@@ -83,6 +83,10 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+        <!--下载服务-->
+        <service android:name=".ui.person.set.UpdateService"
+            android:enabled="true"
+            />
 
     </application>
 
