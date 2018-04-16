@@ -40,11 +40,9 @@ public class ShopDetailAdapter extends BaseAdapter<ShopDetailAdapter.ShopDetailH
     private int number = -1;
     private int type;
     private String shopId;
-    private String localShopId;
 
     ShopDetailAdapter(Context context) {
         this.context = context;
-        localShopId = ShopCart.getShopId(context);
         registerAdapterDataObserver(observer);
     }
 

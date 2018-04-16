@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/order_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/palette_background_color"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        style="@style/Widget.Design.Admin.AppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.example.com.wisdomcommunity.view.CompatStatusBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextAppearance.Widget.Design.Admin.Toolbar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/about" />
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/about_app" />
+
+    <!--<com.example.com.wisdomcommunity.view.MultipleRefreshLayout-->
+    <!--android:id="@+id/multiple_refresh_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:emptyView="@layout/fragment_multiply_empty"-->
+    <!--app:errorView="@layout/fragment_multiply_error"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--app:loadingView="@layout/loading_view">-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/recycler_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <!--</com.example.com.wisdomcommunity.view.MultipleRefreshLayout>-->
+
+</LinearLayout>
